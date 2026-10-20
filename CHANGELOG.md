@@ -4,6 +4,8 @@
 
 ### Validation
 
+- Manual Maven Central release workflow with source/CI checks, reviewed artifact digests, signing, retained deployment recovery, public package verification and matching GitHub Release notes. Publishing requires separate account and environment setup.
+- Disposable-key signing checks verify the release bundle without uploading it to Maven Central.
 - Accept documented assistant-message projections in Realtime Work History while still checking Work IDs, terminal events and pagination.
 - Complete Schedule/Batch execution, Usage pagination/filtering, Identity SAT permissions/revocation and Realtime Work/History acceptance in CN and Global.
 - JDK 8/11/17/21/25 compatibility CI, package-content and Java 8 bytecode checks, and retained test reports and candidate checksums.

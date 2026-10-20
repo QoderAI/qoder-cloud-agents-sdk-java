@@ -24,6 +24,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: make quality
+      - name: Exercise Central bundle signing without publishing
+        run: python3 .github/scripts/check_central_bundle.py
   java:
     name: check (Java ${{ matrix.java }})
     runs-on: ubuntu-latest
