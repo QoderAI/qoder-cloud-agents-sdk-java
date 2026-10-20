@@ -1,0 +1,13 @@
+{
+  "id": "sess_1", "type": "session", "identity_id": "idn_1",
+  "template": {"id": "tmpl_1", "type": "template", "name": "Support", "model": "auto", "version": 9007199254740993},
+  "source_type": "api", "status": "idle", "title": "Example",
+  "metadata": {"biz": "customer-1", "future": null},
+  "config": {"environment_variables": {"MODE": "test", "EMPTY": ""}},
+  "resources": [{"id": "sesr_1", "type": "file", "file_id": "file_1", "mount_path": "/data/workspace/spec.md", "created_at": "2026-10-17T01:02:03.123456789Z"}],
+  "stats": {"active_seconds": 30, "duration_seconds": 3600},
+  "usage": {"total_credits": 12.500000000001, "model_credits": 10.5, "sandbox_runtime_credits": 0},
+  "outcome_evaluations": [{"type": "outcome_evaluation", "outcome_id": "outc_1", "description": "Has tests", "iteration": 1, "result": "satisfied", "explanation": null, "completed_at": "2026-10-17T01:02:03Z"}],
+  "archived_at": null, "created_at": "2026-10-17T01:02:03.123456789Z", "updated_at": "2026-10-17T02:03:04Z",
+  "future_field": {"count": 9007199254740993}
+}

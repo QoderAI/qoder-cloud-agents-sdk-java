@@ -1,0 +1,17 @@
+target/
+__pycache__/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.DS_Store
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.log
+/test-results/
+/artifacts/
+/build/
+.aoneci/

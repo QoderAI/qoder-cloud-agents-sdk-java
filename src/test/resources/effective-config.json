@@ -1,0 +1,18 @@
+{
+  "type": "effective_spec", "id": "config_1", "identity_id": "idn_1", "template_id": "tmpl_1",
+  "agent_effective_hash": "agent-hash", "session_effective_hash": "session-hash", "effective_hash": "full-hash",
+  "agent": {
+    "name": "Support", "description": "Compiled config",
+    "model": {"id": "ultimate", "speed": "standard", "effort": "high", "context_window": 400000},
+    "system": "Baseline\nPrefer CRM data.",
+    "tools": [{"type": "agent_toolset_20260401", "configs": [{"name": "Bash", "enabled": true, "permission_policy": {"type": "always_ask"}}]}],
+    "mcp_servers": [{"type": "http", "name": "crm", "url": "https://example.com/mcp"}],
+    "skills": [{"type": "custom", "skill_id": "skill_1", "version": "latest"}],
+    "metadata": {"team": "support"}, "max_tool_rounds": 12,
+    "multiagent": {"type": "coordinator", "agents": [{"type": "advisor", "model": "ultimate"}]},
+    "future_agent_field": true
+  },
+  "session": {"environment_id": "env_1", "environment_variables": {"MODE": "user"}, "vault_ids": ["vault_1"],
+    "resources": [{"type": "file", "file_id": "file_1"}, {"type": "github_repository", "url": "https://github.com/example/repo", "mount_path": "/repo"}]},
+  "future_response": "preserved"
+}

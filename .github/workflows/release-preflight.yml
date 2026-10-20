@@ -1,0 +1,66 @@
+name: Release preflight
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version without v or SNAPSHOT
+        required: true
+        type: string
+      commit_sha:
+        description: Full 40-character lowercase SHA of current main
+        required: true
+        type: string
+      batch_id:
+        description: 1-64 letters, digits, dots, underscores or hyphens; start with a letter or digit
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: java-release-preflight
+  cancel-in-progress: false
+jobs:
+  preflight:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      RELEASE_VERSION: ${{ inputs.version }}
+      RELEASE_SHA: ${{ inputs.commit_sha }}
+      RELEASE_BATCH: ${{ inputs.batch_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify release inputs and changelog
+        run: |
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          python3 .github/scripts/release_preflight.py --version "$RELEASE_VERSION" --commit-sha "$RELEASE_SHA" --batch-id "$RELEASE_BATCH"
+      - run: make quality
+      - run: make test
+      - name: Display proposed notes and artifact digests
+        run: |
+          cat build/release-preflight/release-notes.md >> "$GITHUB_STEP_SUMMARY"
+          printf '\n### Candidate checksums\n\n```text\n' >> "$GITHUB_STEP_SUMMARY"
+          cat target/SHA256SUMS >> "$GITHUB_STEP_SUMMARY"
+          printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-candidate-${{ inputs.version }}
+          path: |
+            target/qca-sdk-*.jar
+            target/package-check.json
+            target/SHA256SUMS
+            pom.xml
+            build/release-preflight/
+          retention-days: 30
+          if-no-files-found: error

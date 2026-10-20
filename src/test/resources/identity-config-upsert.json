@@ -1,0 +1,19 @@
+{
+  "name": "User overrides",
+  "identity_config": {
+    "system": {"mode": "append", "content": "Prefer CRM data."},
+    "model": {"effort": "high", "speed": "standard"},
+    "tools": {"Bash": {"enabled": true, "permission_policy": {"type": "always_ask"}}, "Read": null},
+    "managed_tool_config": {"create_forward_schedule": {"enabled": false}, "list_forward_schedules": null},
+    "mcp_servers": {"crm": {"enabled": true, "type": "http", "url": "https://example.com/mcp"}, "removed": null},
+    "skills": {"skill_1": {"enabled": true, "type": "custom", "version": "latest"}},
+    "toolsets": {"crm": {"type": "mcp_toolset", "enabled": true, "mcp_server_name": "crm", "tools": {"lookup": {"enabled": false}}, "configs": [{"name": "lookup", "enabled": false}]}},
+    "agent_metadata": {"team": "support", "future": null},
+    "vaults": {"vault_1": {"enabled": true}},
+    "files": {"file_1": null},
+    "github_repositories": {"repo": {"authorization_token": "test_write_only", "enabled": true, "mount_path": null}},
+    "environment_variables": {"MODE": {"op": "set", "value": "user"}, "REMOVE": {"op": "unset"}, "INHERIT": null},
+    "future_option": {"value": 9007199254740993}
+  },
+  "metadata": {"owner": "test"}
+}

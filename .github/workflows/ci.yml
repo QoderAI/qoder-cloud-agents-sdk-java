@@ -1,0 +1,70 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: make quality
+  java:
+    name: check (Java ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['8', '11', '17', '21', '25']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - name: Build, test and install locally
+        run: ./mvnw -B -ntp clean install
+      - name: Verify independent JAR consumer and examples
+        run: ./mvnw -B -ntp -f examples/pom.xml clean verify
+      - name: Check Java 8 package contents and write checksums
+        run: python3 .github/scripts/check_package.py
+      - name: Preserve test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-java-${{ matrix.java }}
+          path: |
+            target/surefire-reports/
+            examples/target/surefire-reports/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Preserve verified candidate package
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-java-${{ matrix.java }}
+          path: |
+            target/qca-sdk-*.jar
+            target/package-check.json
+            target/SHA256SUMS
+            pom.xml
+          if-no-files-found: error
+          retention-days: 14

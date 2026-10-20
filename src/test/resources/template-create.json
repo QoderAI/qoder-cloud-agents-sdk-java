@@ -1,0 +1,27 @@
+{
+  "name": "SDK template",
+  "model": {"id": "ultimate", "effort": "high", "speed": "standard", "context_window": 400000},
+  "description": "Contract test",
+  "system": "Help with the supplied task.",
+  "max_tool_rounds": 12,
+  "environment_id": "env_test",
+  "tools": [
+    {"type": "custom", "name": "lookup", "description": "Lookup", "input_schema": {"type": "object", "properties": {"q": {"type": "string"}}}},
+    {"type": "agent_toolset_20260401", "enabled_tools": ["Read"], "disallowed_tools": ["Write"],
+     "configs": [{"name": "Read", "enabled": true, "permission_policy": {"type": "always_allow"}}]},
+    {"type": "mcp_toolset", "mcp_server_name": "docs"}
+  ],
+  "managed_tool_config": {"enabled_tools": ["list_drive_entries", "future_tool"]},
+  "mcp_servers": [{"name": "docs", "url": "https://example.com/mcp", "type": "http"}],
+  "skills": [{"type": "skill", "skill_id": "skill_test", "version": "latest", "enabled": true}],
+  "multiagent": {"type": "coordinator", "agents": [
+    {"type": "self"}, {"type": "agent", "template_id": "tmpl_helper", "name": "helper"},
+    {"type": "advisor", "model": "ultimate"}
+  ]},
+  "vaults": {"vault_test": {"enabled": true}},
+  "files": {"file_test": {"enabled": false}},
+  "github_repositories": {"repo": {"url": "https://github.com/example/demo", "mount_path": "/repo", "enabled": true, "authorization_token": "test_write_only_secret"}},
+  "environment_variables": {"MODE": "test"},
+  "metadata": {"nested": {"precision": 9007199254740993}, "nullable": null},
+  "future_option": {"enabled": true}
+}

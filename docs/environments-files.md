@@ -1,0 +1,128 @@
+# Environments and Files
+
+Six Environment operations and five File HTTP operations are implemented in synchronous, asynchronous and `withResponse()` forms.
+
+| Resource | Methods |
+| --- | --- |
+| `client.environments()` | `list`, `create`, `retrieve`, `update`, `archive`, `delete` |
+| `client.files()` | `list`, `upload`, `getMetadata`, `delete`, `getDownloadUrl`, `download` |
+
+`getDownloadUrl` and `download` use the same QCA `GET /files/{id}/content` endpoint, so they count as one HTTP operation. The latter also retrieves the content from the returned storage URL.
+
+## Environment configuration
+
+```java
+import com.qoder.cloudagents.core.RequestOptions;
+import com.qoder.cloudagents.forward.*;
+import java.util.Collections;
+
+Environment environment = client.environments().create(
+    EnvironmentCreateParams.builder()
+        .name("Java development")
+        .config(EnvironmentConfig.builder()
+            .type("cloud")
+            .packages(EnvironmentPackages.builder()
+                .npm(Collections.singletonList("pnpm@9"))
+                .pip(Collections.singletonList("PyYAML==6.0.1"))
+                .build())
+            .setupScript("echo environment-ready")
+            .build())
+        .build(),
+    RequestOptions.builder()
+        .idempotencyKey(java.util.UUID.randomUUID().toString())
+        .build());
+```
+
+Omitting `config` lets the service default to cloud. Explicit config must have a type; the service rejects null, empty config and unsupported combinations. Self-hosted config permits `type("self_hosted")` and an optional setup script, not packages. Scripts are sent as text; creating a configuration does not execute them locally.
+
+`EnvironmentPackages` has request setters for apt/npm/pip and response getters for all package managers, including reserved cargo/gem/go fields. It does not invent package defaults or send the response-only `type` field. Unknown fields remain accessible through `field(...)` / `additionalField(...)`.
+
+Environment update metadata is a **server-side merge**; this differs from Memory metadata replacement. The SDK sends only supplied keys, without fetching or merging state locally. Omitted fields, explicit null and empty maps stay distinct; the server rejects null metadata/config and the reserved metadata key `created_by`.
+
+Environment responses also expose archived time, Identity ownership, icon URL and typed Template binding counts. Archive is separate from deletion. Delete does not silently archive or unbind a referenced Environment. Both Environment and File delete methods return typed JSON deletion results; a legacy HTTP 204/205 returns null data and retains status/headers in `withResponse()`.
+
+## Identity ownership and pagination
+
+For PAT access to an Identity-owned resource, use:
+
+```java
+RequestOptions identityScope = RequestOptions.builder()
+    .query("identity_id", "idn_example")
+    .build();
+Environment scoped = client.environments().retrieve("env_example", identityScope);
+```
+
+This query option applies to all Environment and File methods, including upload and the QCA download grant. The list builders also provide `identityId(...)`. The parameter stays in the query; it is never added to JSON or multipart data. For SAT access the credential determines ownership; do not explicitly supply `identity_id`. The SDK does not change authentication or hide service errors based on this field.
+
+Environment/File lists use `page` / `next_page` by default. `afterId` and `beforeId` are also available; all three selectors are mutually exclusive. Opaque page tokens, filters, Identity scope and request options carry into subsequent requests. Ordering is unchanged, repeated cursors fail, and exhausted pages require checking `hasNextPage()`.
+
+File `name(...)` is the existing list filter, not the deferred beta Search API. File `scopeId(...)` filtering has no usable cursor continuation in the current contract. Use `data()` for that response. Combining scope with cursors is rejected; attempting continuation of a scope-filtered response raises `PaginationException` rather than silently requesting a duplicate page.
+
+## Multipart upload
+
+```java
+import com.qoder.cloudagents.core.Upload;
+import java.nio.charset.StandardCharsets;
+
+FileMetadata file = client.files().upload(
+    FileUploadParams.builder()
+        .file(Upload.bytes("Hello QCA\n".getBytes(StandardCharsets.UTF_8),
+                          "example.txt", "text/plain"))
+        .name("Example")
+        .purpose("session_resource")
+        .metadata(Collections.singletonMap("source", "java-example"))
+        .build(),
+    RequestOptions.builder()
+        .idempotencyKey(java.util.UUID.randomUUID().toString())
+        .build());
+```
+
+The multipart file part carries raw bytes and a filename/MIME type. Metadata is a JSON string form field. Name and purpose are form fields; idempotency is a header. Batch input can use the existing `purpose("session_resource")` field. The multipart boundary is generated by the SDK and takes precedence over a manually supplied Content-Type.
+
+| Source | Memory and ownership | Automatic retry |
+| --- | --- | --- |
+| `Upload.bytes(data, filename, mediaType)` | Copies the byte array once; later caller mutations do not change the upload | Replayable, subject to normal status/idempotency rules |
+| `Upload.path(path, mediaType)` | Reads from disk while sending; SDK opens/closes the input, not the file itself | Not replayed, since the disk file can change |
+| `Upload.stream(input, filename, mediaType)` | One-use source; once accepted for upload, the SDK closes it on success, failure or cancellation, even before transmission | Never replayed, even with an idempotency key |
+
+Do not reuse an arbitrary InputStream source after invoking upload. Keep a Path stable until the request finishes. Invalid construction arguments fail before ownership transfers. Slow custom InputStreams must implement close so that it unblocks reads; the SDK cannot forcibly stop arbitrary user code.
+
+The service currently documents text-like uploads and a 500 MiB limit; it validates supported formats, sizes, metadata and reserved keys. The SDK does not reinterpret PDF examples as proof that arbitrary binary types are accepted.
+
+## Stream the download
+
+```java
+import com.qoder.cloudagents.core.FileDownload;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+Path destination = Paths.get("downloaded-example.txt"); // chosen by your application
+try (FileDownload download = client.files().download(file.id());
+     InputStream body = download.body()) {
+    java.nio.file.Files.copy(body, destination);
+}
+```
+
+The SDK first requests the download grant with QCA credentials, then makes a separate HTTP(S) storage request with **no QCA Authorization, default/custom API headers, Identity query or idempotency key**. The signed URL's own query is preserved. Up to five HTTP redirects are allowed on the storage hop, with no credentials added and no HTTPS downgrade. URLs with embedded credentials, non-HTTP(S) schemes or fragments are rejected.
+
+`download` resolves when storage headers arrive, not after loading the entire file into memory. Close `FileDownload` (or its body) after use; EOF also releases the connection. Use `requestId()` for the QCA grant ID and `storageRequestId()` / `headers()` for the storage response. `withResponse().download(...)` exposes storage status and headers; its data must still be closed.
+
+The regular timeout controls storage header wait and read idle time. An optional `totalTimeout` starts before the grant and remains active through storage retries and body consumption. Cancelling the pending async future cancels its active hop; after delivery, close the download. Closing the owning client aborts open downloads.
+
+Storage header/status failures can retry under the shared GET policy. Once a stream is handed to the caller, a read error is surfaced as an SDK request exception and **does not restart the file**, avoiding duplicated output. The SDK does not overwrite local files or choose a path from a remote filename.
+
+If you only need the grant:
+
+```java
+FileDownloadUrl grant = client.files().getDownloadUrl(file.id());
+// grant.url(), grant.expiresAt(), grant.filename()
+```
+
+Treat signed URLs as credentials; do not log them. This helper does not fetch content.
+
+## Example and validation
+
+[EnvironmentFileExample](../examples/src/main/java/com/qoder/cloudagents/examples/EnvironmentFileExample.java) creates an isolated Environment and text File, compares downloaded bytes in bounded chunks, then deletes only its own resources. It retains cleanup errors without hiding the original failure. It does not start Sessions or execute a setup script.
+
+See [example commands](../examples/README.md) and [opt-in live testing](live-testing.md). Default tests use mock services and the installed SDK JAR.

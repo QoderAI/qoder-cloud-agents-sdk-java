@@ -1,0 +1,35 @@
+package com.qoder.cloudagents.forward;
+
+import com.qoder.cloudagents.core.*;
+import com.qoder.cloudagents.core.internal.*;
+import java.util.*;
+
+public final class TemplateUsage extends JsonModel {
+  public TemplateUsage(JsonValue value, String requestId) {
+    super(value, requestId);
+  }
+
+  public String type() {
+    return optionalString("type");
+  }
+
+  public Long sessionCount() {
+    return optionalLong("session_count");
+  }
+
+  public java.math.BigDecimal activeSeconds() {
+    return optional("active_seconds", JsonValue::asDecimal);
+  }
+
+  public java.math.BigDecimal credits() {
+    return optional("credits", JsonValue::asDecimal);
+  }
+
+  public String templateId() {
+    return optionalString("template_id");
+  }
+
+  public Long activeIdentities() {
+    return optionalLong("active_identities");
+  }
+}

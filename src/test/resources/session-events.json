@@ -1,0 +1,13 @@
+{
+  "data": [
+    {"id": "evt_1", "type": "agent.message", "session_id": "sess_1", "content": [{"type": "text", "text": "Done"}, {"type": "future.block", "future_data": {"count": 9007199254740993}}]},
+    {"id": "evt_2", "type": "agent.tool_use", "session_id": "sess_1", "name": "Read", "input": {"file_path": "/data/workspace/spec.md"}, "evaluated_permission": {"type": "allow"}},
+    {"id": "evt_3", "type": "agent.tool_result", "session_id": "sess_1", "tool_use_id": "toolu_2", "content": "file content", "is_error": false},
+    {"id": "evt_4", "type": "session.status_idle", "session_id": "sess_1", "stop_reason": {"type": "end_turn"}},
+    {"id": "evt_5", "type": "session.thread_created", "session_id": "sess_1", "session_thread_id": "sthr_1"},
+    {"id": "evt_6", "type": "agent.content_block_delta", "session_id": "sess_1", "message_id": "msg_1", "index": 0, "delta": {"type": "text_delta", "text": "Hello"}},
+    {"id": "evt_7", "type": "span.outcome_evaluation_end", "session_id": "sess_1", "explanation": "OK", "iteration": 3, "outcome_evaluation_start_id": "evt_start", "outcome_id": "outc_1", "result": "satisfied", "usage": {"total_credits": 0.00123456789}},
+    {"id": "evt_8", "type": "future.public_event", "session_id": "sess_1", "future_payload": {"keep": true}}
+  ],
+  "first_id": "evt_1", "last_id": "evt_8", "has_more": false
+}
