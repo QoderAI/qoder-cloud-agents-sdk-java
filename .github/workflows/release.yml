@@ -1,0 +1,250 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version already committed in both POMs and changelog; no v or SNAPSHOT
+        required: true
+        type: string
+      commit_sha:
+        description: Full lowercase source SHA; current main for a first publication
+        required: true
+        type: string
+      batch_id:
+        description: 1-64 letters, digits, dots, underscores or hyphens; start with a letter or digit
+        required: true
+        type: string
+      resume_run_id:
+        description: Recovery only; original Release run containing the signed release-bundle artifact
+        default: ''
+        type: string
+      deployment_id:
+        description: Recovery only; Central UUID if the original upload receipt was not retained
+        default: ''
+        type: string
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: java-central-release
+  cancel-in-progress: false
+env:
+  RELEASE_VERSION: ${{ inputs.version }}
+  RELEASE_SHA: ${{ inputs.commit_sha }}
+  RELEASE_BATCH: ${{ inputs.batch_id }}
+  RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+  CENTRAL_DEPLOYMENT_ID: ${{ inputs.deployment_id }}
+defaults:
+  run:
+    shell: bash
+jobs:
+  preflight:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: workflow
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source, five-JDK CI and release intent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 workflow/.github/scripts/central_release.py preflight --output candidate
+      - name: Recheck source quality and unsigned candidate
+        if: inputs.resume_run_id == ''
+        working-directory: source
+        run: |
+          make quality
+          make test
+          cp target/package-check.json ../candidate/
+      - name: Record source, release notes and candidate digests
+        run: |
+          printf '### Release source\n\nVersion: `%s`\n\nSHA: `%s`\n\nBatch: `%s`\n\n' "$RELEASE_VERSION" "$RELEASE_SHA" "$RELEASE_BATCH" >> "$GITHUB_STEP_SUMMARY"
+          cat candidate/release-notes.md >> "$GITHUB_STEP_SUMMARY"
+          if [[ -n "$RESUME_RUN_ID" ]]; then
+            printf '\nRecovery uses the original signed bundle: https://github.com/QoderAI/qoder-cloud-agents-sdk-java/actions/runs/%s\n' "$RESUME_RUN_ID" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [[ -f candidate/package-check.json ]]; then
+            printf '\n```json\n' >> "$GITHUB_STEP_SUMMARY"
+            cat candidate/package-check.json >> "$GITHUB_STEP_SUMMARY"
+            printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-candidate
+          path: candidate/
+          retention-days: 90
+          if-no-files-found: error
+  publish:
+    needs: preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: workflow
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-candidate
+          path: candidate
+      - name: Require publishing setup
+        env:
+          CENTRAL_NAMESPACE: ${{ vars.CENTRAL_NAMESPACE }}
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: |
+          test "$CENTRAL_NAMESPACE" = com.qoder || { echo 'Verify com.qoder in Central Portal and set the CENTRAL_NAMESPACE repository Actions variable'; exit 1; }
+          test -n "$CENTRAL_USERNAME" && test -n "$CENTRAL_PASSWORD" || { echo 'Central Portal token secrets are missing'; exit 1; }
+          if [[ -z "$RESUME_RUN_ID" ]]; then
+            test -n "$MAVEN_GPG_KEY" && test -n "$MAVEN_GPG_PASSPHRASE" || { echo 'GPG signing secrets are missing'; exit 1; }
+          fi
+      - name: Build signed bundle without uploading
+        if: inputs.resume_run_id == ''
+        working-directory: source
+        env:
+          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: ./mvnw -B -ntp -Pcentral -Dgpg.signer=bc -Dcentral.skipUpload=true clean deploy
+      - name: Bind signed bundle to reviewed candidate
+        if: inputs.resume_run_id == ''
+        run: python3 workflow/.github/scripts/central_release.py seal
+      - name: Preserve signed bundle before creating the tag or uploading
+        if: inputs.resume_run_id == ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-bundle
+          path: bundle/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Recover original bundle and deployment
+        if: inputs.resume_run_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 workflow/.github/scripts/central_release.py recover
+      - name: Recheck main and create immutable source tag
+        if: inputs.resume_run_id == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 workflow/.github/scripts/central_release.py tag
+      - name: Upload once for Central validation
+        if: inputs.resume_run_id == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+        run: python3 workflow/.github/scripts/central_release.py upload
+      - name: Preserve deployment receipt before publishing
+        if: ${{ !cancelled() && hashFiles('bundle/receipt.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: central-receipt
+          path: bundle/receipt.json
+          retention-days: 90
+          if-no-files-found: error
+      - name: Publish validated deployment and wait for completion
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+        run: python3 workflow/.github/scripts/central_release.py publish
+  verify:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: workflow
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-bundle
+          path: bundle
+          run-id: ${{ inputs.resume_run_id || github.run_id }}
+          github-token: ${{ github.token }}
+      - name: Compare public Maven files to approved signed bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 workflow/.github/scripts/central_release.py verify
+      - name: Test public package from a clean Maven cache
+        run: |
+          printf '<settings xmlns="http://maven.apache.org/SETTINGS/1.2.0"/>\n' > "$RUNNER_TEMP/central-consumer-settings.xml"
+          source/mvnw -B -ntp -s "$RUNNER_TEMP/central-consumer-settings.xml" -Dmaven.repo.local="$RUNNER_TEMP/central-consumer-cache" -f source/examples/pom.xml clean verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-consumer-verification
+          path: |
+            bundle/verification.json
+            source/examples/target/surefire-reports/
+          retention-days: 90
+  release-notes:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: workflow
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-bundle
+          path: bundle
+          run-id: ${{ inputs.resume_run_id || github.run_id }}
+          github-token: ${{ github.token }}
+      - name: Create matching GitHub Release notes after public verification
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 workflow/.github/scripts/central_release.py release
