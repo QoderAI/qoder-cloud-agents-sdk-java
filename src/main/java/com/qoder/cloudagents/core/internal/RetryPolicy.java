@@ -23,16 +23,21 @@ public final class RetryPolicy {
   }
 
   public static long delayMillis(Headers headers, int attempt, Clock clock, double random) {
-    Double delay = number(headers.get("retry-after-ms"));
+    Long delay = retryAfterMillis(headers.get("retry-after-ms"), headers.get("retry-after"), clock);
+    if (delay != null) return delay;
+    return (long) (Math.min(500 * Math.pow(2, Math.min(attempt, 5)), 8000) * (1 - random * .25));
+  }
+
+  public static Long retryAfterMillis(String retryAfterMs, String retryAfter, Clock clock) {
+    Double delay = number(retryAfterMs);
     if (delay == null || delay == 0) {
-      String after = headers.get("retry-after");
-      Double seconds = number(after);
+      Double seconds = number(retryAfter);
       if (seconds != null) delay = seconds * 1000;
-      else if (after != null) {
+      else if (retryAfter != null) {
         try {
           delay =
               (double)
-                  (ZonedDateTime.parse(after, DateTimeFormatter.RFC_1123_DATE_TIME)
+                  (ZonedDateTime.parse(retryAfter, DateTimeFormatter.RFC_1123_DATE_TIME)
                           .toInstant()
                           .toEpochMilli()
                       - clock.millis());
@@ -43,7 +48,7 @@ public final class RetryPolicy {
     }
     if (delay != null && Double.isFinite(delay) && delay > 0 && delay <= MAX_DELAY_MS)
       return Math.max(1, (long) Math.ceil(delay));
-    return (long) (Math.min(500 * Math.pow(2, Math.min(attempt, 5)), 8000) * (1 - random * .25));
+    return null;
   }
 
   private static Double number(String value) {

@@ -6,6 +6,8 @@
 
 - Repeated default header settings now replace earlier values case-insensitively, while per-request headers retain precedence.
 - Realtime handshake and connection failures now retain the underlying exception through `RealtimeException.getCause()` for diagnostics.
+- Resumable SSE subscriptions honor valid `Retry-After` and `retry-after-ms` response headers after HTTP retries are exhausted, while cancellation and total deadlines still interrupt reconnect waits.
+- Closing an active event subscription records cancellation before releasing its reader, preventing a race that could incorrectly report successful completion.
 
 ### Validation
 

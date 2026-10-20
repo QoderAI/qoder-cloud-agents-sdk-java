@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.*;
 import okhttp3.mockwebserver.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @Timeout(15)
@@ -376,6 +377,93 @@ class SessionStreamsTest {
       assertEquals("session.deleted", stream.iterator().next().type());
     }
     assertEquals(2, server.getRequestCount());
+  }
+
+  @ParameterizedTest
+  @CsvSource({
+    "429, Retry-After, 1, 0",
+    "503, retry-after-ms, 800, 0",
+    "429, retry-after-ms, 800, 1"
+  })
+  void reconnectHonorsServerDelayAfterHttpRetryBudget(
+      int status, String header, String value, int retries) throws Exception {
+    if (retries > 0)
+      server.enqueue(
+          new MockResponse()
+              .setResponseCode(status)
+              .setHeader("retry-after-ms", "1")
+              .setBody("{}"));
+    server.enqueue(
+        new MockResponse().setResponseCode(status).setHeader(header, value).setBody("{}"));
+    server.enqueue(sse(event("end", "session.deleted")));
+    try (EventStream<SessionEvent> stream =
+        client
+            .sessions()
+            .events()
+            .resumableStream(
+                "s",
+                SessionEventStreamParams.builder().build(),
+                RequestOptions.builder()
+                    .maxRetries(retries)
+                    .totalTimeout(Duration.ofSeconds(5))
+                    .build())) {
+      EventSubscription subscription = stream.subscribe(e -> {});
+      for (int i = 0; i <= retries; i++) take();
+      assertNull(server.takeRequest(600, TimeUnit.MILLISECONDS));
+      take();
+      subscription.completion().get(2, TimeUnit.SECONDS);
+      assertEquals(retries + 2, server.getRequestCount());
+    }
+  }
+
+  @Test
+  void totalDeadlineInterruptsServerRetryDelay() {
+    server.enqueue(
+        new MockResponse().setResponseCode(429).setHeader("Retry-After", "30").setBody("{}"));
+    server.enqueue(sse(event("end", "session.deleted")));
+    try (EventStream<SessionEvent> stream =
+        client
+            .sessions()
+            .events()
+            .resumableStream("s", SessionEventStreamParams.builder().build(), deadline(1000))) {
+      assertThrows(ApiTimeoutException.class, () -> stream.iterator().hasNext());
+      assertEquals(1, server.getRequestCount());
+    }
+  }
+
+  @Test
+  void subscriptionCloseInterruptsServerRetryDelayAndReportsCancellation() throws Exception {
+    server.enqueue(
+        new MockResponse().setResponseCode(429).setHeader("Retry-After", "30").setBody("{}"));
+    server.enqueue(sse(event("end", "session.deleted")));
+    ExecutorService reader = Executors.newSingleThreadExecutor();
+    CompletableFuture<Void> finished = new CompletableFuture<>();
+    try (EventStream<SessionEvent> stream =
+        client
+            .sessions()
+            .events()
+            .resumableStream("s", SessionEventStreamParams.builder().build(), deadline(5000))) {
+      EventSubscription subscription =
+          stream.subscribe(
+              e -> fail("No event expected during the server retry delay"),
+              task ->
+                  reader.execute(
+                      () -> {
+                        try {
+                          task.run();
+                        } finally {
+                          finished.complete(null);
+                        }
+                      }));
+      take();
+      assertNull(server.takeRequest(600, TimeUnit.MILLISECONDS));
+      subscription.close();
+      assertThrows(CancellationException.class, () -> subscription.completion().get());
+      finished.get(1, TimeUnit.SECONDS);
+      assertEquals(1, server.getRequestCount());
+    } finally {
+      reader.shutdownNow();
+    }
   }
 
   @Test
