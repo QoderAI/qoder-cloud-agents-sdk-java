@@ -69,6 +69,36 @@ class ForwardClientTest {
   }
 
   @Test
+  void defaultHeadersUseLastValueRegardlessOfCaseAndAllowRequestOverrides() throws Exception {
+    try (ForwardClient configured =
+        builder()
+            .defaultHeader("X-Test-Header", "initial")
+            .defaultHeader("x-test-header", "middle")
+            .defaultHeader("X-Test-Header", "final")
+            .build()) {
+      server.enqueue(json(MODELS));
+      configured.models().list();
+      RecordedRequest request = server.takeRequest(2, TimeUnit.SECONDS);
+      assertNotNull(request);
+      assertEquals(
+          java.util.Collections.singletonList("final"),
+          request.getHeaders().values("x-test-header"));
+
+      server.enqueue(json(MODELS));
+      configured
+          .async()
+          .models()
+          .list(RequestOptions.builder().header("X-TEST-HEADER", "request").build())
+          .get(3, TimeUnit.SECONDS);
+      RecordedRequest overridden = server.takeRequest(2, TimeUnit.SECONDS);
+      assertNotNull(overridden);
+      assertEquals(
+          java.util.Collections.singletonList("request"),
+          overridden.getHeaders().values("x-test-header"));
+    }
+  }
+
+  @Test
   void asyncTemplateQueriesAndOpaquePathIdsAreEncoded() throws Exception {
     server.enqueue(
         json(

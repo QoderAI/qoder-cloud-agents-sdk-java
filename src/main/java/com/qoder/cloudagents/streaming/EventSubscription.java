@@ -22,7 +22,8 @@ public final class EventSubscription implements AutoCloseable {
   /** In-flight user callbacks may finish; no further callback is scheduled. */
   @Override
   public void close() {
-    close.run();
+    // Record cancellation before waking the reader, which could otherwise report success.
     completion.cancel(false);
+    close.run();
   }
 }

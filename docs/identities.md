@@ -1,6 +1,6 @@
 # Identity and configuration
 
-The Identity resource currently exposes eleven operations, its Config child exposes four, and its Memory Store child exposes three. All use the client's shared PAT/SA authentication, request options and retry policy. See [Memory Store mounts](sessions.md#memory-store-mounts) for list/mount/detach. Identity SAT issuance is a separate planned addition.
+The Identity resource exposes eleven operations, its Config child exposes four, and its Memory Store child exposes three. These operations use the client's shared PAT/SA authentication, request options and retry policy. See [Memory Store mounts](sessions.md#memory-store-mounts) for list/mount/detach. Identity SAT issuance is also available through `client.identities().serviceAccountTokens()`, using a separate per-call SA Key and disabling automatic retries; see [Forward SAT management](usage-sat-drive.md).
 
 ## Resource methods
 
@@ -18,6 +18,7 @@ The Identity resource currently exposes eleven operations, its Config child expo
 | | `retrieve(identityId, templateId)` | Stored `IdentityConfig` |
 | | `upsert(identityId, templateId, params)` | Updated `IdentityConfig` |
 | | `getEffective(identityId, templateId)` | Compiled `EffectiveConfig` |
+| `client.identities().serviceAccountTokens()` | `create(identityId, saKey, params)` | `ServiceAccountToken` |
 
 Each method also accepts `RequestOptions` as its final argument. `client.async()` exposes the same methods with `CompletableFuture` results. `withResponse()` returns HTTP status, headers and request ID in addition to the typed data.
 

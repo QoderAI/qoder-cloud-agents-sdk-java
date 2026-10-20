@@ -5,6 +5,7 @@ import com.qoder.cloudagents.core.internal.*;
 import com.qoder.cloudagents.errors.*;
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
+import java.time.Clock;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -167,7 +168,7 @@ public final class EventStream<T> implements Iterable<T>, AutoCloseable {
             finish();
             return null;
           }
-          reconnect();
+          reconnect(null);
           continue;
         }
         if (frame.type.equals("ping")) continue;
@@ -198,8 +199,20 @@ public final class EventStream<T> implements Iterable<T>, AutoCloseable {
       fail(error);
       throw error;
     }
-    reconnect();
+    Long delay = null;
+    if (error instanceof ApiStatusException) {
+      ApiStatusException status = (ApiStatusException) error;
+      delay =
+          RetryPolicy.retryAfterMillis(
+              header(status, "retry-after-ms"), header(status, "retry-after"), Clock.systemUTC());
+    }
+    reconnect(delay);
     return true;
+  }
+
+  private static String header(ApiStatusException error, String name) {
+    List<String> values = error.headers().get(name);
+    return values == null || values.isEmpty() ? null : values.get(values.size() - 1);
   }
 
   private static boolean retryable(RuntimeException error) {
@@ -214,9 +227,12 @@ public final class EventStream<T> implements Iterable<T>, AutoCloseable {
     return error instanceof ApiConnectionException;
   }
 
-  private synchronized void reconnect() {
+  private synchronized void reconnect(Long retryAfterMillis) {
     releaseConnection();
-    long delay = ThreadLocalRandom.current().nextLong(Math.max(1, backoff / 2), backoff + 1);
+    long delay =
+        retryAfterMillis != null
+            ? retryAfterMillis
+            : ThreadLocalRandom.current().nextLong(Math.max(1, backoff / 2), backoff + 1);
     backoff = Math.min(backoff * 2, 10000);
     long until = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(delay);
     try {

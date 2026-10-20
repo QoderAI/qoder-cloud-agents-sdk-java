@@ -219,6 +219,7 @@ public final class ForwardClient implements AutoCloseable {
 
     public Builder defaultHeader(String name, String value) {
       RequestOptions.builder().header(name, value);
+      headers.keySet().removeIf(key -> key.equalsIgnoreCase(name));
       headers.put(name, value);
       return this;
     }

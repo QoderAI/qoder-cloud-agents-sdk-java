@@ -1,6 +1,6 @@
 # Usage、Forward SAT 管理与 Drive
 
-本阶段实现 10 个 HTTP 操作：Usage 2 个、Forward SAT 管理 3 个、Drive 5 个。均提供同步、异步和 `withResponse()`，共用请求超时、取消、错误与响应元信息。当前仅完成离线验证，未在 CN/Global 执行这些 Java 示例。
+本节覆盖 10 个 HTTP 操作：Usage 2 个、Forward SAT 管理 3 个、Drive 5 个。均提供同步、异步和 `withResponse()`，共用请求超时、取消、错误与响应元信息。默认测试使用本地模拟服务；CN/Global 的示例与功能验收按[线上测试指南](live-testing.md)显式运行。
 
 ## Usage
 
@@ -119,4 +119,4 @@ client.templates().update(templateId, patch);
 
 该配置会更新所选 Template 的工具列表，按需要保留其他工具；SDK 不暴露 `/forward-mcp/...` 内部工具路由。不要把 Drive 文件管理与 Agent 内部工具调用混为一类接口。
 
-下一步：实现 Session / Thread SSE，再实现 Realtime 与 History，随后统一做真实环境验收。
+SDK 同时提供 [Session / Thread SSE](session-streaming.md) 和 [Realtime 与 History](realtime.md)。对应文档说明订阅、连接、取消和历史分页的使用方式；真实环境验收见[线上测试指南](live-testing.md)。
