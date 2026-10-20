@@ -42,6 +42,7 @@ Creation requires an application-generated stable `Idempotency-Key`; retry the s
 - Sends are serialized. Successful completion means the transport wrote the message, not that the server processed it. Cancelling a queued send removes it; cancelling or timing out a started send closes the connection because delivery is uncertain. Input is never replayed automatically.
 - Async continuations can execute on SDK/transport threads. Use `thenAcceptAsync`/an application executor for blocking work; do not synchronously wait for another event inside a completion callback.
 - A normal peer close ends `receive` with `null`. Buffered events drain before a terminal error. Abnormal closes, replacement and fatal server error events terminate the connection; `RealtimeException` preserves conversation/request IDs, close code/reason and the triggering error event through explicit getters. Nonfatal `error` and `work.failed` remain events for the application to handle.
+- Transport failures wrapped in `RealtimeException` retain their underlying exception through `getCause()`, while the top-level message remains generic.
 - Closing the parent client stops its connections. Always close a connection or use try-with-resources, including after asynchronous use. Closing a non-owning `client.async()` view does not close its parent.
 
 There is no automatic reconnect or input replay. A caller can explicitly reconnect with the conversation ID and query persisted History to decide how to recover. WS `sequence`/`event_id` are not History or SSE cursors.

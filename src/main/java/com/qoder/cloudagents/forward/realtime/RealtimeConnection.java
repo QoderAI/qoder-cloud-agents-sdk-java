@@ -435,7 +435,14 @@ public final class RealtimeConnection implements AutoCloseable {
     Throwable cause = Futures.unwrap(e);
     return cause instanceof RuntimeException
         ? (RuntimeException) cause
-        : problem("Realtime connection failed", null);
+        : new RealtimeException(
+            "Realtime connection failed",
+            conversationId(),
+            requestId(),
+            closeCode,
+            closeReason,
+            null,
+            cause);
   }
 
   private RealtimeException problem(String message, JsonValue event) {

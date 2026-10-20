@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.qoder.cloudagents.core.*;
 import com.qoder.cloudagents.errors.*;
 import com.qoder.cloudagents.forward.realtime.*;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
@@ -417,8 +418,27 @@ class RealtimeConnectionTest {
       RealtimeException e =
           assertThrows(RealtimeException.class, () -> c.receive(Duration.ofSeconds(3)));
       assertEquals(1006, e.closeCode());
+      assertEquals("conv_test", e.conversationId());
+      assertEquals("req-ws", e.requestId());
+      assertInstanceOf(IOException.class, e.getCause());
+      assertEquals("Realtime connection failed", e.getMessage());
       assertEquals(1, server.getRequestCount());
     }
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {false, true})
+  void handshakeDisconnectPreservesTransportCause(boolean async) {
+    server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
+    Throwable error =
+        async
+            ? failed(client.async().realtime().connect(params().build()))
+            : assertThrows(RealtimeException.class, this::connect);
+    RealtimeException failure = assertInstanceOf(RealtimeException.class, error);
+    assertInstanceOf(IOException.class, failure.getCause());
+    assertEquals("conv_test", failure.conversationId());
+    assertEquals(1006, failure.closeCode());
+    assertEquals("Realtime connection failed", failure.getMessage());
   }
 
   @Test

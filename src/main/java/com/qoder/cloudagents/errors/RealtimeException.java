@@ -17,7 +17,18 @@ public final class RealtimeException extends ApiException {
       Integer closeCode,
       String closeReason,
       JsonValue event) {
-    super(message);
+    this(message, conversationId, requestId, closeCode, closeReason, event, null);
+  }
+
+  public RealtimeException(
+      String message,
+      String conversationId,
+      String requestId,
+      Integer closeCode,
+      String closeReason,
+      JsonValue event,
+      Throwable cause) {
+    super(message, cause);
     this.conversationId = conversationId;
     this.requestId = requestId;
     this.closeCode = closeCode;

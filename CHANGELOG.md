@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Repeated default header settings now replace earlier values case-insensitively, while per-request headers retain precedence.
+- Realtime handshake and connection failures now retain the underlying exception through `RealtimeException.getCause()` for diagnostics.
+
 ### Validation
 
 - Manual Maven Central release workflow with source/CI checks, verified artifact digests, signing, retained deployment recovery, public package verification and matching GitHub Release notes. Publishing uses repository Actions secrets and proceeds after preflight without a separate environment approval.
