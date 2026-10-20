@@ -125,17 +125,42 @@ class CentralReleaseTests(unittest.TestCase):
         with patch.object(release, 'gh', side_effect=[ref, tag]), self.assertRaisesRegex(ValueError, 'source differs'):
             release.check_tag(self.info)
 
-    def test_release_requires_reviewers_and_main_only_environment(self):
-        environment = dict(protection_rules=[dict(type='required_reviewers', reviewers=[dict(id=1)])],
-                           deployment_branch_policy=dict(custom_branch_policies=True, protected_branches=False))
-        branches = dict(branch_policies=[dict(name='main', type='branch')])
-        with patch.object(release, 'gh', side_effect=[environment, branches]):
-            release.check_environment()
-        with patch.object(release, 'gh', return_value=None), self.assertRaisesRegex(ValueError, 'required reviewers'):
-            release.check_environment()
-        branches['branch_policies'].append(dict(name='*', type='branch'))
-        with patch.object(release, 'gh', side_effect=[environment, branches]), self.assertRaisesRegex(ValueError, 'only the main'):
-            release.check_environment()
+    def test_preflight_without_environment_still_requires_current_main_and_ci(self):
+        source, candidate = self.output / 'source', self.output / 'candidate'
+        coordinates = '<groupId>com.qoder</groupId><artifactId>qca-sdk</artifactId><version>1.2.3</version>'
+        project = '<project xmlns="http://maven.apache.org/POM/4.0.0">{}</project>'
+        files = {
+            'pom.xml': project.format(coordinates),
+            'examples/pom.xml': project.format(
+                '<version>1.2.3</version><dependencies><dependency>' + coordinates + '</dependency></dependencies>'),
+            'src/main/resources/com/qoder/cloudagents/version.properties': 'version=${project.version}\n',
+            'CHANGELOG.md': '# Changelog\n\n## [Unreleased]\n\n## [1.2.3]\n\n### Added\n\n- Release example.\n',
+        }
+        for name, contents in files.items():
+            path = source / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(contents)
+        responses = {
+            'commits/main': dict(sha='a' * 40),
+            'git/ref/tags/v1.2.3': None,
+            'actions/workflows/ci.yml/runs?event=push&branch=main&head_sha=' + 'a' * 40:
+                dict(workflow_runs=[dict(id=10, head_sha='a' * 40, conclusion='success')]),
+            'actions/runs/10/jobs?per_page=100':
+                dict(jobs=[dict(name=name, conclusion='success') for name in release.CHECKS]),
+        }
+        # Any request for repository protections or an environment fails this test.
+        with patch.object(release, 'git', return_value='a' * 40), \
+                patch.object(release, 'gh', side_effect=responses.__getitem__):
+            release.preflight(source, candidate)
+            self.assertEqual(release.identity(), json.loads((candidate / 'intent.json').read_text()))
+            self.assertIn('Release example.', (candidate / 'release-notes.md').read_text())
+            responses['commits/main']['sha'] = 'c' * 40
+            with self.assertRaisesRegex(ValueError, 'main changed'):
+                release.preflight(source, candidate)
+            responses['commits/main']['sha'] = 'a' * 40
+            responses['actions/runs/10/jobs?per_page=100']['jobs'][0]['conclusion'] = 'failure'
+            with self.assertRaisesRegex(ValueError, 'all five'):
+                release.preflight(source, candidate)
 
     def test_recovery_cannot_upload(self):
         with patch.dict(os.environ, RESUME_RUN_ID='123'), patch.object(release, 'check_tag'), \

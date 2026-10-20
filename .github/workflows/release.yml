@@ -71,7 +71,7 @@ jobs:
           make quality
           make test
           cp target/package-check.json ../candidate/
-      - name: Show source and release notes for review
+      - name: Record source, release notes and candidate digests
         run: |
           printf '### Release source\n\nVersion: `%s`\n\nSHA: `%s`\n\nBatch: `%s`\n\n' "$RELEASE_VERSION" "$RELEASE_SHA" "$RELEASE_BATCH" >> "$GITHUB_STEP_SUMMARY"
           cat candidate/release-notes.md >> "$GITHUB_STEP_SUMMARY"
@@ -93,7 +93,6 @@ jobs:
     needs: preflight
     runs-on: ubuntu-latest
     timeout-minutes: 50
-    environment: release
     permissions:
       contents: write
       actions: read
@@ -127,7 +126,7 @@ jobs:
           MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_KEY }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         run: |
-          test "$CENTRAL_NAMESPACE" = com.qoder || { echo 'Verify com.qoder in Central Portal and set CENTRAL_NAMESPACE in the release environment'; exit 1; }
+          test "$CENTRAL_NAMESPACE" = com.qoder || { echo 'Verify com.qoder in Central Portal and set the CENTRAL_NAMESPACE repository Actions variable'; exit 1; }
           test -n "$CENTRAL_USERNAME" && test -n "$CENTRAL_PASSWORD" || { echo 'Central Portal token secrets are missing'; exit 1; }
           if [[ -z "$RESUME_RUN_ID" ]]; then
             test -n "$MAVEN_GPG_KEY" && test -n "$MAVEN_GPG_PASSPHRASE" || { echo 'GPG signing secrets are missing'; exit 1; }

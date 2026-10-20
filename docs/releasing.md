@@ -1,20 +1,22 @@
 # Java SDK release setup
 
-The development version is `com.qoder:qca-sdk:0.1.0-SNAPSHOT`. The manual [Release workflow](../.github/workflows/release.yml) implements publication, but cannot publish until the Central account, namespace, signing key and GitHub environment below are configured. The GitHub repository and internal Maven access do not grant Maven Central publishing access. No public release has been made by adding this workflow.
+The development version is `com.qoder:qca-sdk:0.1.0-SNAPSHOT`. The manual [Release workflow](../.github/workflows/release.yml) implements publication using repository Actions secrets. Dispatching it from `main` authorizes publication after all automated checks pass; there is no separate environment approval. The Central account, namespace, signing key and repository settings below must be configured first. The GitHub repository and internal Maven access do not grant Maven Central publishing access. No public release has been made by adding this workflow.
 
-## Activate GitHub protection
+## Optional GitHub protection
 
-After the first reviewed public source push, run CI and confirm all six checks described in [maintenance](maintaining.md) appear. A repository administrator can then apply the prepared payloads. Inspect existing rules first and update matching rules rather than creating duplicates:
+Branch/tag rules and a `release` environment are not prerequisites for this workflow. Its own checks require a manual dispatch from `main`, the intended source SHA and all six successful CI jobs described in [maintenance](maintaining.md).
+
+A repository administrator can optionally apply the prepared main and tag protection payloads later. Inspect existing rules first and update matching rules rather than creating duplicates:
 
 ```sh
 gh api repos/QoderAI/qoder-cloud-agents-sdk-java/rulesets
 gh api --method POST repos/QoderAI/qoder-cloud-agents-sdk-java/rulesets --input .github/config/main-ruleset.json
 gh api --method POST repos/QoderAI/qoder-cloud-agents-sdk-java/rulesets --input .github/config/tag-ruleset.json
-gh api --method PUT repos/QoderAI/qoder-cloud-agents-sdk-java/environments/release --input .github/config/release-environment.json
-gh api --method POST repos/QoderAI/qoder-cloud-agents-sdk-java/environments/release/deployment-branch-policies --input .github/config/release-branch.json
 ```
 
-The main and `v*` tag protection follows the Go repository baseline. The prepared `release` environment uses maintainer `moonyue-w` (GitHub user ID 300878504), permits `main`, and does not prevent self-review, matching the existing SDK setup. Check that reviewer membership and repository policy are still correct before activation. Applying these settings requires repository administrator access. Configuration files do not activate remote settings by themselves.
+The main and `v*` tag protection follows the Go repository baseline. Configuration files do not activate remote settings by themselves. Without tag protection, the workflow still rejects conflicting tags and never overwrites them, but GitHub does not prevent another authorized actor from changing them.
+
+The unused `release-environment.json` and `release-branch.json` files remain optional templates for adopting environment approval later. To use them, first review the named reviewer and policy, explicitly add `environment: release` to the publishing job, and configure its credentials in that environment. Creating an environment alone does not attach it to this workflow.
 
 ## Read-only release preflight
 
@@ -48,7 +50,7 @@ The release workflow uses this bundle-only mode, then uploads the retained bundl
 4. In the publisher's [account page](https://central.sonatype.com/account), generate a **User Token**. The generated username/password pair is used for publication; it is not the normal account login password.
 5. Prepare a team-owned, passphrase-protected GPG signing key. Retain its backup securely and make its public key discoverable as required by [Central's GPG guide](https://central.sonatype.org/publish/requirements/gpg/). The workflow expects an ASCII-armored exported OpenPGP secret key, compatible with Maven GPG Plugin's BC signer. Export only the intended signing key.
 
-In repository **Settings → Environments → release**, configure:
+In repository **Settings → Secrets and variables → Actions**, configure repository-level values:
 
 | Kind | Name | Value |
 | --- | --- | --- |
@@ -58,15 +60,15 @@ In repository **Settings → Environments → release**, configure:
 | Secret | `MAVEN_GPG_KEY` | ASCII-armored exported private signing key |
 | Secret | `MAVEN_GPG_PASSPHRASE` | Passphrase for that signing key |
 
-Do not put credentials in POMs, repository files, command-line arguments or chat. For example, `gh secret set CENTRAL_USERNAME --repo QoderAI/qoder-cloud-agents-sdk-java --env release` reads the value interactively; repeat for the password. An exported key file can be redirected to `gh secret set MAVEN_GPG_KEY ...` without printing it. The public signing key must be registered separately; configuring a private-key secret does not publish its public key.
+Do not put credentials in POMs, repository files, command-line arguments or chat. For example, `gh secret set CENTRAL_USERNAME --repo QoderAI/qoder-cloud-agents-sdk-java` reads the value interactively; repeat for the password and passphrase. An exported key file can be redirected to `gh secret set MAVEN_GPG_KEY ...` without printing it. Do not use `--env release`: environment-only secrets are unavailable to this workflow. The public signing key must be registered separately; configuring a private-key secret does not publish its public key.
 
-The namespace variable is a maintainer's setup confirmation, not an automatic ownership check. Portal enforces actual publishing permissions during upload. The workflow stops before signing/uploading when its required settings are absent. Use the prepared required-reviewer and main-only environment rules above before the first release.
+The namespace variable is a maintainer's setup confirmation, not an automatic ownership check. Portal enforces actual publishing permissions during upload. The workflow stops before signing/uploading when its required settings are absent. Configuring repository secrets is separate from setting branch/tag protections; a repository administrator may need to enter the credentials if the current maintainer lacks that permission.
 
 ## Prepare and publish a release
 
 Prepare a PR that updates the root POM, the example project's version and SDK dependency, plus the changelog version section. Keep an empty `Unreleased` section. Review any version-specific install examples. Merge only after `quality` and all five Java checks succeed. The workflow does not bump versions or merge the PR.
 
-Open **Actions → Release → Run workflow**, select **main**, and enter:
+Open **Actions → Release → Run workflow**, select **main**, and verify the following inputs before dispatch. Successful preflight automatically proceeds to signing and publication; it does not pause for an additional approval.
 
 | Input | First publication |
 | --- | --- |
@@ -78,12 +80,12 @@ Open **Actions → Release → Run workflow**, select **main**, and enter:
 
 The stages are:
 
-1. **preflight** checks input, POM/changelog, current main and the latest successful main CI run with all six required jobs. It re-runs quality, SDK tests and packaged consumer tests, then shows the notes and unsigned package hashes for approval.
-2. **publish** waits for the `release` environment reviewer. It rebuilds and signs with JDK 17, compares the JAR/POM/sources/Javadoc bytes to the reviewed candidate, and retains the exact signed bundle before any upload. It checks main again and creates an annotated `v<version>` tag binding the SHA, batch and bundle digest. It uploads once with `USER_MANAGED` publishing, immediately retains the deployment ID, waits for Central validation, requests publication, and waits for `PUBLISHED`.
-3. **verify** waits for the public Maven files and compares every payload, signature and checksum with the approved bundle. It then runs the independent example/consumer tests against Maven Central using empty Maven settings and a fresh local dependency cache; it never installs the SDK locally first.
+1. **preflight** checks input, POM/changelog, current main and the latest successful main CI run with all six required jobs. It re-runs quality, SDK tests and packaged consumer tests, then records the notes and unsigned package hashes in the run summary.
+2. **publish** starts automatically after preflight succeeds. It rebuilds and signs with JDK 17, compares the JAR/POM/sources/Javadoc bytes to the verified candidate, and retains the exact signed bundle before any upload. It checks main again and creates an annotated `v<version>` tag binding the SHA, batch and bundle digest. It uploads once with `USER_MANAGED` publishing, immediately retains the deployment ID, waits for Central validation, requests publication, and waits for `PUBLISHED`. `USER_MANAGED` separates Central validation from the publish API call; the workflow makes that call automatically.
+3. **verify** waits for the public Maven files and compares every payload, signature and checksum with the retained bundle. It then runs the independent example/consumer tests against Maven Central using empty Maven settings and a fresh local dependency cache; it never installs the SDK locally first.
 4. **release-notes** creates the matching GitHub Release only after verification succeeds. Existing notes must match exactly; the workflow does not overwrite conflicting releases.
 
-The `release-bundle` artifact contains the signed archive, file digests, source/batch/workflow identity and approved notes. `central-receipt` records the deployment ID. Retention is 90 days; keep a durable copy for longer recovery needs. The workflow does not include signing secrets in artifacts. Public download verification or consumer failures do not undo a Central publication.
+The `release-bundle` artifact contains the signed archive, file digests, source/batch/workflow identity and release notes. `central-receipt` records the deployment ID. Retention is 90 days; keep a durable copy for longer recovery needs. The workflow does not include signing secrets in artifacts. Public download verification or consumer failures do not undo a Central publication.
 
 ## Recover without replacing a published version
 

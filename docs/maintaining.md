@@ -43,4 +43,4 @@ The current version remains `0.1.0-SNAPSHOT`. A SNAPSHOT can resolve to differen
 
 GitHub CI produces candidate JARs, sources, Javadoc, checksums and test reports. A successful CI run is not a Maven Central publication or a live-environment acceptance result. The default workflow uses mock services; run the opt-in checks in [live testing](live-testing.md) with separately supplied credentials and isolated resources when needed.
 
-See [release setup](releasing.md) for repository protection, Central registration and signing secrets, the manual publication workflow and deployment recovery. The workflow requires a configured, reviewed `release` environment; adding workflow files alone does not enable public publication.
+See [release setup](releasing.md) for optional repository protection, Central registration and repository Actions secrets, the manual publication workflow and deployment recovery. A manual dispatch from `main` proceeds after preflight without a separate environment approval. Central credentials and signing setup are still required; adding workflow files alone does not enable public publication.

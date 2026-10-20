@@ -110,20 +110,6 @@ def check_ci(info):
             'Quality and all five Java CI jobs must succeed')
 
 
-def check_environment():
-    environment = gh('environments/release')
-    require(environment and any(rule.get('type') == 'required_reviewers' and rule.get('reviewers')
-                                for rule in environment.get('protection_rules', [])),
-            'Configure required reviewers on the release environment before publication')
-    policy = environment.get('deployment_branch_policy') or {}
-    require(policy.get('custom_branch_policies') and not policy.get('protected_branches'),
-            'Configure the release environment with a main-only branch policy')
-    branches = gh('environments/release/deployment-branch-policies')
-    entries = branches.get('branch_policies', []) if branches else []
-    require(len(entries) == 1 and entries[0].get('name') == 'main' and entries[0].get('type') == 'branch',
-            'release environment must allow only the main branch')
-
-
 def read_bundle(path, version):
     prefix = f'com/qoder/qca-sdk/{version}/qca-sdk-{version}'
     primary = {prefix + suffix for suffix in ('.pom', '.jar', '-sources.jar', '-javadoc.jar')}
@@ -162,7 +148,6 @@ def preflight(source, output):
         check_main(info)
         require(gh(f'git/ref/tags/{tag_name(info)}') is None, 'Tag already exists; use resume_run_id')
     check_ci(info)
-    check_environment()
     output.mkdir(parents=True, exist_ok=True)
     save(output / 'intent.json', info)
     (output / 'release-notes.md').write_text(notes)
