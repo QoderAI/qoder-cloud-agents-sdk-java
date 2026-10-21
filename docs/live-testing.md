@@ -1,8 +1,17 @@
 # Forward 真实环境验收
 
-`ForwardLiveCheck` 位于独立的 `examples` Maven 工程，消费本地安装的 SDK JAR。普通 `test` / `verify` 只运行模拟服务测试，不执行线上请求。
+`ForwardLiveCheck` 位于独立的 `examples` Maven 工程，消费 SDK JAR 依赖。普通 `test` / `verify` 只运行模拟服务测试，不执行线上请求。
 
-先构建、安装并验证消费者：
+验证已发布版本时，检出对应发布标签，从空缓存解析并验证消费者，不先执行 SDK 的本地 `install`：
+
+```sh
+SDK_ACCEPTANCE_CACHE=$(mktemp -d)
+./mvnw -B -ntp -Dmaven.repo.local="$SDK_ACCEPTANCE_CACHE" -f examples/pom.xml clean verify
+```
+
+后续 `exec:java` 命令也传入 `-Dmaven.repo.local="$SDK_ACCEPTANCE_CACHE"`。记录实际使用的 Maven settings／镜像、下载来源及 JAR 摘要，避免把已有缓存或源码安装包当作公开发布包。
+
+开发或验证尚未发布的版本时，先构建、安装并验证消费者：
 
 ```sh
 ./mvnw -B -ntp clean install

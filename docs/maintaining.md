@@ -34,10 +34,21 @@ The SDK's embedded version is filtered from `${project.version}`; do not replace
 ```sh
 python3 .github/scripts/release_notes.py check
 # After adding the actual release entry:
-python3 .github/scripts/release_notes.py extract --version 0.1.0-rc.1
+python3 .github/scripts/release_notes.py extract --version 0.1.0
 ```
 
-The current version is `0.1.0-rc.1`. Acceptance records must include the resolved version, source SHA and JAR digest. Release versions must not be overwritten; a successful test of an older build is not evidence for a newer one.
+The release version in this checkout is `0.1.0`. Also update the README dependency and version-specific maintenance examples. Acceptance records must include the resolved version, source SHA and JAR digest. Release versions must not be overwritten; a successful test of an older build is not evidence for a newer one.
+
+### RC qualification for 0.1.0
+
+The `0.1.0-rc.1` package from source `7742942d6d9dc3f681cb974b45ecfffe5083ad4c` was downloaded from Maven Central and tested on Java 8, 11, 17, 21 and 25 on 2026-10-21. Its JAR SHA-256 was `4eb33d871d234fd80b0302b2bf03d90d9c121d87ad0d50eed098a28505afaa86`.
+
+- All 608 offline checks per JDK passed: 545 SDK regression tests, 62 example-consumer tests and one independent published-JAR/hash/Java 8 bytecode check, for 3,040 executions.
+- The CN/Global PAT/SA live matrix ran 38 groups per JDK. The first run passed 184 of 190 groups. Six CN failures covered three Schedule reply checks, one Batch output check, one Realtime `work.failed` event and one Realtime PCM connection exception.
+- Each failed case passed one targeted retry with the same package, configuration, assertions and JDK. Original failures were retained; no assertion was weakened. This is passing coverage after retries, not a clean first run or proof that the production failures were fixed. No cleanup failures or retained execution resources were reported.
+- Channel/QR/Pairing external-platform flows, audio-device quality, long-duration stability and production fault injection were not part of that live matrix; see [live testing](live-testing.md).
+
+The `0.1.0` preparation changes version metadata and documentation, keeping the RC's implementation and test sources unchanged. The release workflow must still build, sign and independently verify the actual `0.1.0` package; RC acceptance does not replace those checks.
 
 ## Build candidates and releases
 
