@@ -12,7 +12,7 @@ First stable release of the Java SDK for the Forward API, using `com.qoder.sdk:q
 - Shared PAT, static SAT and custom credentials, plus `ServiceAccountCredential` for automatic SA Key exchange, SAT caching and refresh. Forward administrator/Identity SAT issuance and revocation use explicit per-call SA Keys.
 - Typed Forward resource APIs for Models, Templates, Identities and configuration, Sessions and Threads, Memory Stores, Environments, Files, Skills, Vaults and Credentials, Schedules, Batches, Channels and Pairing, Usage and Drive.
 - Session/Thread SSE subscriptions with cancellation and explicit resumption; Realtime conversations with text/PCM audio, typed events, acknowledged close and History.
-- Shared request options, timeouts, retries, pagination, response metadata and typed errors, with resource-lifecycle examples and API guides. Managed APIs are outside this release's scope.
+- Shared request options, timeouts, retries, pagination, response metadata and typed errors, with resource-lifecycle examples and API guides. Managed API support is planned for a future release and is not included in 0.1.0.
 
 ### Changed
 

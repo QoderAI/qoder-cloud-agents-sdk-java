@@ -164,9 +164,10 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 | SA Credential | `ServiceAccountCredential` | 平台 Token 置换、缓存、按需续期，与 Forward SAT 管理 API 分开 | 已实现 |
 | 同步/异步与响应元信息 | `ForwardClient / AsyncForwardClient / withResponse` | 同一协议核心；取消和资源所有权明确；保留 request ID | 已实现 |
 
-## 范围外
+## 当前版本未提供
 
-- Managed 全部接口、资源 Search、Forward Dream。
+- Managed API：计划在后续版本支持，当前 0.1.0 尚未提供。
+- 资源 Search、Forward Dream。
 - Realtime Template 专用配置 GET/POST；普通 Template 的 managed_tool_config 已实现。
 - Agent 运行时内部工具调用和免 Token 的内部服务认证模式。
 - 新增 Drive 本地文件同步框架、采集/播放音频设备实现。
