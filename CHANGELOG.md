@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.1.0-rc.1] - 2026-10-21
+
+First public release candidate for installation and integration testing ahead of `0.1.0`.
+
+### Changed
+
+- Use `com.qoder.sdk:qoder-cloud-agents-sdk` as the Maven coordinates. Java packages remain under `com.qoder.cloudagents`.
+
 ### Fixed
 
 - Repeated default header settings now replace earlier values case-insensitively, while per-request headers retain precedence.
@@ -68,4 +76,4 @@
 - Usage, Token management and Drive round-trip examples with installed-JAR consumer checks, scoped cleanup and storage credential isolation.
 - HTTP error request ID fallback from top-level and nested error bodies when response headers omit it.
 
-The current SNAPSHOT can be built from source; Maven Central publication is not enabled. See the [maintenance guide](docs/maintaining.md) for current checks and delivery boundaries.
+This version can be built from source; Maven Central publication remains pending. See the [maintenance guide](docs/maintaining.md) for current checks and delivery boundaries.

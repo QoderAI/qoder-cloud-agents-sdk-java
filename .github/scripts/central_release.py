@@ -111,7 +111,7 @@ def check_ci(info):
 
 
 def read_bundle(path, version):
-    prefix = f'com/qoder/qca-sdk/{version}/qca-sdk-{version}'
+    prefix = f'com/qoder/sdk/qoder-cloud-agents-sdk/{version}/qoder-cloud-agents-sdk-{version}'
     primary = {prefix + suffix for suffix in ('.pom', '.jar', '-sources.jar', '-javadoc.jar')}
     required = primary | {name + '.asc' for name in primary}
     allowed = required | {name + '.' + algo for name in required for algo in ('md5', 'sha1', 'sha256', 'sha512')}
@@ -161,11 +161,11 @@ def seal(source, candidate, output):
     contents = read_bundle(bundle, info['version'])
     checks = json.loads((candidate / 'package-check.json').read_text())['sha256']
     for local, expected in checks.items():
-        filename = f"qca-sdk-{info['version']}.pom" if local == 'pom.xml' else Path(local).name
-        path = f"com/qoder/qca-sdk/{info['version']}/{filename}"
+        filename = f"qoder-cloud-agents-sdk-{info['version']}.pom" if local == 'pom.xml' else Path(local).name
+        path = f"com/qoder/sdk/qoder-cloud-agents-sdk/{info['version']}/{filename}"
         require(hashlib.sha256(contents[path]).hexdigest() == expected,
                 'Signed bundle differs from reviewed build: ' + filename)
-    expected_files = {'pom.xml'} | {f"target/qca-sdk-{info['version']}{suffix}.jar"
+    expected_files = {'pom.xml'} | {f"target/qoder-cloud-agents-sdk-{info['version']}{suffix}.jar"
                                    for suffix in ('', '-sources', '-javadoc')}
     require(set(checks) == expected_files, 'Incomplete candidate digests')
     info.update(run_id=run_id(os.environ['GITHUB_RUN_ID']), workflow_sha=os.environ['GITHUB_SHA'],
@@ -247,7 +247,7 @@ def portal_request(path, data=b'', content_type=None):
 
 
 def deployment_name(info):
-    return f"qca-sdk-{info['version']}-{info['source_sha']}-{info['batch_id']}-{info['bundle_sha256']}"
+    return f"qoder-cloud-agents-sdk-{info['version']}-{info['source_sha']}-{info['batch_id']}-{info['bundle_sha256']}"
 
 
 def upload(output):
@@ -277,7 +277,7 @@ def publish(output):
         status = json.loads(portal_request('/status?' + urllib.parse.urlencode(dict(id=identifier))))
         require(status.get('deploymentId') == identifier
                 and status.get('deploymentName') == deployment_name(info), 'Central deployment identity differs')
-        expected = f"pkg:maven/com.qoder/qca-sdk@{info['version']}"
+        expected = f"pkg:maven/com.qoder.sdk/qoder-cloud-agents-sdk@{info['version']}"
         require(not status.get('purls') or status['purls'] == [expected], 'Unexpected Central coordinates')
         state = status.get('deploymentState')
         require(state in ('PENDING', 'VALIDATING', 'VALIDATED', 'PUBLISHING', 'PUBLISHED', 'FAILED'),

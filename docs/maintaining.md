@@ -27,17 +27,17 @@ For a release, move the applicable entries beneath `## [VERSION] - YYYY-MM-DD` a
 
 - Root `pom.xml` project version.
 - `examples/pom.xml` project version.
-- The examples' `com.qoder:qca-sdk` dependency version.
+- The examples' `com.qoder.sdk:qoder-cloud-agents-sdk` dependency version.
 
 The SDK's embedded version is filtered from `${project.version}`; do not replace that template with a hard-coded value. `check_repository.py` rejects mismatched versions and requires a matching changelog entry for a non-SNAPSHOT version.
 
 ```sh
 python3 .github/scripts/release_notes.py check
 # After adding the actual release entry:
-python3 .github/scripts/release_notes.py extract --version 0.1.0
+python3 .github/scripts/release_notes.py extract --version 0.1.0-rc.1
 ```
 
-The current version remains `0.1.0-SNAPSHOT`. A SNAPSHOT can resolve to different timestamped builds, so acceptance records must include the resolved version, source SHA and JAR digest. A successful test of an older SNAPSHOT is not evidence for a newer one.
+The current version is `0.1.0-rc.1`. Acceptance records must include the resolved version, source SHA and JAR digest. Release versions must not be overwritten; a successful test of an older build is not evidence for a newer one.
 
 ## Build candidates and releases
 

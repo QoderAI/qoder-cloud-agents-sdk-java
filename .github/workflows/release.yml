@@ -126,7 +126,7 @@ jobs:
           MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_KEY }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         run: |
-          test "$CENTRAL_NAMESPACE" = com.qoder || { echo 'Verify com.qoder in Central Portal and set the CENTRAL_NAMESPACE repository Actions variable'; exit 1; }
+          test "$CENTRAL_NAMESPACE" = com.qoder.sdk || { echo 'Verify publishing access to com.qoder.sdk in Central Portal and set the CENTRAL_NAMESPACE repository Actions variable'; exit 1; }
           test -n "$CENTRAL_USERNAME" && test -n "$CENTRAL_PASSWORD" || { echo 'Central Portal token secrets are missing'; exit 1; }
           if [[ -z "$RESUME_RUN_ID" ]]; then
             test -n "$MAVEN_GPG_KEY" && test -n "$MAVEN_GPG_PASSPHRASE" || { echo 'GPG signing secrets are missing'; exit 1; }

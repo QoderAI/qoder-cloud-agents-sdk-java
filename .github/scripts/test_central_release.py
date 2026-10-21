@@ -19,7 +19,7 @@ UUID = '12345678-1234-1234-1234-123456789abc'
 
 
 def write_bundle(path, transform=lambda values: values):
-    prefix = 'com/qoder/qca-sdk/1.2.3/qca-sdk-1.2.3'
+    prefix = 'com/qoder/sdk/qoder-cloud-agents-sdk/1.2.3/qoder-cloud-agents-sdk-1.2.3'
     values = {}
     for suffix in ('.pom', '.jar', '-sources.jar', '-javadoc.jar'):
         name = prefix + suffix
@@ -51,7 +51,7 @@ class CentralReleaseTests(unittest.TestCase):
 
     def status(self, state, **changes):
         return json.dumps(dict(deploymentId=UUID, deploymentName=release.deployment_name(self.info),
-                               deploymentState=state, purls=['pkg:maven/com.qoder/qca-sdk@1.2.3'],
+                               deploymentState=state, purls=['pkg:maven/com.qoder.sdk/qoder-cloud-agents-sdk@1.2.3'],
                                **changes)).encode()
 
     def test_identity_rejects_forks_events_and_snapshots(self):
@@ -62,7 +62,7 @@ class CentralReleaseTests(unittest.TestCase):
 
     def test_bundle_requires_signatures_checksums_and_exact_coordinates(self):
         self.assertEqual(self.info, release.load(self.output))
-        prefix = 'com/qoder/qca-sdk/1.2.3/qca-sdk-1.2.3'
+        prefix = 'com/qoder/sdk/qoder-cloud-agents-sdk/1.2.3/qoder-cloud-agents-sdk-1.2.3'
         for name in (prefix + '.pom.asc', prefix + '.jar.md5'):
             with self.subTest(name=name):
                 write_bundle(self.output / 'central-bundle.zip', lambda values: {k: v for k, v in values.items() if k != name})
@@ -73,7 +73,7 @@ class CentralReleaseTests(unittest.TestCase):
             release.read_bundle(self.output / 'central-bundle.zip', '1.2.3')
 
     def test_bundle_rejects_wrong_checksums_and_manifest_tampering(self):
-        key = 'com/qoder/qca-sdk/1.2.3/qca-sdk-1.2.3.jar.sha1'
+        key = 'com/qoder/sdk/qoder-cloud-agents-sdk/1.2.3/qoder-cloud-agents-sdk-1.2.3.jar.sha1'
         write_bundle(self.output / 'central-bundle.zip', lambda values: dict(values, **{key: b'bad'}))
         with self.assertRaisesRegex(ValueError, 'checksum mismatch'):
             release.read_bundle(self.output / 'central-bundle.zip', '1.2.3')
@@ -88,13 +88,13 @@ class CentralReleaseTests(unittest.TestCase):
         release.save(candidate / 'intent.json', release.identity())
         checks = {}
         for suffix in ('.pom', '.jar', '-sources.jar', '-javadoc.jar'):
-            filename = 'qca-sdk-1.2.3' + suffix
+            filename = 'qoder-cloud-agents-sdk-1.2.3' + suffix
             key = 'pom.xml' if suffix == '.pom' else 'target/' + filename
-            checks[key] = self.info['files']['com/qoder/qca-sdk/1.2.3/' + filename]
+            checks[key] = self.info['files']['com/qoder/sdk/qoder-cloud-agents-sdk/1.2.3/' + filename]
         release.save(candidate / 'package-check.json', dict(sha256=checks))
         (candidate / 'release-notes.md').write_text('Reviewed notes\n')
         release.seal(source, candidate, self.output / 'sealed')
-        checks['target/qca-sdk-1.2.3.jar'] = '0' * 64
+        checks['target/qoder-cloud-agents-sdk-1.2.3.jar'] = '0' * 64
         release.save(candidate / 'package-check.json', dict(sha256=checks))
         with self.assertRaisesRegex(ValueError, 'differs from reviewed build'):
             release.seal(source, candidate, self.output / 'sealed')
@@ -127,7 +127,7 @@ class CentralReleaseTests(unittest.TestCase):
 
     def test_preflight_without_environment_still_requires_current_main_and_ci(self):
         source, candidate = self.output / 'source', self.output / 'candidate'
-        coordinates = '<groupId>com.qoder</groupId><artifactId>qca-sdk</artifactId><version>1.2.3</version>'
+        coordinates = '<groupId>com.qoder.sdk</groupId><artifactId>qoder-cloud-agents-sdk</artifactId><version>1.2.3</version>'
         project = '<project xmlns="http://maven.apache.org/POM/4.0.0">{}</project>'
         files = {
             'pom.xml': project.format(coordinates),

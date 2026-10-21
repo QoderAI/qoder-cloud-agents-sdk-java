@@ -64,7 +64,7 @@ jobs:
         with:
           name: candidate-java-${{ matrix.java }}
           path: |
-            target/qca-sdk-*.jar
+            target/qoder-cloud-agents-sdk-*.jar
             target/package-check.json
             target/SHA256SUMS
             pom.xml

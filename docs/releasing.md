@@ -1,6 +1,6 @@
 # Java SDK release setup
 
-The development version is `com.qoder:qca-sdk:0.1.0-SNAPSHOT`. The manual [Release workflow](../.github/workflows/release.yml) implements publication using repository Actions secrets. Dispatching it from `main` authorizes publication after all automated checks pass; there is no separate environment approval. The Central account, namespace, signing key and repository settings below must be configured first. The GitHub repository and internal Maven access do not grant Maven Central publishing access. No public release has been made by adding this workflow.
+The current version is `com.qoder.sdk:qoder-cloud-agents-sdk:0.1.0-rc.1`. The manual [Release workflow](../.github/workflows/release.yml) implements publication using repository Actions secrets. Dispatching it from `main` authorizes publication after all automated checks pass; there is no separate environment approval. The Central account, namespace, signing key and repository settings below must be configured first. The GitHub repository and internal Maven access do not grant Maven Central publishing access. No public release has been made by adding this workflow.
 
 ## Optional GitHub protection
 
@@ -26,7 +26,7 @@ The [Release preflight workflow](../.github/workflows/release-preflight.yml) run
 - `commit_sha`: the full 40-character lowercase SHA of the current `main` commit.
 - `batch_id`: 1–64 letters, digits, dots, underscores or hyphens, starting with a letter or digit.
 
-It checks the source and changelog, runs quality checks, builds and tests on JDK 17, and retains the candidate JARs, POM, checksums, release intent and notes. It neither creates a tag nor uploads to Maven Central nor publishes a GitHub Release. Current `0.1.0-SNAPSHOT` cannot be passed as a release version. Five-JDK CI remains a separate required gate.
+It checks the source and changelog, runs quality checks, builds and tests on JDK 17, and retains the candidate JARs, POM, checksums, release intent and notes. It neither creates a tag nor uploads to Maven Central nor publishes a GitHub Release. SNAPSHOT versions cannot be passed as release versions. Five-JDK CI remains a separate required gate.
 
 ## Prepare a Maven Central bundle
 
@@ -45,16 +45,16 @@ The release workflow uses this bundle-only mode, then uploads the retained bundl
 ## One-time Central registration
 
 1. Register or sign in to [Central Portal](https://central.sonatype.com/). Use the team's intended publisher account, not an unrelated personal namespace.
-2. Open the account menu, **View Namespaces**, and add `com.qoder`. If the namespace is already owned by the team, obtain publisher access from its owner rather than creating another namespace or silently changing the SDK coordinates.
-3. For a new `com.qoder` namespace, ask the `qoder.com` DNS administrator to add the exact verification TXT value shown by Portal at `qoder.com`. Check DNS visibility before clicking **Verify Namespace**; wait for **Verified**. A GitHub repository under QoderAI does not verify this domain-based namespace.
-4. In the publisher's [account page](https://central.sonatype.com/account), generate a **User Token**. The generated username/password pair is used for publication; it is not the normal account login password.
+2. Open the account menu, **View Namespaces**, and confirm publisher access to `com.qoder.sdk`, matching the SDK's group. If the namespace is already owned by the team, obtain publisher access from its owner rather than registering another namespace or changing the SDK coordinates.
+3. Complete any ownership verification requested by Portal before publishing. Existing authorized publishers do not need to repeat namespace registration. A GitHub repository under QoderAI does not itself verify a domain-based namespace.
+4. In the publisher's [User Tokens page](https://central.sonatype.com/usertoken), generate a **User Token**. Save the generated username/password pair before closing the dialog; it cannot be retrieved later. These credentials are used for publication, not the normal account login password.
 5. Prepare a team-owned, passphrase-protected GPG signing key. Retain its backup securely and make its public key discoverable as required by [Central's GPG guide](https://central.sonatype.org/publish/requirements/gpg/). The workflow expects an ASCII-armored exported OpenPGP secret key, compatible with Maven GPG Plugin's BC signer. Export only the intended signing key.
 
 In repository **Settings → Secrets and variables → Actions**, configure repository-level values:
 
 | Kind | Name | Value |
 | --- | --- | --- |
-| Variable | `CENTRAL_NAMESPACE` | `com.qoder`, after the namespace is verified and the publisher has access |
+| Variable | `CENTRAL_NAMESPACE` | `com.qoder.sdk`, after the namespace is verified and the publisher has access |
 | Secret | `CENTRAL_USERNAME` | Central Portal User Token username |
 | Secret | `CENTRAL_PASSWORD` | Central Portal User Token password |
 | Secret | `MAVEN_GPG_KEY` | ASCII-armored exported private signing key |
@@ -72,7 +72,7 @@ Open **Actions → Release → Run workflow**, select **main**, and verify the f
 
 | Input | First publication |
 | --- | --- |
-| `version` | The reviewed version without `v` or `SNAPSHOT`, for example `0.1.0` |
+| `version` | The reviewed version without `v` or `SNAPSHOT`, for example `0.1.0-rc.1` |
 | `commit_sha` | Full 40-character lowercase SHA of the current GitHub main |
 | `batch_id` | 1–64 letters/digits/dots/underscores/hyphens, starting with a letter or digit |
 | `resume_run_id` | Empty |
@@ -104,7 +104,7 @@ Normally leave `deployment_id` empty: recovery downloads the original `central-r
 | Tag, notes, source, batch, archive or deployment identity conflict | Stop and investigate the conflict; never move/delete the release tag or overwrite the version |
 | Original artifacts expired or missing | Recover the preserved original archive/manifest with maintainer review; this workflow fails rather than rebuilding a replacement |
 
-Central deployment names use `qca-sdk-<version>-<full-source-sha>-<batch_id>-<bundle-sha256>` from `manifest.json`. This name binds a manually recovered UUID to the retained bundle. Recovery always points to the original bundle run, not to a later recovery run. If a later recovery supplies the UUID manually, keep supplying it when the original run has no receipt.
+Central deployment names use `qoder-cloud-agents-sdk-<version>-<full-source-sha>-<batch_id>-<bundle-sha256>` from `manifest.json`. This name binds a manually recovered UUID to the retained bundle. Recovery always points to the original bundle run, not to a later recovery run. If a later recovery supplies the UUID manually, keep supplying it when the original run has no receipt.
 
 ## Offline release validation
 
