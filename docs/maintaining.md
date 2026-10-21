@@ -34,10 +34,10 @@ The SDK's embedded version is filtered from `${project.version}`; do not replace
 ```sh
 python3 .github/scripts/release_notes.py check
 # After adding the actual release entry:
-python3 .github/scripts/release_notes.py extract --version 0.1.0
+python3 .github/scripts/release_notes.py extract --version 0.1.0-rc.1
 ```
 
-The current version is `0.1.0`. Acceptance records must include the resolved version, source SHA and JAR digest. Release versions must not be overwritten; a successful test of an older build is not evidence for a newer one.
+The current version is `0.1.0-rc.1`. Acceptance records must include the resolved version, source SHA and JAR digest. Release versions must not be overwritten; a successful test of an older build is not evidence for a newer one.
 
 ## Build candidates and releases
 

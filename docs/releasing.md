@@ -1,6 +1,6 @@
 # Java SDK release setup
 
-The current version is `com.qoder.sdk:qoder-cloud-agents-sdk:0.1.0`. The manual [Release workflow](../.github/workflows/release.yml) implements publication using repository Actions secrets. Dispatching it from `main` authorizes publication after all automated checks pass; there is no separate environment approval. The Central account, namespace, signing key and repository settings below must be configured first. The GitHub repository and internal Maven access do not grant Maven Central publishing access. No public release has been made by adding this workflow.
+The current version is `com.qoder.sdk:qoder-cloud-agents-sdk:0.1.0-rc.1`. The manual [Release workflow](../.github/workflows/release.yml) implements publication using repository Actions secrets. Dispatching it from `main` authorizes publication after all automated checks pass; there is no separate environment approval. The Central account, namespace, signing key and repository settings below must be configured first. The GitHub repository and internal Maven access do not grant Maven Central publishing access. No public release has been made by adding this workflow.
 
 ## Optional GitHub protection
 
@@ -72,7 +72,7 @@ Open **Actions → Release → Run workflow**, select **main**, and verify the f
 
 | Input | First publication |
 | --- | --- |
-| `version` | The reviewed version without `v` or `SNAPSHOT`, for example `0.1.0` |
+| `version` | The reviewed version without `v` or `SNAPSHOT`, for example `0.1.0-rc.1` |
 | `commit_sha` | Full 40-character lowercase SHA of the current GitHub main |
 | `batch_id` | 1–64 letters/digits/dots/underscores/hyphens, starting with a letter or digit |
 | `resume_run_id` | Empty |

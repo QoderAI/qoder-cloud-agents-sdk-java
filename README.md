@@ -2,7 +2,7 @@
 
 Java 8 compatible client for the **Forward API**. The repository follows the resource and authentication structure of the QCA Go, Python and TypeScript SDKs, using Maven and Java builders.
 
-**Status: source available; not yet published to Maven Central.** The current version is `0.1.0`. Build from source to use the SDK until a public Maven release is available.
+**Status: source available; not yet published to Maven Central.** The current version is `0.1.0-rc.1`. Build from source to use the SDK until a public Maven release is available.
 
 The SDK provides synchronous and asynchronous clients for Models, Templates, Identities, Sessions and Threads, Memory Stores, Environments, Files, Skills, Vaults and Credentials, Schedules, Batches, Channels and Pairing, Usage, Service Account Tokens and Drive. Shared support includes PAT/SA authentication, timeouts, retries, pagination, typed errors and request IDs. Session/Thread SSE supports explicit resumption; Realtime supports text, PCM audio and History. The [API coverage](docs/forward-api-coverage.md) records the 123-operation baseline and its exclusions. Managed APIs are outside this project's scope.
 
@@ -16,7 +16,7 @@ After installing the SDK locally or publishing it to your configured Maven repos
 <dependency>
   <groupId>com.qoder.sdk</groupId>
   <artifactId>qoder-cloud-agents-sdk</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.0-rc.1</version>
 </dependency>
 ```
 
