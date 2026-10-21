@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-21
+
+First stable release of the Java SDK for the Forward API, using `com.qoder.sdk:qoder-cloud-agents-sdk:0.1.0`.
+
+### Features
+
+- Java 8 compatible synchronous and asynchronous clients, checked on Java 8, 11, 17, 21 and 25.
+- Shared PAT, static SAT and custom credentials, plus `ServiceAccountCredential` for automatic SA Key exchange, SAT caching and refresh. Forward administrator/Identity SAT issuance and revocation use explicit per-call SA Keys.
+- Typed Forward resource APIs for Models, Templates, Identities and configuration, Sessions and Threads, Memory Stores, Environments, Files, Skills, Vaults and Credentials, Schedules, Batches, Channels and Pairing, Usage and Drive.
+- Session/Thread SSE subscriptions with cancellation and explicit resumption; Realtime conversations with text/PCM audio, typed events, acknowledged close and History.
+- Shared request options, timeouts, retries, pagination, response metadata and typed errors, with resource-lifecycle examples and API guides. Managed API support is planned for a future release and is not included in 0.1.0.
+
+### Changed
+
+- Promote the RC's API and runtime behavior without implementation changes; update installation, example and maintenance documentation for Maven Central consumption.
+
+### Migration
+
+- From `0.1.0-rc.1`, change only the dependency version to `0.1.0`.
+- From the earlier internal `com.qoder:qca-sdk:0.1.0-SNAPSHOT`, use `com.qoder.sdk:qoder-cloud-agents-sdk:0.1.0`. Java imports remain under `com.qoder.cloudagents`.
+
 ## [0.1.0-rc.1] - 2026-10-21
 
 First public release candidate for installation and integration testing ahead of `0.1.0`.
@@ -76,4 +97,4 @@ First public release candidate for installation and integration testing ahead of
 - Usage, Token management and Drive round-trip examples with installed-JAR consumer checks, scoped cleanup and storage credential isolation.
 - HTTP error request ID fallback from top-level and nested error bodies when response headers omit it.
 
-This version can be built from source; Maven Central publication remains pending. See the [maintenance guide](docs/maintaining.md) for current checks and delivery boundaries.
+This release candidate is available from Maven Central. See the [maintenance guide](docs/maintaining.md) for checks and delivery boundaries.

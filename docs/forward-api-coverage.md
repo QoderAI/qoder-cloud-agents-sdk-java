@@ -6,9 +6,17 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 
 来源：TypeScript main `597ff047be4fb0afb72fc6bd024ce957cf3e1fc1` 的 `src/forward/api-inventory.json`（120 项），补充 `service-account-token.ts` 和 `identity-service-account-token.ts` 的 3 项；operation ID 集合与 Go main `735f13c8bf5888bf70b5a93b9ba89bd0e078d4b9` 的 `forward/testdata/api-contracts.json`（123 项）交叉核对一致。
 
-共 **123 个 HTTP 操作**：121 个普通 HTTP 操作、2 个 SSE 订阅操作；另有 1 个 WebSocket 连接入口。Java 资源方法见下表；当前尚未发布 Maven Central 版本。相同方法的同步/异步形式只计一个协议操作。
+共 **123 个 HTTP 操作**：121 个普通 HTTP 操作、2 个 SSE 订阅操作；另有 1 个 WebSocket 连接入口。Java 资源方法见下表；Maven 接入方式见 [README](../README.md#installation)，已发布版本见 [Releases](https://github.com/QoderAI/qoder-cloud-agents-sdk-java/releases)。相同方法的同步/异步形式只计一个协议操作。
 
 这里只盘点协议入口；参数、响应、分页、认证和重试行为由对应资源指南与契约测试说明。
+
+## 使用指南
+
+- [客户端认证、超时、重试与取消](client-configuration.md)
+- [Template](templates.md)、[Identity / Config](identities.md)、[Session / Thread](sessions.md) 和 [SSE](session-streaming.md)
+- [Memory Store](memory-stores.md)、[Environment / File](environments-files.md)、[Skill / Vault](skills-vaults.md)
+- [Schedule / Batch](schedules-batches.md)、[Channel / Pairing / QR](channels.md)、[Usage / SAT / Drive](usage-sat-drive.md)
+- [Realtime](realtime.md) 和 [可运行示例](../examples/README.md)
 
 ## HTTP 操作
 
@@ -156,9 +164,10 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 | SA Credential | `ServiceAccountCredential` | 平台 Token 置换、缓存、按需续期，与 Forward SAT 管理 API 分开 | 已实现 |
 | 同步/异步与响应元信息 | `ForwardClient / AsyncForwardClient / withResponse` | 同一协议核心；取消和资源所有权明确；保留 request ID | 已实现 |
 
-## 范围外
+## 当前版本未提供
 
-- Managed 全部接口、资源 Search、Forward Dream。
+- Managed API：计划在后续版本支持，当前 0.1.0 尚未提供。
+- 资源 Search、Forward Dream。
 - Realtime Template 专用配置 GET/POST；普通 Template 的 managed_tool_config 已实现。
 - Agent 运行时内部工具调用和免 Token 的内部服务认证模式。
 - 新增 Drive 本地文件同步框架、采集/播放音频设备实现。

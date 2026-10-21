@@ -1,8 +1,14 @@
 # Forward examples
 
-This independent Maven project uses the installed SDK JAR. `ForwardReadOnlyExample` lists Models and the first Template page, then optionally retrieves `QODER_TEMPLATE_ID`, without mutating resources. `TemplateLifecycleExample` creates, updates, clones and retrieves isolated Templates, then archives every created ID. `IdentityConfigExample` creates an isolated Identity, configures it for an existing Template, retrieves effective configuration, then clears and deletes that Identity. All share PAT/SA setup through `ExampleClient`.
+This independent Maven project consumes `com.qoder.sdk:qoder-cloud-agents-sdk` as a JAR dependency. `ForwardReadOnlyExample` lists Models and the first Template page, then optionally retrieves `QODER_TEMPLATE_ID`, without mutating resources. `TemplateLifecycleExample` creates, updates, clones and retrieves isolated Templates, then archives every created ID. `IdentityConfigExample` creates an isolated Identity, configures it for an existing Template, retrieves effective configuration, then clears and deletes that Identity. All share PAT/SA setup through `ExampleClient`.
 
-From the repository root:
+To use a published version, check out its matching release tag and run from the repository root. Maven resolves the SDK dependency without building SDK sources:
+
+```sh
+./mvnw -B -ntp -f examples/pom.xml clean verify
+```
+
+For SDK development or an unpublished version, install the local SDK first:
 
 ```sh
 ./mvnw clean install

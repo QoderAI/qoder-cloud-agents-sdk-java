@@ -1,6 +1,8 @@
 # Java SDK release setup
 
-The current version is `com.qoder.sdk:qoder-cloud-agents-sdk:0.1.0-rc.1`. The manual [Release workflow](../.github/workflows/release.yml) implements publication using repository Actions secrets. Dispatching it from `main` authorizes publication after all automated checks pass; there is no separate environment approval. The Central account, namespace, signing key and repository settings below must be configured first. The GitHub repository and internal Maven access do not grant Maven Central publishing access. No public release has been made by adding this workflow.
+The release version in this checkout is `com.qoder.sdk:qoder-cloud-agents-sdk:0.1.0`. The manual [Release workflow](../.github/workflows/release.yml) publishes using repository Actions secrets. Dispatching it from `main` authorizes publication after all automated checks pass; there is no separate environment approval. The Central account, namespace, signing key and repository settings below must be configured first. The GitHub repository and internal Maven access do not grant Maven Central publishing access.
+
+`0.1.0-rc.1` was published to Maven Central on 2026-10-21; see its [Release](https://github.com/QoderAI/qoder-cloud-agents-sdk-java/releases/tag/v0.1.0-rc.1) and [successful publication workflow](https://github.com/QoderAI/qoder-cloud-agents-sdk-java/actions/runs/39572349619). A version committed to a POM is not yet a published package: check the workflow's public verification and matching GitHub Release for each version.
 
 ## Optional GitHub protection
 
@@ -68,11 +70,13 @@ The namespace variable is a maintainer's setup confirmation, not an automatic ow
 
 Prepare a PR that updates the root POM, the example project's version and SDK dependency, plus the changelog version section. Keep an empty `Unreleased` section. Review any version-specific install examples. Merge only after `quality` and all five Java checks succeed. The workflow does not bump versions or merge the PR.
 
+For promotion from `0.1.0-rc.1` to `0.1.0`, review the [RC qualification and its limitations](maintaining.md#rc-qualification-for-010). Use the merged `0.1.0` main SHA and a new batch ID; leave recovery inputs empty. This creates a new version and tag, with its own signed bundle and public-package checks. Do not reuse the RC deployment, change its tag or copy/rename its JAR as the final release.
+
 Open **Actions → Release → Run workflow**, select **main**, and verify the following inputs before dispatch. Successful preflight automatically proceeds to signing and publication; it does not pause for an additional approval.
 
 | Input | First publication |
 | --- | --- |
-| `version` | The reviewed version without `v` or `SNAPSHOT`, for example `0.1.0-rc.1` |
+| `version` | The reviewed version without `v` or `SNAPSHOT`, for example `0.1.0` |
 | `commit_sha` | Full 40-character lowercase SHA of the current GitHub main |
 | `batch_id` | 1–64 letters/digits/dots/underscores/hyphens, starting with a letter or digit |
 | `resume_run_id` | Empty |
