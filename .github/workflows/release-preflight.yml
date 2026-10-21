@@ -57,7 +57,7 @@ jobs:
         with:
           name: release-candidate-${{ inputs.version }}
           path: |
-            target/qca-sdk-*.jar
+            target/qoder-cloud-agents-sdk-*.jar
             target/package-check.json
             target/SHA256SUMS
             pom.xml

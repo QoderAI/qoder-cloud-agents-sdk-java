@@ -19,9 +19,11 @@ def check(root):
     pom = root / "pom.xml"
     xml = ET.parse(pom).getroot()
     ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+    group = xml.findtext("m:groupId", namespaces=ns)
     artifact = xml.findtext("m:artifactId", namespaces=ns)
     version = xml.findtext("m:version", namespaces=ns)
-    require(artifact == "qca-sdk" and version, "Unexpected SDK coordinates")
+    require(group == "com.qoder.sdk" and artifact == "qoder-cloud-agents-sdk" and version,
+            "Unexpected SDK coordinates")
     target = root / "target"
     jars = [target / (artifact + "-" + version + suffix + ".jar")
             for suffix in ("", "-sources", "-javadoc")]
@@ -52,7 +54,7 @@ def check(root):
                 "Internal implementation leaked into public Javadoc")
     files = jars + [pom]
     digests = {str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
-    report = {"artifact_id": artifact, "version": version, "class_count": len(classes),
+    report = {"group_id": group, "artifact_id": artifact, "version": version, "class_count": len(classes),
               "class_major_version": 52, "sha256": digests}
     (target / "package-check.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     (target / "SHA256SUMS").write_text("".join(digest + "  " + name + "\n" for name, digest in digests.items()), encoding="utf-8")

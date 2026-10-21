@@ -18,12 +18,12 @@ def check_versions(root):
     version = pom.findtext("m:version", namespaces=NS)
     if not version or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?", version):
         raise ValueError("Use an explicit SDK version in pom.xml")
-    if pom.findtext("m:groupId", namespaces=NS) != "com.qoder" or pom.findtext("m:artifactId", namespaces=NS) != "qca-sdk":
+    if pom.findtext("m:groupId", namespaces=NS) != "com.qoder.sdk" or pom.findtext("m:artifactId", namespaces=NS) != "qoder-cloud-agents-sdk":
         raise ValueError("Unexpected Maven coordinates")
     consumer = ET.parse(root / "examples/pom.xml").getroot()
     deps = [d for d in consumer.findall("m:dependencies/m:dependency", NS)
-            if d.findtext("m:groupId", namespaces=NS) == "com.qoder"
-            and d.findtext("m:artifactId", namespaces=NS) == "qca-sdk"]
+            if d.findtext("m:groupId", namespaces=NS) == "com.qoder.sdk"
+            and d.findtext("m:artifactId", namespaces=NS) == "qoder-cloud-agents-sdk"]
     if len(deps) != 1 or deps[0].findtext("m:version", namespaces=NS) != version:
         raise ValueError("examples SDK dependency must match the root POM")
     if consumer.findtext("m:version", namespaces=NS) != version:
