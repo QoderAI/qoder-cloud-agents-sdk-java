@@ -8,6 +8,10 @@ public final class MemoryStoreCreateMount extends JsonObject {
     super(value);
   }
 
+  public String access() {
+    return optional("access", JsonValue::asString);
+  }
+
   public static MemoryStoreCreateMount fromJson(JsonValue value) {
     return new MemoryStoreCreateMount(value);
   }
@@ -33,6 +37,10 @@ public final class MemoryStoreCreateMount extends JsonObject {
 
     public Builder templateId(String value) {
       return put("template_id", value);
+    }
+
+    public Builder access(String value) {
+      return put("access", value);
     }
 
     public MemoryStoreCreateMount build() {

@@ -5,6 +5,8 @@ import com.qoder.cloudagents.core.ApiResponse;
 import com.qoder.cloudagents.core.FileDownload;
 import com.qoder.cloudagents.core.JsonValue;
 import com.qoder.cloudagents.core.RequestOptions;
+import com.qoder.cloudagents.core.http.HttpInterceptor;
+import com.qoder.cloudagents.core.http.HttpTransport;
 import com.qoder.cloudagents.errors.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,12 +38,14 @@ public final class ClientEngine implements AutoCloseable {
   private final int maxRetries;
   private final Map<String, String> defaultHeaders;
   private final OkHttpClient transport = Transports.create();
+  private final HttpTransport customTransport;
+  private final List<HttpInterceptor> interceptors;
   private final ScheduledThreadPoolExecutor timer =
       new ScheduledThreadPoolExecutor(1, Transports.threads("qca-timer"));
   private final Set<Operation<?>> active = ConcurrentHashMap.newKeySet();
   private final Set<Consumer<RuntimeException>> streams = ConcurrentHashMap.newKeySet();
   private volatile boolean closed;
-  private final FileDownloads downloads = new FileDownloads(this, transport, timer);
+  private final FileDownloads downloads = new FileDownloads(this, timer);
 
   public ClientEngine(
       HttpUrl baseUrl,
@@ -49,6 +53,19 @@ public final class ClientEngine implements AutoCloseable {
       Duration timeout,
       int maxRetries,
       Map<String, String> defaultHeaders) {
+    this(baseUrl, credential, timeout, maxRetries, defaultHeaders, null, Collections.emptyList());
+  }
+
+  public ClientEngine(
+      HttpUrl baseUrl,
+      Credential credential,
+      Duration timeout,
+      int maxRetries,
+      Map<String, String> defaultHeaders,
+      HttpTransport customTransport,
+      List<HttpInterceptor> interceptors) {
+    this.customTransport = customTransport;
+    this.interceptors = Collections.unmodifiableList(new ArrayList<>(interceptors));
     this.baseUrl = baseUrl;
     this.credential = credential;
     timeoutMillis = RequestOptions.positiveMillis(timeout);
@@ -242,11 +259,12 @@ public final class ClientEngine implements AutoCloseable {
   }
 
   private static JsonValue decodeJson(Response response) throws IOException {
+    if (response.code() == 204
+        || response.code() == 205
+        || response.request().method().equals("HEAD")) return JsonValue.of(null);
     String text = response.body() == null ? "" : response.body().string();
     try {
-      return response.code() == 204 || response.code() == 205
-          ? JsonValue.of(null)
-          : JsonValue.parse(text);
+      return JsonValue.parse(text);
     } catch (ResponseValidationException error) {
       if (response.isSuccessful()) throw error;
       return JsonValue.of(text);
@@ -270,6 +288,11 @@ public final class ClientEngine implements AutoCloseable {
     active.forEach(operation -> operation.fail(new ApiUserAbortException("Client closed")));
     timer.shutdownNow();
     Transports.close(transport);
+  }
+
+  Call storageCall(Request request, long timeout) {
+    return HttpExtensions.create(
+        transport, customTransport, Collections.emptyList(), request, timeout, false, true);
   }
 
   private final class Operation<T> {
@@ -417,12 +440,8 @@ public final class ClientEngine implements AutoCloseable {
       Request request = builder.build();
       AtomicBoolean headersFinished = new AtomicBoolean();
       final Call attemptCall =
-          transport
-              .newBuilder()
-              .readTimeout(sse ? 0 : timeout, TimeUnit.MILLISECONDS)
-              .writeTimeout(timeout, TimeUnit.MILLISECONDS)
-              .build()
-              .newCall(request);
+          HttpExtensions.create(
+              transport, customTransport, interceptors, request, timeout, sse, replayable);
       synchronized (this) {
         if (result.isDone()) {
           attemptCall.cancel();

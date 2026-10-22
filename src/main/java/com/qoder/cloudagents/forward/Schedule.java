@@ -9,6 +9,10 @@ public final class Schedule extends JsonModel {
     super(value, requestId);
   }
 
+  public Long initialEventsVersion() {
+    return optional("initial_events_version", JsonValue::asLong);
+  }
+
   public String id() {
     return optional("id", JsonValue::asString);
   }

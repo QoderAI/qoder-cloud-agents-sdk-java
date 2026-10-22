@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added
+
+- Public Java 8 HTTP transport and per-attempt interceptor contracts for custom networking and tracing, without exposing OkHttp types. Cancellation reaches downstream transport futures; SSE bodies remain streaming. Storage downloads use the transport without API credentials or interceptors. WebSockets and SA Key exchange retain their existing transports.
+- Synchronous/asynchronous `request(ApiRequest, RequestOptions)` for additional JSON endpoints, reusing authentication, retries, cancellation and response metadata with relative path segments.
+- Synchronous/asynchronous `withOptions(...)` to derive independently closeable clients while retaining resolved authentication and unspecified settings. Caller-supplied credentials and transports remain caller-owned.
+
+### Fixed
+
+- Add typed image `file_id`, Memory Store creation-mount `access`, Schedule/Run `initial_events_version` and Pairing `created_at` / `updated_at` fields. Missing versions remain unknown rather than becoming zero.
+
 ## [0.1.0] - 2026-10-21
 
 First stable release of the Java SDK for the Forward API, using `com.qoder.sdk:qoder-cloud-agents-sdk:0.1.0`.

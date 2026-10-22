@@ -66,6 +66,8 @@ System.out.println(accepted.requestId());
 
 `EventContent.text(...)` creates the content-block array required for a user message. Use `EventContent.blocks(...)` with typed `ContentBlock` and `ImageSource` for text/image inputs. `EventContent.ofString(...)` represents string content for event types such as tool results; do not use it for a `user.message`.
 
+The development SDK adds `ImageSource.builder().type("file").fileId(fileId)` and `fileId()` for images referenced by file ID. These typed methods are not included in the published `0.1.0` JAR; the service validates the image source and file permissions.
+
 `SessionEventParam` also exposes tool confirmation/result fields, custom tool result IDs, interrupt reason and outcome definition. `OutcomeRubric` is an object with a type and text/file ID, matching the documented outcome contract. Event-specific validation and permissions remain server-side.
 
 A successful send acknowledges accepted input; it does not mean the model finished. Reading history returns persisted events, not a live subscription:

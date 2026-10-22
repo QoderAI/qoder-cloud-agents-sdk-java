@@ -1,6 +1,8 @@
 package com.qoder.cloudagents;
 
+import com.qoder.cloudagents.core.*;
 import com.qoder.cloudagents.core.internal.ClientEngine;
+import com.qoder.cloudagents.errors.ConfigurationException;
 import com.qoder.cloudagents.forward.AsyncBatches;
 import com.qoder.cloudagents.forward.AsyncChannelPairings;
 import com.qoder.cloudagents.forward.AsyncChannels;
@@ -19,6 +21,9 @@ import com.qoder.cloudagents.forward.AsyncTemplates;
 import com.qoder.cloudagents.forward.AsyncUsage;
 import com.qoder.cloudagents.forward.AsyncVaults;
 import com.qoder.cloudagents.forward.realtime.AsyncRealtime;
+import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 /** Native asynchronous Forward client. Build with ForwardClient.builder().buildAsync(). */
 public final class AsyncForwardClient implements AutoCloseable {
@@ -27,6 +32,7 @@ public final class AsyncForwardClient implements AutoCloseable {
   private final AsyncDrives drives;
   private final AsyncRealtime realtime;
   private final ClientEngine engine;
+  private final ForwardClient.Builder configuration;
   private final boolean ownsEngine;
   private final AsyncModels models;
   private final AsyncFiles files;
@@ -43,7 +49,8 @@ public final class AsyncForwardClient implements AutoCloseable {
   private final AsyncSessions sessions;
   private final AsyncMemoryStores memoryStores;
 
-  AsyncForwardClient(ClientEngine engine, boolean ownsEngine) {
+  AsyncForwardClient(ClientEngine engine, boolean ownsEngine, ForwardClient.Builder configuration) {
+    this.configuration = configuration;
     this.engine = engine;
     realtime = new AsyncRealtime(engine);
     drives = new AsyncDrives(engine);
@@ -136,6 +143,28 @@ public final class AsyncForwardClient implements AutoCloseable {
 
   public AsyncChannelPairings channelPairings() {
     return channelPairings;
+  }
+
+  /** Creates an independently owned async client; the original client is unchanged. */
+  public AsyncForwardClient withOptions(Consumer<ForwardClient.Builder> configure) {
+    if (configure == null)
+      throw new ConfigurationException("Configuration callback must not be null");
+    ForwardClient.Builder copy = configuration.copy();
+    configure.accept(copy);
+    return copy.buildAsync();
+  }
+
+  public CompletableFuture<ApiResponse<JsonValue>> request(ApiRequest request) {
+    return request(request, RequestOptions.DEFAULT);
+  }
+
+  /** The returned future directly owns cancellation of the underlying operation. */
+  public CompletableFuture<ApiResponse<JsonValue>> request(
+      ApiRequest request, RequestOptions options) {
+    if (request == null || options == null)
+      throw new ConfigurationException("Request and options must not be null");
+    return engine.request(
+        request.method(), request.path(), Collections.emptyMap(), request.body(), true, options);
   }
 
   @Override

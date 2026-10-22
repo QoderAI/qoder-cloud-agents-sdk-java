@@ -12,14 +12,12 @@ import okhttp3.*;
 /** Two-hop download lifecycle; the storage hop never resolves credentials or copies API headers. */
 public final class FileDownloads implements AutoCloseable {
   private final ClientEngine engine;
-  private final OkHttpClient transport;
   private final ScheduledThreadPoolExecutor timer;
   private final Set<Operation> active = ConcurrentHashMap.newKeySet();
   private volatile boolean closed;
 
-  FileDownloads(ClientEngine engine, OkHttpClient transport, ScheduledThreadPoolExecutor timer) {
+  FileDownloads(ClientEngine engine, ScheduledThreadPoolExecutor timer) {
     this.engine = engine;
-    this.transport = transport;
     this.timer = timer;
   }
 
@@ -108,13 +106,7 @@ public final class FileDownloads implements AutoCloseable {
       try {
         Request request = new Request.Builder().url(url).get().build();
         AtomicBoolean headersFinished = new AtomicBoolean();
-        Call sending =
-            transport
-                .newBuilder()
-                .readTimeout(timeout, TimeUnit.MILLISECONDS)
-                .writeTimeout(timeout, TimeUnit.MILLISECONDS)
-                .build()
-                .newCall(request);
+        Call sending = engine.storageCall(request, timeout);
         call = sending;
         headerWait =
             timer.schedule(

@@ -17,6 +17,8 @@ For SDK development or an unpublished version, install the local SDK first:
 
 Verification uses a local fake service and asserts the SDK was loaded from a JAR. It does not use production credentials.
 
+`ClientExtensionsExample` demonstrates a read-only generic JSON request, a per-attempt tracing interceptor and an independently closeable client copy. It also accepts an application-owned `HttpTransport`. These extension APIs are unreleased; install the development SDK first, then run with `-Dexec.mainClass=com.qoder.cloudagents.examples.ClientExtensionsExample`. The packaged-consumer test verifies an adapter built with Java 8 `HttpURLConnection`, without importing SDK internals.
+
 To run against your environment, configure credentials in your shell and choose one mode:
 
 | Mode | Environment |

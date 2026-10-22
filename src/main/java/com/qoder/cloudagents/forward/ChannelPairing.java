@@ -9,6 +9,14 @@ public final class ChannelPairing extends JsonModel {
     super(value, requestId);
   }
 
+  public String createdAt() {
+    return optional("created_at", JsonValue::asString);
+  }
+
+  public String updatedAt() {
+    return optional("updated_at", JsonValue::asString);
+  }
+
   public String id() {
     return optional("id", JsonValue::asString);
   }

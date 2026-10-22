@@ -227,6 +227,7 @@ Microphone capture and audio playback belong to the application. Connections do 
 
 - [Runnable examples](examples/README.md): shared PAT/SA setup, resource lifecycles, Session SSE and Realtime.
 - [API coverage](docs/forward-api-coverage.md): supported operations and guides for each resource.
+- [Client extensions (unreleased)](docs/client-configuration.md#client-extensions-unreleased): custom HTTP transport, interceptors, generic JSON requests and configuration copies.
 - [Files and downloads](docs/environments-files.md) and [Drive, Usage and SAT management](docs/usage-sat-drive.md).
 - [Live testing](docs/live-testing.md): opt-in CN/Global verification and coverage boundaries.
 
