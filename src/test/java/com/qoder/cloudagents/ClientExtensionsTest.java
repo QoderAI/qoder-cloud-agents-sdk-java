@@ -294,7 +294,12 @@ class ClientExtensionsTest {
   @Test
   void cancellationPropagatesThroughDerivedInterceptorFutures() throws Exception {
     CountDownLatch entered = new CountDownLatch(1);
+    CountDownLatch cancelled = new CountDownLatch(1);
     CompletableFuture<HttpResponse> network = new CompletableFuture<>();
+    network.whenComplete(
+        (response, error) -> {
+          if (network.isCancelled()) cancelled.countDown();
+        });
     try (ForwardClient client =
         builder()
             .transport(
@@ -307,7 +312,7 @@ class ClientExtensionsTest {
       CompletableFuture<?> pending = client.async().request(get());
       assertTrue(entered.await(2, TimeUnit.SECONDS));
       pending.cancel(true);
-      assertTrue(network.isCancelled());
+      assertTrue(cancelled.await(2, TimeUnit.SECONDS));
     }
   }
 
@@ -324,7 +329,7 @@ class ClientExtensionsTest {
   @Test
   void lateCustomResponseAfterCancellationIsClosed() throws Exception {
     CountDownLatch entered = new CountDownLatch(1);
-    AtomicBoolean closed = new AtomicBoolean();
+    CountDownLatch closed = new CountDownLatch(1);
     CompletableFuture<HttpResponse> network =
         new CompletableFuture<HttpResponse>() {
           @Override
@@ -350,10 +355,10 @@ class ClientExtensionsTest {
               new ByteArrayInputStream(new byte[0]) {
                 @Override
                 public void close() {
-                  closed.set(true);
+                  closed.countDown();
                 }
               }));
-      assertTrue(closed.get());
+      assertTrue(closed.await(2, TimeUnit.SECONDS));
     }
   }
 
@@ -601,7 +606,12 @@ class ClientExtensionsTest {
   @Test
   void closeCancelsPendingCustomIoButDoesNotCloseTransportObject() throws Exception {
     CountDownLatch entered = new CountDownLatch(1);
+    CountDownLatch cancelled = new CountDownLatch(1);
     CompletableFuture<HttpResponse> network = new CompletableFuture<>();
+    network.whenComplete(
+        (response, error) -> {
+          if (network.isCancelled()) cancelled.countDown();
+        });
     class OwnedTransport implements HttpTransport, AutoCloseable {
       boolean closed;
 
@@ -620,7 +630,7 @@ class ClientExtensionsTest {
       CompletableFuture<?> result = client.async().request(get());
       assertTrue(entered.await(2, TimeUnit.SECONDS));
       client.close();
-      assertTrue(network.isCancelled());
+      assertTrue(cancelled.await(2, TimeUnit.SECONDS));
       assertTrue(result.isCompletedExceptionally());
       assertFalse(transport.closed);
     } finally {
