@@ -20,6 +20,7 @@ import com.qoder.cloudagents.forward.AsyncSkills;
 import com.qoder.cloudagents.forward.AsyncTemplates;
 import com.qoder.cloudagents.forward.AsyncUsage;
 import com.qoder.cloudagents.forward.AsyncVaults;
+import com.qoder.cloudagents.forward.AsyncWebhooks;
 import com.qoder.cloudagents.forward.realtime.AsyncRealtime;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
@@ -27,6 +28,7 @@ import java.util.function.Consumer;
 
 /** Native asynchronous Forward client. Build with ForwardClient.builder().buildAsync(). */
 public final class AsyncForwardClient implements AutoCloseable {
+  private final AsyncWebhooks webhooks;
   private final AsyncUsage usage;
   private final AsyncServiceAccountTokens serviceAccountTokens;
   private final AsyncDrives drives;
@@ -56,6 +58,7 @@ public final class AsyncForwardClient implements AutoCloseable {
     drives = new AsyncDrives(engine);
     serviceAccountTokens = new AsyncServiceAccountTokens(engine);
     usage = new AsyncUsage(engine);
+    webhooks = new AsyncWebhooks(engine);
     this.ownsEngine = ownsEngine;
     models = new AsyncModels(engine);
     files = new AsyncFiles(engine);
@@ -71,6 +74,10 @@ public final class AsyncForwardClient implements AutoCloseable {
     identities = new AsyncIdentities(engine);
     sessions = new AsyncSessions(engine);
     memoryStores = new AsyncMemoryStores(engine);
+  }
+
+  public AsyncWebhooks webhooks() {
+    return webhooks;
   }
 
   public AsyncRealtime realtime() {

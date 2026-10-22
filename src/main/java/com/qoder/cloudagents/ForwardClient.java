@@ -29,6 +29,7 @@ import com.qoder.cloudagents.forward.Skills;
 import com.qoder.cloudagents.forward.Templates;
 import com.qoder.cloudagents.forward.Usage;
 import com.qoder.cloudagents.forward.Vaults;
+import com.qoder.cloudagents.forward.Webhooks;
 import com.qoder.cloudagents.forward.realtime.Realtime;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import okhttp3.HttpUrl;
  * Thread-safe Forward client. Close it after its synchronous and asynchronous views are finished.
  */
 public final class ForwardClient implements AutoCloseable {
+  private final Webhooks webhooks;
   private final Usage usage;
   private final ServiceAccountTokens serviceAccountTokens;
   private final Drives drives;
@@ -73,6 +75,7 @@ public final class ForwardClient implements AutoCloseable {
     drives = new Drives(async.drives());
     serviceAccountTokens = new ServiceAccountTokens(async.serviceAccountTokens());
     usage = new Usage(async.usage());
+    webhooks = new Webhooks(async.webhooks());
     files = new Files(async.files());
     channelPairings = new ChannelPairings(async.channelPairings());
     channels = new Channels(async.channels());
@@ -86,6 +89,10 @@ public final class ForwardClient implements AutoCloseable {
     identities = new Identities(async.identities());
     sessions = new Sessions(async.sessions());
     memoryStores = new MemoryStores(async.memoryStores());
+  }
+
+  public Webhooks webhooks() {
+    return webhooks;
   }
 
   public Realtime realtime() {

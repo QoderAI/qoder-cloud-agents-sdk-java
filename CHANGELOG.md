@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add Forward Webhook endpoint creation, listing, retrieval, partial update, deletion, enable/disable and synthetic test delivery.
+- Add raw-body webhook signature verification with HMAC-SHA256, multiple v1 signatures and a 300-second timestamp window; include receiver examples and offline contracts.
 - Public Java 8 HTTP transport and per-attempt interceptor contracts for custom networking and tracing, without exposing OkHttp types. Cancellation reaches downstream transport futures; SSE bodies remain streaming. Storage downloads use the transport without API credentials or interceptors. WebSockets and SA Key exchange retain their existing transports.
 - Synchronous/asynchronous `request(ApiRequest, RequestOptions)` for additional JSON endpoints, reusing authentication, retries, cancellation and response metadata with relative path segments.
 - Synchronous/asynchronous `withOptions(...)` to derive independently closeable clients while retaining resolved authentication and unspecified settings. Caller-supplied credentials and transports remain caller-owned.
