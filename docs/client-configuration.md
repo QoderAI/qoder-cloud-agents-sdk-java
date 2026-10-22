@@ -87,7 +87,75 @@ com.qoder.cloudagents.core.ApiResponse<com.qoder.cloudagents.forward.Template> r
 - Models provide `requestId()`, `field(name)` for unknown fields and `rawJson()`. Unknown fields and numeric precision are preserved; invalid typed field access raises `ResponseValidationException`. Request metadata is separate from the JSON body.
 - Template list parameters support `limit`, `status`, `afterId` or `beforeId`. Use `page.data()` for one page, `getNextPage()` / `getNextPageAsync()` for manual pagination, or `for (Template template : page)` for lazy synchronous iteration. Server order is retained; filters and request options follow subsequent pages. Check `hasNextPage()` before fetching; an exhausted page or repeated cursor raises `PaginationException`.
 
-## Template configuration
+## Client extensions (unreleased)
+
+The following client extensions are on the development branch and are not included in the published `0.1.0` JAR. Build and install the local SDK to try them.
+
+### Derived clients
+
+```java
+try (ForwardClient slow = client.withOptions(options -> options
+        .timeout(java.time.Duration.ofSeconds(60))
+        .maxRetries(1)
+        .defaultHeader("X-Trace-Source", "background-job"))) {
+    slow.models().list();
+}
+```
+
+`withOptions` retains the resolved BaseURL, authentication, headers, interceptors and custom transport unless changed. It does not reread environment credentials. Header setters replace matching names case-insensitively; interceptors append in registration order. Use `clearDefaultHeaders()` or `clearInterceptors()` to replace those collections. Per-request options still take precedence. `client.async().withOptions(...)` creates an independently owned async client.
+
+Copies have separate default connection pools, retry timers and in-flight request lifecycles. Closing either client does not close the other. Custom transports and credentials are shared by reference and remain caller-owned; keep them open until all clients and streams finish. Changing `.pat(...)`, `.accessToken(...)` or `.credential(...)` on a copy replaces its inherited credential source. For a static SAT use `.authMode(AuthMode.SA).accessToken(token)`.
+
+### Additional JSON endpoints
+
+```java
+import com.qoder.cloudagents.core.ApiRequest;
+import com.qoder.cloudagents.core.ApiResponse;
+import com.qoder.cloudagents.core.JsonValue;
+
+ApiResponse<JsonValue> response = client.request(
+    ApiRequest.builder("GET", "models").build(),
+    RequestOptions.builder().totalTimeout(java.time.Duration.ofSeconds(30)).build());
+System.out.println(response.requestId());
+```
+
+Pass unencoded path **segments**, for example `ApiRequest.builder("POST", "sessions", sessionId, "new-action")`; the SDK encodes each segment beneath its configured BaseURL. Absolute URLs, slash-separated paths, traversal and embedded queries/fragments are rejected. Use `RequestOptions.query(...)` and `header(...)` for query parameters and headers, and `.body(JsonValue)` for a JSON body. GET/HEAD cannot have a body. HEAD and 204/205 responses return JSON null.
+
+The return type includes JSON, status and response headers; `client.async().request(...)` returns a cancellable `CompletableFuture<ApiResponse<JsonValue>>`. HTTP errors retain the existing exception mapping. This entry point uses business PAT/SAT credentials and the shared retry rules; it does not add resource-specific validation. Prefer typed resource methods where available, particularly SA Key token management and credential rotation. Use the existing resource APIs for multipart upload, downloads and SSE.
+
+### HTTP interceptors and custom transport
+
+```java
+try (ForwardClient traced = client.withOptions(options -> options.interceptor((request, chain) -> {
+    long started = System.nanoTime();
+    return chain.proceed(request.withHeader("X-Trace-Source", "example"))
+        .whenComplete((response, error) -> {
+            long elapsedMs = (System.nanoTime() - started) / 1_000_000;
+            System.out.println("http_elapsed_ms=" + elapsedMs);
+        });
+}))) {
+    traced.models().list();
+}
+```
+
+`HttpInterceptor` runs after authentication on **every attempt**, including SSE connection/reconnection and explicit SA Key token-management requests. It may inspect metadata, add ordinary headers or return a response, but may call `chain.proceed(...)` only once. It cannot change routing, method, body, timeout, Authorization or idempotency. Do not log headers, bodies or full URLs, or read a streaming body just to log it. Interceptor callbacks must return promptly. Their completion future measures response-header arrival, not SSE/download completion.
+
+Implement `com.qoder.cloudagents.core.http.HttpTransport` and pass it to `.transport(...)` when an application needs its own HTTP library, proxy, TLS settings or connection pool. The SDK passes an immutable `HttpRequest` with URI, headers, connect/read/write timeouts and an optional streaming `Body`. Use `Body.contentType()`, `contentLength()` and `writeTo(OutputStream)` when sending uploads; do not buffer all uploads or close the destination from `writeTo`.
+
+The transport must return a `CompletableFuture<HttpResponse>` promptly, perform one attempt without automatic redirects/retries/authentication, honor timeouts, and abort its I/O when its future is cancelled. Return an unconsumed `InputStream` in `HttpResponse`; the SDK closes it on completion, cancellation or failure. Transport implementations must release responses that lose a race with cancellation. Read timeout is zero for an accepted SSE stream; SDK header and optional total deadlines remain active. Cancelling an SDK request also cancels downstream transport futures even when an interceptor has wrapped them in `thenApply`/`whenComplete`.
+
+| Operation | Custom transport | API interceptors |
+| --- | --- | --- |
+| JSON, multipart, authenticated downloads | Yes | Yes |
+| Session/Thread SSE, including resumption | Yes | Yes, per connection |
+| File signed-URL storage download | Yes | No; no API headers/credentials copied |
+| Realtime create/History HTTP | Yes | Yes |
+| Realtime WebSocket | No | No |
+| `ServiceAccountCredential` platform exchange | No | No |
+
+The default HTTP implementation remains OkHttp. Injected transports and interceptors do not change the SDK's retry safety rules or grant additional API permissions.
+
+## Template configuration example
 
 ```java
 import com.qoder.cloudagents.forward.TemplateCreateParams;

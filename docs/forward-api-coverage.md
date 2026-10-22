@@ -10,6 +10,8 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 
 这里只盘点协议入口；参数、响应、分页、认证和重试行为由对应资源指南与契约测试说明。
 
+开发分支已按 Go `a996a88`、Python `2f8c625`、TypeScript `f4e3a4f` 的 main 补齐 ImageSource `file_id`、创建 Memory Store 时的 mount `access`、Schedule/Run `initial_events_version` 和 ChannelPairing 时间戳。接口操作集合仍为 123 项；客户端 HTTP 扩展、通用 JSON 请求和配置复制见[客户端配置](client-configuration.md)，这些新增能力尚不在已发布的 `0.1.0` 中。
+
 ## 使用指南
 
 - [客户端认证、超时、重试与取消](client-configuration.md)

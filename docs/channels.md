@@ -102,6 +102,8 @@ DeletedChannelPairing removed = client.channelPairings().delete(pairing.id());
 
 Use the returned Pairing ID for revocation and Schedule sinks. Current API supports completion by pending Pairing ID as well as code; code-only older SDK types are not copied. An ID-based completion can be retried against the same binding without depending on code expiry. Used/expired codes cannot be treated as fresh pairing requests. Permission, ownership and concurrent-change errors remain server decisions.
 
+The development SDK also exposes nullable `createdAt()` and `updatedAt()` strings on `ChannelPairing`, preserving timestamps returned by the service. These getters are not included in the published `0.1.0` JAR.
+
 `delete` removes the Channel connection; it is distinct from `channelPairings().delete`, which revokes one binding. Already absent/unpaired bindings can return `deleted=true`. SDK keeps the declared deletion response and accepts an empty 204 without inventing a JSON body; use `withResponse()` for metadata in that case.
 
 ## Lists and examples

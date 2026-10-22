@@ -2,9 +2,15 @@ package com.qoder.cloudagents;
 
 import com.qoder.cloudagents.auth.AuthMode;
 import com.qoder.cloudagents.auth.Credential;
+import com.qoder.cloudagents.core.ApiRequest;
+import com.qoder.cloudagents.core.ApiResponse;
+import com.qoder.cloudagents.core.JsonValue;
 import com.qoder.cloudagents.core.RequestOptions;
+import com.qoder.cloudagents.core.http.HttpInterceptor;
+import com.qoder.cloudagents.core.http.HttpTransport;
 import com.qoder.cloudagents.core.internal.Authentication;
 import com.qoder.cloudagents.core.internal.ClientEngine;
+import com.qoder.cloudagents.core.internal.Futures;
 import com.qoder.cloudagents.errors.ConfigurationException;
 import com.qoder.cloudagents.forward.Batches;
 import com.qoder.cloudagents.forward.ChannelPairings;
@@ -25,8 +31,11 @@ import com.qoder.cloudagents.forward.Usage;
 import com.qoder.cloudagents.forward.Vaults;
 import com.qoder.cloudagents.forward.realtime.Realtime;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import okhttp3.HttpUrl;
 
 /**
@@ -38,6 +47,7 @@ public final class ForwardClient implements AutoCloseable {
   private final Drives drives;
   private final Realtime realtime;
   private final ClientEngine engine;
+  private final Builder configuration;
   private final Models models;
   private final Files files;
   private final ChannelPairings channelPairings;
@@ -54,10 +64,11 @@ public final class ForwardClient implements AutoCloseable {
   private final MemoryStores memoryStores;
   private final AsyncForwardClient async;
 
-  private ForwardClient(ClientEngine engine) {
+  private ForwardClient(ClientEngine engine, Builder configuration) {
+    this.configuration = configuration;
     this.engine = engine;
     realtime = new Realtime(engine);
-    async = new AsyncForwardClient(engine, false);
+    async = new AsyncForwardClient(engine, false, configuration);
     models = new Models(async.models());
     drives = new Drives(async.drives());
     serviceAccountTokens = new ServiceAccountTokens(async.serviceAccountTokens());
@@ -161,6 +172,22 @@ public final class ForwardClient implements AutoCloseable {
     return channelPairings;
   }
 
+  /** Creates an independently closeable client, retaining unspecified resolved options. */
+  public ForwardClient withOptions(Consumer<Builder> configure) {
+    Builder copy = configuration.copy();
+    Builder.required(configure).accept(copy);
+    return copy.build();
+  }
+
+  /** Calls an additional JSON API using the client's authentication, retries and error handling. */
+  public ApiResponse<JsonValue> request(ApiRequest request) {
+    return request(request, RequestOptions.DEFAULT);
+  }
+
+  public ApiResponse<JsonValue> request(ApiRequest request, RequestOptions options) {
+    return Futures.await(async.request(request, options));
+  }
+
   @Override
   public void close() {
     engine.close();
@@ -170,6 +197,10 @@ public final class ForwardClient implements AutoCloseable {
     private String baseUrl, pat, accessToken;
     private AuthMode authMode;
     private Credential credential;
+    private Credential resolvedCredential;
+    private HttpTransport transport;
+    private final List<HttpInterceptor> interceptors = new ArrayList<>();
+    private boolean derived, modeChanged;
     private Duration timeout = Duration.ofMinutes(10);
     private int maxRetries = 2;
     private final Map<String, String> headers = new LinkedHashMap<>();
@@ -181,20 +212,35 @@ public final class ForwardClient implements AutoCloseable {
 
     public Builder authMode(AuthMode value) {
       authMode = required(value);
+      modeChanged = true;
       return this;
     }
 
     public Builder pat(String value) {
+      if (derived) {
+        credential = null;
+        accessToken = null;
+        if (!modeChanged) authMode = AuthMode.PAT;
+      }
       pat = Authentication.validateToken(value);
       return this;
     }
 
     public Builder accessToken(String value) {
+      if (derived) {
+        credential = null;
+        pat = null;
+      }
       accessToken = Authentication.validateToken(value);
       return this;
     }
 
     public Builder credential(Credential value) {
+      if (derived) {
+        pat = null;
+        accessToken = null;
+        if (!modeChanged) authMode = null;
+      }
       credential = required(value);
       return this;
     }
@@ -224,7 +270,45 @@ public final class ForwardClient implements AutoCloseable {
       return this;
     }
 
-    private ClientEngine engine() {
+    /** Caller-owned transport, also used for isolated storage downloads; not WebSockets. */
+    public Builder transport(HttpTransport value) {
+      transport = required(value);
+      return this;
+    }
+
+    /** Appends an API interceptor; storage downloads do not invoke it. */
+    public Builder interceptor(HttpInterceptor value) {
+      interceptors.add(required(value));
+      return this;
+    }
+
+    public Builder clearInterceptors() {
+      interceptors.clear();
+      return this;
+    }
+
+    public Builder clearDefaultHeaders() {
+      headers.clear();
+      return this;
+    }
+
+    Builder copy() {
+      Builder copy = new Builder();
+      copy.baseUrl = baseUrl;
+      copy.pat = pat;
+      copy.accessToken = accessToken;
+      copy.authMode = authMode;
+      copy.credential = credential;
+      copy.timeout = timeout;
+      copy.maxRetries = maxRetries;
+      copy.transport = transport;
+      copy.headers.putAll(headers);
+      copy.interceptors.addAll(interceptors);
+      copy.derived = derived;
+      return copy;
+    }
+
+    private Builder resolve() {
       String value = baseUrl;
       if (value == null) value = System.getenv("QODER_FORWARD_BASE_URL");
       if (value == null || value.isEmpty()) value = "https://api.qoder.com/api/v1/forward";
@@ -242,16 +326,40 @@ public final class ForwardClient implements AutoCloseable {
       Credential resolved =
           Authentication.resolve(
               authMode, pat, accessToken, credential, url.host(), System::getenv);
-      return new ClientEngine(url, resolved, timeout, maxRetries, headers);
+      Builder snapshot = copy();
+      snapshot.baseUrl = url.toString();
+      snapshot.authMode =
+          authMode != null
+              ? authMode
+              : credential instanceof com.qoder.cloudagents.auth.ServiceAccountCredential
+                  ? AuthMode.SA
+                  : AuthMode.PAT;
+      snapshot.resolvedCredential = resolved;
+      if (pat == null && accessToken == null) snapshot.credential = resolved;
+      snapshot.derived = true;
+      return snapshot;
+    }
+
+    private ClientEngine engine() {
+      return new ClientEngine(
+          HttpUrl.get(baseUrl),
+          resolvedCredential,
+          timeout,
+          maxRetries,
+          headers,
+          transport,
+          interceptors);
     }
 
     public ForwardClient build() {
-      return new ForwardClient(engine());
+      Builder snapshot = resolve();
+      return new ForwardClient(snapshot.engine(), snapshot);
     }
 
     /** Builds an independently owned async client with the same configuration options. */
     public AsyncForwardClient buildAsync() {
-      return new AsyncForwardClient(engine(), true);
+      Builder snapshot = resolve();
+      return new AsyncForwardClient(snapshot.engine(), true, snapshot);
     }
   }
 }

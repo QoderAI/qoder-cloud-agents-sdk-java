@@ -9,6 +9,10 @@ public final class ImageSource extends JsonObject {
     super(value);
   }
 
+  public String fileId() {
+    return optional("file_id", JsonValue::asString);
+  }
+
   public static ImageSource fromJson(JsonValue value) {
     return new ImageSource(value);
   }
@@ -50,6 +54,10 @@ public final class ImageSource extends JsonObject {
 
     public Builder url(String value) {
       return put("url", value);
+    }
+
+    public Builder fileId(String value) {
+      return put("file_id", value);
     }
 
     public ImageSource build() {
