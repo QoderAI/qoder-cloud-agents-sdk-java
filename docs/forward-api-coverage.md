@@ -193,3 +193,7 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 | POST | `/channel_pairings/{pairing_id}` | `channelPairings().update(...)` | 暂不增加，当前范围外 |
 
 后续若决定纳入，再重新核对参数、权限和分页并更新总基线；不能将“完成配对”视为已实现以上三个管理操作。
+
+## Next release: Webhooks
+
+Eight Webhook endpoint operations extend the original 123-operation baseline to **131 HTTP operations**. Sync/async methods, request metadata, cursor pagination and raw-body signature verification are implemented. See [Webhook guide](webhooks.md) for paths, authentication and validation boundaries. This is separate from the three deferred Pairing operations.

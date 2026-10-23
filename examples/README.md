@@ -242,3 +242,5 @@ Default verification uses mock services. The opt-in [live runner](../docs/live-t
 ## Repeatable live acceptance
 
 See [the opt-in live runner](../docs/live-testing.md) for the `read`, `resources`, `session`, `realtime-text`, `realtime-pcm`, `schedule`, `batch`, `usage`, `sa-tokens` and `realtime-work` groups. The dedicated Schedule/Batch checks wait for completion and validate output and Session history; the smaller lifecycle examples above intentionally return earlier. This runner consumes the installed JAR and is never launched by the default Maven test lifecycle.
+
+Forward Webhook listing and receiver verification: see [Webhook guide](../docs/webhooks.md). The example does not create subscriptions or emit test deliveries.

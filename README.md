@@ -249,3 +249,7 @@ Pin the SDK version in your build. Before 1.0, incompatible API changes use a ne
 ## License
 
 [MIT](LICENSE).
+
+## Forward Webhooks (next release)
+
+Manage webhook endpoints and verify signed event deliveries. See [Webhook usage and receiver examples](docs/webhooks.md).
