@@ -52,8 +52,6 @@ endpoints.update(created.id(), WebhookEndpointUpdateParams.builder().active(fals
 endpoints.enable(created.id());
 WebhookEndpointTestResponse accepted = endpoints.test(created.id());
 for (WebhookEndpoint endpoint : endpoints.list()) System.out.println(endpoint.id());
-endpoints.disable(created.id());
-endpoints.delete(created.id());
 ```
 
 Import `com.qoder.cloudagents.forward.*`, `com.qoder.cloudagents.core.RequestOptions`
@@ -91,6 +89,18 @@ accepted events durably, and deduplicate using `Webhook-ID` before acknowledging
 with 2xx. Retries share the same ID. The SDK does not supply a queue or a deduplication
 database. The examples only parse an authenticated delivery and list endpoints;
 they do not start a production receiver or create subscriptions automatically.
+
+## Clean up a test endpoint
+
+Run this step separately for a temporary test endpoint, after your receiver has
+confirmed receipt and successfully verified the expected test delivery. Keep the
+endpoint active while waiting: disabling or deleting it can discard queued
+deliveries. HTTP 202 and `delivery_rows` confirm queuing, not receipt.
+
+```java
+endpoints.disable(created.id());
+endpoints.delete(created.id());
+```
 
 ## Validation boundary
 
