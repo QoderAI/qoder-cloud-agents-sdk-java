@@ -4,7 +4,7 @@
 
 The Qoder Cloud Agents Java SDK provides typed synchronous and asynchronous clients, with shared authentication, timeouts, retries, pagination, streaming and error handling.
 
-Version **0.1.0** supports the **Forward API**. **Managed API support is planned for a future release** and is not available in this version.
+Version **0.1.0** supports the **Forward API**. The development branch adds [Managed API support](docs/managed.md) for the planned combined **0.2.0** release; it is not available in the published 0.1.0 JAR.
 
 | Capability | Resources |
 | --- | --- |
@@ -18,7 +18,7 @@ Version **0.1.0** supports the **Forward API**. **Managed API support is planned
 
 See [API coverage and resource guides](docs/forward-api-coverage.md) for the supported operations.
 
-The development branch also includes [Forward Search, Dreams, Decisions, pairing management and contract updates](docs/forward-parity.md), alongside Webhooks and client extensions. These additions are unreleased and are not included in the published `0.1.0` JAR.
+The development branch also includes [Forward Search, Dreams, Decisions, pairing management and contract updates](docs/forward-parity.md), alongside Webhooks, client extensions and [108 Managed operations](docs/managed-api-coverage.md). These additions are unreleased and are not included in the published `0.1.0` JAR.
 
 - [Installation](#installation)
 - [Quick start](#quick-start)

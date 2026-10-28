@@ -33,7 +33,8 @@ def check(root):
         names = jar.namelist()
         classes = [name for name in names if name.endswith(".class")]
         require(classes, "SDK JAR has no classes")
-        require("com/qoder/cloudagents/ForwardClient.class" in names, "Missing Forward client")
+        for client in ("ForwardClient", "AsyncForwardClient", "ManagedClient", "AsyncManagedClient"):
+            require("com/qoder/cloudagents/" + client + ".class" in names, "Missing client: " + client)
         require(jar.read("META-INF/LICENSE") == (root / "LICENSE").read_bytes(), "License differs")
         properties = jar.read("com/qoder/cloudagents/version.properties").decode("utf-8")
         require("version=" + version in properties.splitlines(), "Embedded version differs from POM")
@@ -47,9 +48,11 @@ def check(root):
                         or Path(name).name.startswith(".env") for name in names),
                 "Unexpected local or test data in SDK JAR")
     with zipfile.ZipFile(jars[1]) as jar:
-        require("com/qoder/cloudagents/ForwardClient.java" in jar.namelist(), "Missing source attachment")
+        for client in ("ForwardClient", "ManagedClient"):
+            require("com/qoder/cloudagents/" + client + ".java" in jar.namelist(), "Missing source attachment: " + client)
     with zipfile.ZipFile(jars[2]) as jar:
-        require("com/qoder/cloudagents/ForwardClient.html" in jar.namelist(), "Missing Javadoc attachment")
+        for client in ("ForwardClient", "ManagedClient"):
+            require("com/qoder/cloudagents/" + client + ".html" in jar.namelist(), "Missing Javadoc attachment: " + client)
         require(not any(name.startswith("com/qoder/cloudagents/core/internal/") for name in jar.namelist()),
                 "Internal implementation leaked into public Javadoc")
     files = jars + [pom]

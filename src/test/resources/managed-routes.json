@@ -1,0 +1,2651 @@
+[
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/agents/archive",
+    "method": "POST",
+    "path": "/api/v1/cloud/agents/segment_0%2Fencoded/archive",
+    "resource": "agents",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/agents/create",
+    "method": "POST",
+    "path": "/api/v1/cloud/agents",
+    "resource": "agents",
+    "operation": "create",
+    "param": "AgentCreateParams",
+    "mode": "body",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "name": "sdk-contract",
+      "model": {
+        "id": "ultimate",
+        "effort": "low",
+        "context_window": 200000
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/agents/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/agents/segment_0%2Fencoded",
+    "resource": "agents",
+    "operation": "retrieve",
+    "param": "AgentRetrieveParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "version": 1
+    },
+    "query_types": {
+      "version": "long"
+    },
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/agents/list-versions",
+    "method": "GET",
+    "path": "/api/v1/cloud/agents/segment_0%2Fencoded/versions",
+    "resource": "agents.versions",
+    "operation": "list",
+    "param": "AgentVersionListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "limit": 1
+    },
+    "query_types": {
+      "limit": "long"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/agents/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/agents",
+    "resource": "agents",
+    "operation": "list",
+    "param": "AgentListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "include_archived": true,
+      "created_at[gte]": "test/value",
+      "created_at[lte]": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "include_archived": "boolean",
+      "created_at[gte]": "String",
+      "created_at[lte]": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/agents/search",
+    "method": "POST",
+    "path": "/api/v1/cloud/agents/search",
+    "resource": "agents",
+    "operation": "search",
+    "param": "AgentSearchParams",
+    "mode": "search",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      },
+      "limit": 1,
+      "page": "opaque-page"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/agents/update",
+    "method": "POST",
+    "path": "/api/v1/cloud/agents/segment_0%2Fencoded",
+    "resource": "agents",
+    "operation": "update",
+    "param": "AgentUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "version": 1,
+      "system": "Updated system"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/archive",
+    "method": "POST",
+    "path": "/api/v1/cloud/deployments/segment_0%2Fencoded/archive",
+    "resource": "deployments",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/create",
+    "method": "POST",
+    "path": "/api/v1/cloud/deployments",
+    "resource": "deployments",
+    "operation": "create",
+    "param": "DeploymentCreateParams",
+    "mode": "body",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "name": "sdk-contract",
+      "agent": "agent_test",
+      "environment_id": "env_test",
+      "initial_events": [
+        {
+          "type": "user.message",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello"
+            }
+          ]
+        }
+      ],
+      "environment_variables": "LOG_LEVEL=debug"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/get-run-global",
+    "method": "GET",
+    "path": "/api/v1/cloud/deployment_runs/segment_0%2Fencoded",
+    "resource": "deploymentRuns",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/get-run",
+    "method": "GET",
+    "path": "/api/v1/cloud/deployments/segment_0%2Fencoded/runs/segment_1%2Fencoded",
+    "resource": "deployments.runs",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/deployments/segment_0%2Fencoded",
+    "resource": "deployments",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/list-all-runs",
+    "method": "GET",
+    "path": "/api/v1/cloud/deployment_runs",
+    "resource": "deploymentRuns",
+    "operation": "list",
+    "param": "DeploymentRunListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "deployment_id": "test/value",
+      "trigger_type": "test/value",
+      "has_error": true,
+      "created_at[gt]": "test/value",
+      "created_at[gte]": "test/value",
+      "created_at[lt]": "test/value",
+      "created_at[lte]": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "deployment_id": "String",
+      "trigger_type": "String",
+      "has_error": "boolean",
+      "created_at[gt]": "String",
+      "created_at[gte]": "String",
+      "created_at[lt]": "String",
+      "created_at[lte]": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/list-runs",
+    "method": "GET",
+    "path": "/api/v1/cloud/deployments/segment_0%2Fencoded/runs",
+    "resource": "deployments.runs",
+    "operation": "list",
+    "param": "DeploymentScopedRunListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "limit": 1,
+      "triggered_after": "test/value",
+      "triggered_before": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "triggered_after": "String",
+      "triggered_before": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/deployments",
+    "resource": "deployments",
+    "operation": "list",
+    "param": "DeploymentListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "status": "test/value",
+      "include_archived": true,
+      "agent_id": "test/value",
+      "created_at[gte]": "test/value",
+      "created_at[lte]": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "status": "String",
+      "include_archived": "boolean",
+      "agent_id": "String",
+      "created_at[gte]": "String",
+      "created_at[lte]": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/pause",
+    "method": "POST",
+    "path": "/api/v1/cloud/deployments/segment_0%2Fencoded/pause",
+    "resource": "deployments",
+    "operation": "pause",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/run",
+    "method": "POST",
+    "path": "/api/v1/cloud/deployments/segment_0%2Fencoded/run",
+    "resource": "deployments",
+    "operation": "run",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/search",
+    "method": "POST",
+    "path": "/api/v1/cloud/deployments/search",
+    "resource": "deployments",
+    "operation": "search",
+    "param": "DeploymentSearchParams",
+    "mode": "search",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      },
+      "limit": 1,
+      "page": "opaque-page"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/unpause",
+    "method": "POST",
+    "path": "/api/v1/cloud/deployments/segment_0%2Fencoded/unpause",
+    "resource": "deployments",
+    "operation": "unpause",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/deployments/update",
+    "method": "POST",
+    "path": "/api/v1/cloud/deployments/segment_0%2Fencoded",
+    "resource": "deployments",
+    "operation": "update",
+    "param": "DeploymentUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "schedule": null,
+      "environment_variables": null,
+      "metadata": {
+        "remove": null
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/dreams/archive",
+    "method": "POST",
+    "path": "/api/v1/cloud/dreams/segment_0%2Fencoded/archive",
+    "resource": "dreams",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/dreams/cancel",
+    "method": "POST",
+    "path": "/api/v1/cloud/dreams/segment_0%2Fencoded/cancel",
+    "resource": "dreams",
+    "operation": "cancel",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/dreams/create",
+    "method": "POST",
+    "path": "/api/v1/cloud/dreams",
+    "resource": "dreams",
+    "operation": "create",
+    "param": "DreamCreateParams",
+    "mode": "body",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "inputs": [
+        {
+          "type": "memory_store",
+          "memory_store_id": "memstore_test"
+        }
+      ]
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/dreams/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/dreams/segment_0%2Fencoded",
+    "resource": "dreams",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/dreams/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/dreams",
+    "resource": "dreams",
+    "operation": "list",
+    "param": "DreamListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "include_archived": true
+    },
+    "query_types": {
+      "limit": "long",
+      "include_archived": "boolean"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/archive",
+    "method": "POST",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/archive",
+    "resource": "environments",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/create",
+    "method": "POST",
+    "path": "/api/v1/cloud/environments",
+    "resource": "environments",
+    "operation": "create",
+    "param": "EnvironmentCreateParams",
+    "mode": "body",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "name": "sdk-contract",
+      "config": {
+        "type": "self_hosted"
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/delete",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded",
+    "resource": "environments",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded",
+    "resource": "environments",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/environments",
+    "resource": "environments",
+    "operation": "list",
+    "param": "EnvironmentListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "include_archived": true,
+      "created_at[gte]": "test/value",
+      "created_at[lte]": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "include_archived": "boolean",
+      "created_at[gte]": "String",
+      "created_at[lte]": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/search",
+    "method": "POST",
+    "path": "/api/v1/cloud/environments/search",
+    "resource": "environments",
+    "operation": "search",
+    "param": "EnvironmentSearchParams",
+    "mode": "search",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      },
+      "limit": 1,
+      "page": "opaque-page"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/update",
+    "method": "POST",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded",
+    "resource": "environments",
+    "operation": "update",
+    "param": "EnvironmentUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "description": "changed"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/work/ack",
+    "method": "POST",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/work/segment_1%2Fencoded/ack",
+    "resource": "environments.work",
+    "operation": "ack",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/work/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/work/segment_1%2Fencoded",
+    "resource": "environments.work",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/work/heartbeat",
+    "method": "POST",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/work/segment_1%2Fencoded/heartbeat",
+    "resource": "environments.work",
+    "operation": "heartbeat",
+    "param": "WorkHeartbeatParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {
+      "expected_last_heartbeat": "test/value",
+      "desired_ttl_seconds": 1
+    },
+    "query_types": {
+      "expected_last_heartbeat": "String",
+      "desired_ttl_seconds": "long"
+    },
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/work/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/work",
+    "resource": "environments.work",
+    "operation": "list",
+    "param": "WorkListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "limit": 1
+    },
+    "query_types": {
+      "limit": "long"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/work/poll",
+    "method": "GET",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/work/poll",
+    "resource": "environments.work",
+    "operation": "poll",
+    "param": "WorkPollParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "block_ms": 1,
+      "reclaim_older_than_ms": 1
+    },
+    "query_types": {
+      "block_ms": "long",
+      "reclaim_older_than_ms": "long"
+    },
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/work/stats",
+    "method": "GET",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/work/stats",
+    "resource": "environments.work",
+    "operation": "stats",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/work/stop",
+    "method": "POST",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/work/segment_1%2Fencoded/stop",
+    "resource": "environments.work",
+    "operation": "stop",
+    "param": "WorkStopParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "force": true
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/environments/work/update-metadata",
+    "method": "POST",
+    "path": "/api/v1/cloud/environments/segment_0%2Fencoded/work/segment_1%2Fencoded",
+    "resource": "environments.work",
+    "operation": "update",
+    "param": "WorkUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "worker": "java",
+        "remove": null
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/files/delete",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/files/segment_0%2Fencoded",
+    "resource": "files",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/files/download",
+    "method": "GET",
+    "path": "/api/v1/cloud/files/segment_0%2Fencoded/content",
+    "resource": "files",
+    "operation": "getDownloadUrl",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "url": "https://storage.example.com/file",
+      "expires_at": "2026-12-01T00:00:00Z"
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/files/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/files/segment_0%2Fencoded",
+    "resource": "files",
+    "operation": "getMetadata",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/files/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/files",
+    "resource": "files",
+    "operation": "list",
+    "param": "FileListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "name": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "name": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/files/search",
+    "method": "POST",
+    "path": "/api/v1/cloud/files/search",
+    "resource": "files",
+    "operation": "search",
+    "param": "FileSearchParams",
+    "mode": "search",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      },
+      "limit": 1,
+      "page": "opaque-page"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/files/upload",
+    "method": "POST",
+    "path": "/api/v1/cloud/files",
+    "resource": "files",
+    "operation": "upload",
+    "param": "FileUploadParams",
+    "mode": "multipart",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/archive",
+    "method": "POST",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/archive",
+    "resource": "memoryStores",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/create-memory",
+    "method": "POST",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/memories",
+    "resource": "memoryStores.memories",
+    "operation": "create",
+    "param": "MemoryCreateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "path": "/qa.md",
+      "content": "hello"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/create",
+    "method": "POST",
+    "path": "/api/v1/cloud/memory_stores",
+    "resource": "memoryStores",
+    "operation": "create",
+    "param": "MemoryStoreCreateParams",
+    "mode": "body",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "name": "sdk-contract"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/delete-memory",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/memories/segment_1%2Fencoded",
+    "resource": "memoryStores.memories",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/delete",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded",
+    "resource": "memoryStores",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/get-memory",
+    "method": "GET",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/memories/segment_1%2Fencoded",
+    "resource": "memoryStores.memories",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/get-version",
+    "method": "GET",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/memory_versions/segment_1%2Fencoded",
+    "resource": "memoryStores.versions",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded",
+    "resource": "memoryStores",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/list-memories",
+    "method": "GET",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/memories",
+    "resource": "memoryStores.memories",
+    "operation": "list",
+    "param": "MemoryListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "path_prefix": "test/value"
+    },
+    "query_types": {
+      "path_prefix": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/list-versions",
+    "method": "GET",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/memory_versions",
+    "resource": "memoryStores.versions",
+    "operation": "list",
+    "param": "MemoryVersionListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "memory_id": "test/value"
+    },
+    "query_types": {
+      "memory_id": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/memory_stores",
+    "resource": "memoryStores",
+    "operation": "list",
+    "param": "MemoryStoreListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "include_archived": true,
+      "name": "test/value",
+      "created_at[gte]": "test/value",
+      "created_at[lte]": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "include_archived": "boolean",
+      "name": "String",
+      "created_at[gte]": "String",
+      "created_at[lte]": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/redact-version",
+    "method": "POST",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/memory_versions/segment_1%2Fencoded/redact",
+    "resource": "memoryStores.versions",
+    "operation": "redact",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/search",
+    "method": "POST",
+    "path": "/api/v1/cloud/memory_stores/search",
+    "resource": "memoryStores",
+    "operation": "search",
+    "param": "MemoryStoreSearchParams",
+    "mode": "search",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      },
+      "limit": 1,
+      "page": "opaque-page"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/update-memory",
+    "method": "POST",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded/memories/segment_1%2Fencoded",
+    "resource": "memoryStores.memories",
+    "operation": "update",
+    "param": "MemoryUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "content": "updated",
+      "content_sha256": "test-hash"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/memory-stores/update",
+    "method": "POST",
+    "path": "/api/v1/cloud/memory_stores/segment_0%2Fencoded",
+    "resource": "memoryStores",
+    "operation": "update",
+    "param": "MemoryStoreUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "description": null
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/models/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/models",
+    "resource": "models",
+    "operation": "list",
+    "param": null,
+    "mode": "none",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/archive",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/archive",
+    "resource": "sessions",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/cancel",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/cancel",
+    "resource": "sessions",
+    "operation": "cancel",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/create",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions",
+    "resource": "sessions",
+    "operation": "create",
+    "param": "SessionCreateParams",
+    "mode": "body",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "agent": {
+        "type": "agent",
+        "id": "agent_test",
+        "version": 2
+      },
+      "environment_id": "env_test",
+      "budget": {
+        "type": "limit",
+        "max_credit_cost": "100.00"
+      },
+      "metadata": {
+        "ticket": "sdk-contract",
+        "__qca_sdk_future": "kept"
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/delete",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded",
+    "resource": "sessions",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/events/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/events",
+    "resource": "sessions.events",
+    "operation": "list",
+    "param": "SessionEventListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "limit": 1,
+      "order": "test/value",
+      "types": "test/value",
+      "created_at[gt]": "test/value",
+      "created_at[gte]": "test/value",
+      "created_at[lt]": "test/value",
+      "created_at[lte]": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "order": "String",
+      "types": "String",
+      "created_at[gt]": "String",
+      "created_at[gte]": "String",
+      "created_at[lt]": "String",
+      "created_at[lte]": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/events/send",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/events",
+    "resource": "sessions.events",
+    "operation": "send",
+    "param": "SessionEventSendParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "events": [
+        {
+          "type": "user.message",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello"
+            }
+          ]
+        }
+      ]
+    },
+    "response": {
+      "data": [
+        {
+          "id": "evt_test",
+          "type": "user.message",
+          "content": [
+            {
+              "type": "text",
+              "text": "hello"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded",
+    "resource": "sessions",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/sessions",
+    "resource": "sessions",
+    "operation": "list",
+    "param": "SessionListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "order": "test/value",
+      "include_archived": true,
+      "statuses": "test/value",
+      "agent_id": "test/value",
+      "agent_version": 1,
+      "deployment_id": "test/value",
+      "memory_store_id": "test/value",
+      "created_at[gt]": "test/value",
+      "created_at[gte]": "test/value",
+      "created_at[lt]": "test/value",
+      "created_at[lte]": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "order": "String",
+      "include_archived": "boolean",
+      "statuses": "String",
+      "agent_id": "String",
+      "agent_version": "long",
+      "deployment_id": "String",
+      "memory_store_id": "String",
+      "created_at[gt]": "String",
+      "created_at[gte]": "String",
+      "created_at[lt]": "String",
+      "created_at[lte]": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/resources/add",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/resources",
+    "resource": "sessions.resources",
+    "operation": "create",
+    "param": "SessionResourceCreateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "type": "file",
+      "file_id": "file_test",
+      "mount_path": "/qa.txt"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/resources/delete",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/resources/segment_1%2Fencoded",
+    "resource": "sessions.resources",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/resources/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/resources/segment_1%2Fencoded",
+    "resource": "sessions.resources",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/resources/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/resources",
+    "resource": "sessions.resources",
+    "operation": "list",
+    "param": "SessionResourceListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "limit": 1
+    },
+    "query_types": {
+      "limit": "long"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/resources/update",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/resources/segment_1%2Fencoded",
+    "resource": "sessions.resources",
+    "operation": "update",
+    "param": "SessionResourceUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "password": "test-password"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/search",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions/search",
+    "resource": "sessions",
+    "operation": "search",
+    "param": "SessionSearchParams",
+    "mode": "search",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      },
+      "limit": 1,
+      "page": "opaque-page"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/threads/archive",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/threads/segment_1%2Fencoded/archive",
+    "resource": "sessions.threads",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/threads/events/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/threads/segment_1%2Fencoded/events",
+    "resource": "sessions.threads.events",
+    "operation": "list",
+    "param": "SessionThreadEventListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {
+      "limit": 1
+    },
+    "query_types": {
+      "limit": "long"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/threads/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/threads/segment_1%2Fencoded",
+    "resource": "sessions.threads",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/threads/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded/threads",
+    "resource": "sessions.threads",
+    "operation": "list",
+    "param": "SessionThreadListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "limit": 1
+    },
+    "query_types": {
+      "limit": "long"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/sessions/update",
+    "method": "POST",
+    "path": "/api/v1/cloud/sessions/segment_0%2Fencoded",
+    "resource": "sessions",
+    "operation": "update",
+    "param": "SessionUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "budget": null,
+      "agent": {
+        "system": "updated runtime",
+        "skills": []
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/create-version",
+    "method": "POST",
+    "path": "/api/v1/cloud/skills/segment_0%2Fencoded/versions",
+    "resource": "skills.versions",
+    "operation": "create",
+    "param": "SkillVersionCreateParams",
+    "mode": "multipart",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/create",
+    "method": "POST",
+    "path": "/api/v1/cloud/skills",
+    "resource": "skills",
+    "operation": "create",
+    "param": "SkillCreateParams",
+    "mode": "multipart",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/delete-version",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/skills/segment_0%2Fencoded/versions/segment_1%2Fencoded",
+    "resource": "skills.versions",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/delete",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/skills/segment_0%2Fencoded",
+    "resource": "skills",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/get-version-content",
+    "method": "GET",
+    "path": "/api/v1/cloud/skills/segment_0%2Fencoded/versions/segment_1%2Fencoded/content",
+    "resource": "skills.versions",
+    "operation": "download",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/get-version",
+    "method": "GET",
+    "path": "/api/v1/cloud/skills/segment_0%2Fencoded/versions/segment_1%2Fencoded",
+    "resource": "skills.versions",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/skills/segment_0%2Fencoded",
+    "resource": "skills",
+    "operation": "retrieve",
+    "param": "SkillRetrieveParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "include_content": true
+    },
+    "query_types": {
+      "include_content": "boolean"
+    },
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/list-versions",
+    "method": "GET",
+    "path": "/api/v1/cloud/skills/segment_0%2Fencoded/versions",
+    "resource": "skills.versions",
+    "operation": "list",
+    "param": "SkillVersionListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "limit": 1
+    },
+    "query_types": {
+      "limit": "long"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/skills",
+    "resource": "skills",
+    "operation": "list",
+    "param": "SkillListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "source": "test/value",
+      "display_title": "test/value",
+      "name": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "source": "String",
+      "display_title": "String",
+      "name": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/search",
+    "method": "POST",
+    "path": "/api/v1/cloud/skills/search",
+    "resource": "skills",
+    "operation": "search",
+    "param": "SkillSearchParams",
+    "mode": "search",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      },
+      "limit": 1,
+      "page": "opaque-page"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/skills/update",
+    "method": "PUT",
+    "path": "/api/v1/cloud/skills/segment_0%2Fencoded",
+    "resource": "skills",
+    "operation": "update",
+    "param": "SkillUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/archive-credential",
+    "method": "POST",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/credentials/segment_1%2Fencoded/archive",
+    "resource": "vaults.credentials",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/archive",
+    "method": "POST",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/archive",
+    "resource": "vaults",
+    "operation": "archive",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/create-credential",
+    "method": "POST",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/credentials",
+    "resource": "vaults.credentials",
+    "operation": "create",
+    "param": "VaultCredentialCreateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "auth": {
+        "type": "environment_variable",
+        "name": "EXAMPLE_KEY",
+        "secret_value": "test-secret"
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/create",
+    "method": "POST",
+    "path": "/api/v1/cloud/vaults",
+    "resource": "vaults",
+    "operation": "create",
+    "param": "VaultCreateParams",
+    "mode": "body",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "display_name": "sdk-contract"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/delete-credential",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/credentials/segment_1%2Fencoded",
+    "resource": "vaults.credentials",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/delete",
+    "method": "DELETE",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded",
+    "resource": "vaults",
+    "operation": "delete",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/get-credential",
+    "method": "GET",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/credentials/segment_1%2Fencoded",
+    "resource": "vaults.credentials",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/get",
+    "method": "GET",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded",
+    "resource": "vaults",
+    "operation": "retrieve",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": null,
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/list-credentials",
+    "method": "GET",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/credentials",
+    "resource": "vaults.credentials",
+    "operation": "list",
+    "param": "VaultCredentialListParams",
+    "mode": "query",
+    "ids": [
+      "segment_0/encoded"
+    ],
+    "query": {
+      "limit": 1,
+      "include_archived": true,
+      "name": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "include_archived": "boolean",
+      "name": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/list",
+    "method": "GET",
+    "path": "/api/v1/cloud/vaults",
+    "resource": "vaults",
+    "operation": "list",
+    "param": "VaultListParams",
+    "mode": "query",
+    "ids": [],
+    "query": {
+      "limit": 1,
+      "include_archived": true,
+      "name": "test/value"
+    },
+    "query_types": {
+      "limit": "long",
+      "include_archived": "boolean",
+      "name": "String"
+    },
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/search",
+    "method": "POST",
+    "path": "/api/v1/cloud/vaults/search",
+    "resource": "vaults",
+    "operation": "search",
+    "param": "VaultSearchParams",
+    "mode": "search",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "metadata": {
+        "team": "sdk"
+      },
+      "limit": 1,
+      "page": "opaque-page"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "next_page": null,
+      "total": 0
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/start-oauth",
+    "method": "POST",
+    "path": "/api/v1/cloud/oauth/start",
+    "resource": "oauth",
+    "operation": "start",
+    "param": "OAuthStartParams",
+    "mode": "body",
+    "ids": [],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "vault_id": "vault_test",
+      "mcp_server_url": "https://mcp.example.com",
+      "client_id": "test-client",
+      "client_secret": "test-secret"
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/update-credential",
+    "method": "POST",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/credentials/segment_1%2Fencoded",
+    "resource": "vaults.credentials",
+    "operation": "update",
+    "param": "VaultCredentialUpdateParams",
+    "mode": "body",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {
+      "auth": {
+        "type": "environment_variable",
+        "secret_value": "new-test-secret"
+      }
+    },
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  },
+  {
+    "source": "https://docs.qoder.com/cloud-agents/api/vaults/validate-credential",
+    "method": "POST",
+    "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/credentials/segment_1%2Fencoded/mcp_oauth_validate",
+    "resource": "vaults.credentials",
+    "operation": "validate",
+    "param": null,
+    "mode": "none",
+    "ids": [
+      "segment_0/encoded",
+      "segment_1/encoded"
+    ],
+    "query": {},
+    "query_types": {},
+    "body": {},
+    "response": {
+      "id": "object_test",
+      "type": "test",
+      "future": {
+        "accepted": true
+      }
+    }
+  }
+]
