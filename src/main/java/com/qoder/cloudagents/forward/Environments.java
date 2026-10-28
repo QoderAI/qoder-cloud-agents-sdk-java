@@ -63,11 +63,44 @@ public final class Environments {
     return Futures.await(async.delete(environmentId, options));
   }
 
+  public EnvironmentListResponse search(EnvironmentSearchParams params) {
+    return search(params, RequestOptions.DEFAULT);
+  }
+
+  public EnvironmentListResponse search(EnvironmentSearchParams params, RequestOptions options) {
+    return Futures.await(async.search(params, options));
+  }
+
+  public EnvironmentListResponse search() {
+    return search(EnvironmentSearchParams.builder().build());
+  }
+
+  public EnvironmentListResponse search(RequestOptions options) {
+    return search(EnvironmentSearchParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public ApiResponse<EnvironmentListResponse> search() {
+      return search(EnvironmentSearchParams.builder().build());
+    }
+
+    public ApiResponse<EnvironmentListResponse> search(RequestOptions options) {
+      return search(EnvironmentSearchParams.builder().build(), options);
+    }
+
+    public ApiResponse<EnvironmentListResponse> search(EnvironmentSearchParams params) {
+      return search(params, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<EnvironmentListResponse> search(
+        EnvironmentSearchParams params, RequestOptions options) {
+      return Futures.await(async.withResponse().search(params, options));
+    }
+
     public ApiResponse<EnvironmentListResponse> list() {
       return list(EnvironmentListParams.builder().build());
     }

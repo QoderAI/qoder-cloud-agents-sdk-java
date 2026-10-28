@@ -198,6 +198,16 @@ class SessionsTest {
     assertEquals("Bearer test-pat", sent.getHeader("Authorization"));
     assertEquals("logical-operation", sent.getHeader("Idempotency-Key"));
     assertEquals("contract", sent.getHeader("X-Test"));
+    if (operation.equals("create")) {
+      com.fasterxml.jackson.databind.node.ObjectNode expected =
+          (com.fasterxml.jackson.databind.node.ObjectNode) JSON.readTree(body);
+      expected
+          .putObject("metadata")
+          .put("__qca_sdk_created", "true")
+          .put("__qca_sdk_language", "java")
+          .put("__qca_sdk_version", sent.getHeader("X-Qoder-Package-Version"));
+      body = expected.toString();
+    }
     String actual = sent.getBody().readUtf8();
     if (body.isEmpty()) assertEquals("", actual);
     else assertEquals(JSON.readTree(body), JSON.readTree(actual));
@@ -418,8 +428,7 @@ class SessionsTest {
             SessionEventParam.builder()
                 .type("user.define_outcome")
                 .description("Tests pass")
-                .rubric(OutcomeRubric.builder().type("text").text("Tests and lint pass").build())
-                .outcomeId("outc_1")
+                .rubric(OutcomeRubric.builder().type("text").content("Tests and lint pass").build())
                 .maxIterations(3L)
                 .build());
     SessionEventSendParams params = SessionEventSendParams.builder().events(events).build();

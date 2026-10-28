@@ -66,11 +66,53 @@ public final class AsyncFiles {
         withResponse().download(fileId, options), ApiResponse::data, r -> r.data().close());
   }
 
+  public CompletableFuture<FileListResponse> search(FileSearchParams params) {
+    return search(params, RequestOptions.DEFAULT);
+  }
+
+  public CompletableFuture<FileListResponse> search(
+      FileSearchParams params, RequestOptions options) {
+    return Futures.map(withResponse().search(params, options), ApiResponse::data);
+  }
+
+  public CompletableFuture<FileListResponse> search() {
+    return search(FileSearchParams.builder().build());
+  }
+
+  public CompletableFuture<FileListResponse> search(RequestOptions options) {
+    return search(FileSearchParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public CompletableFuture<ApiResponse<FileListResponse>> search() {
+      return search(FileSearchParams.builder().build());
+    }
+
+    public CompletableFuture<ApiResponse<FileListResponse>> search(RequestOptions options) {
+      return search(FileSearchParams.builder().build(), options);
+    }
+
+    public CompletableFuture<ApiResponse<FileListResponse>> search(FileSearchParams params) {
+      return search(params, RequestOptions.DEFAULT);
+    }
+
+    public CompletableFuture<ApiResponse<FileListResponse>> search(
+        FileSearchParams params, RequestOptions options) {
+      if (options == null || params == null)
+        throw new ConfigurationException("Request parameters and options must not be null");
+      return SearchRequests.search(
+          engine,
+          new String[] {"files", "search"},
+          params.toJsonValue(),
+          params.query(),
+          options,
+          FileListResponse::new);
+    }
+
     public CompletableFuture<ApiResponse<FileListResponse>> list() {
       return list(FileListParams.builder().build());
     }

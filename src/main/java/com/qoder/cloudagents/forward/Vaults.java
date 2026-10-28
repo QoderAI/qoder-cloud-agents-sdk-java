@@ -55,11 +55,43 @@ public final class Vaults {
     return Futures.await(async.delete(vaultId, options));
   }
 
+  public VaultListResponse search(VaultSearchParams params) {
+    return search(params, RequestOptions.DEFAULT);
+  }
+
+  public VaultListResponse search(VaultSearchParams params, RequestOptions options) {
+    return Futures.await(async.search(params, options));
+  }
+
+  public VaultListResponse search() {
+    return search(VaultSearchParams.builder().build());
+  }
+
+  public VaultListResponse search(RequestOptions options) {
+    return search(VaultSearchParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public ApiResponse<VaultListResponse> search() {
+      return search(VaultSearchParams.builder().build());
+    }
+
+    public ApiResponse<VaultListResponse> search(RequestOptions options) {
+      return search(VaultSearchParams.builder().build(), options);
+    }
+
+    public ApiResponse<VaultListResponse> search(VaultSearchParams params) {
+      return search(params, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<VaultListResponse> search(VaultSearchParams params, RequestOptions options) {
+      return Futures.await(async.withResponse().search(params, options));
+    }
+
     public ApiResponse<VaultListResponse> list() {
       return list(VaultListParams.builder().build());
     }

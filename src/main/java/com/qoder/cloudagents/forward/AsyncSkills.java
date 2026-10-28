@@ -83,11 +83,53 @@ public final class AsyncSkills {
     return Futures.map(withResponse().delete(skillId, options), ApiResponse::data);
   }
 
+  public CompletableFuture<SkillListResponse> search(SkillSearchParams params) {
+    return search(params, RequestOptions.DEFAULT);
+  }
+
+  public CompletableFuture<SkillListResponse> search(
+      SkillSearchParams params, RequestOptions options) {
+    return Futures.map(withResponse().search(params, options), ApiResponse::data);
+  }
+
+  public CompletableFuture<SkillListResponse> search() {
+    return search(SkillSearchParams.builder().build());
+  }
+
+  public CompletableFuture<SkillListResponse> search(RequestOptions options) {
+    return search(SkillSearchParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public CompletableFuture<ApiResponse<SkillListResponse>> search() {
+      return search(SkillSearchParams.builder().build());
+    }
+
+    public CompletableFuture<ApiResponse<SkillListResponse>> search(RequestOptions options) {
+      return search(SkillSearchParams.builder().build(), options);
+    }
+
+    public CompletableFuture<ApiResponse<SkillListResponse>> search(SkillSearchParams params) {
+      return search(params, RequestOptions.DEFAULT);
+    }
+
+    public CompletableFuture<ApiResponse<SkillListResponse>> search(
+        SkillSearchParams params, RequestOptions options) {
+      if (options == null || params == null)
+        throw new ConfigurationException("Request parameters and options must not be null");
+      return SearchRequests.search(
+          engine,
+          new String[] {"skills", "search"},
+          params.toJsonValue(),
+          params.query(),
+          options,
+          SkillListResponse::new);
+    }
+
     public CompletableFuture<ApiResponse<SkillListResponse>> list() {
       return list(SkillListParams.builder().build());
     }

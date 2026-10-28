@@ -9,6 +9,10 @@ public final class Schedule extends JsonModel {
     super(value, requestId);
   }
 
+  public List<SessionResourceSpec> resources() {
+    return optionalList("resources", SessionResourceSpec::fromJson);
+  }
+
   public Long initialEventsVersion() {
     return optional("initial_events_version", JsonValue::asLong);
   }

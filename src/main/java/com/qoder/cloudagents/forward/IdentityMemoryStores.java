@@ -43,11 +43,37 @@ public final class IdentityMemoryStores {
     return Futures.await(async.detach(identityId, templateId, memoryStoreId, options));
   }
 
+  public IdentityMemoryStoreListResponse list(
+      String identityId, String templateId, IdentityMemoryStoreListParams params) {
+    return list(identityId, templateId, params, RequestOptions.DEFAULT);
+  }
+
+  public IdentityMemoryStoreListResponse list(
+      String identityId,
+      String templateId,
+      IdentityMemoryStoreListParams params,
+      RequestOptions options) {
+    return Futures.await(async.list(identityId, templateId, params, options));
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public ApiResponse<IdentityMemoryStoreListResponse> list(
+        String identityId, String templateId, IdentityMemoryStoreListParams params) {
+      return list(identityId, templateId, params, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<IdentityMemoryStoreListResponse> list(
+        String identityId,
+        String templateId,
+        IdentityMemoryStoreListParams params,
+        RequestOptions options) {
+      return Futures.await(async.withResponse().list(identityId, templateId, params, options));
+    }
+
     public ApiResponse<IdentityMemoryStoreListResponse> list(String identityId, String templateId) {
       return list(identityId, templateId, RequestOptions.DEFAULT);
     }

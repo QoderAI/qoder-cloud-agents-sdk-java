@@ -13,6 +13,10 @@ public final class IdentityMemoryStoreMountParams extends JsonObject {
     return new IdentityMemoryStoreMountParams(value);
   }
 
+  public String access() {
+    return optional("access", JsonValue::asString);
+  }
+
   public String memoryStoreId() {
     return optional("memory_store_id", JsonValue::asString);
   }
@@ -23,6 +27,10 @@ public final class IdentityMemoryStoreMountParams extends JsonObject {
 
   public static final class Builder extends JsonObjectBuilder<Builder> {
     private Builder() {}
+
+    public Builder access(String value) {
+      return put("access", value);
+    }
 
     public Builder memoryStoreId(String value) {
       return put("memory_store_id", value);

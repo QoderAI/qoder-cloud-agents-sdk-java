@@ -67,6 +67,10 @@ public final class JsonValue {
     return new JsonValue(MAPPER.valueToTree(value));
   }
 
+  public boolean isBoolean() {
+    return node.isBoolean();
+  }
+
   public boolean isString() {
     return node.isTextual();
   }

@@ -13,6 +13,10 @@ public final class IdentityUpdateParams extends JsonObject {
     return new IdentityUpdateParams(value);
   }
 
+  public Boolean autoMemoryStore() {
+    return optional("auto_memory_store", JsonValue::asBoolean);
+  }
+
   public String externalId() {
     return optional("external_id", JsonValue::asString);
   }
@@ -35,6 +39,10 @@ public final class IdentityUpdateParams extends JsonObject {
 
   public static final class Builder extends JsonObjectBuilder<Builder> {
     private Builder() {}
+
+    public Builder autoMemoryStore(Boolean value) {
+      return put("auto_memory_store", value);
+    }
 
     public Builder externalId(String value) {
       return put("external_id", value);

@@ -9,6 +9,10 @@ public final class Identity extends JsonModel {
     super(value, requestId);
   }
 
+  public Boolean autoMemoryStore() {
+    return optional("auto_memory_store", JsonValue::asBoolean);
+  }
+
   public String id() {
     return field("id").asString();
   }

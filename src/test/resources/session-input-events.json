@@ -8,6 +8,6 @@
     {"type": "user.tool_confirmation", "tool_use_id": "toolu_1", "result": "deny", "deny_message": "Not needed"},
     {"type": "user.tool_result", "tool_use_id": "toolu_2", "content": "tool output", "is_error": false},
     {"type": "user.custom_tool_result", "custom_tool_use_id": "custom_1", "content": [{"type": "text", "text": "Done"}], "is_error": true},
-    {"type": "user.define_outcome", "description": "Tests pass", "rubric": {"type": "text", "text": "Tests and lint pass"}, "outcome_id": "outc_1", "max_iterations": 3}
+    {"type": "user.define_outcome", "description": "Tests pass", "rubric": {"type": "text", "content": "Tests and lint pass"}, "max_iterations": 3}
   ]
 }

@@ -22,6 +22,10 @@ public final class ScheduleRunRetrieveParams {
   public static final class Builder {
     private final Map<String, String> values = new LinkedHashMap<>();
 
+    public Builder includeInitialEvents(boolean value) {
+      return put("include_initial_events", Boolean.toString(value));
+    }
+
     public Builder identityId(String value) {
       return put("identity_id", value);
     }

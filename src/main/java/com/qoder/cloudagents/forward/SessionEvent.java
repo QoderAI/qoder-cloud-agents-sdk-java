@@ -1,12 +1,25 @@
 package com.qoder.cloudagents.forward;
 
 import com.qoder.cloudagents.core.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 /** Immutable API response; unknown fields are preserved. */
 public final class SessionEvent extends JsonModel {
   public SessionEvent(JsonValue value, String requestId) {
     super(value, requestId);
+  }
+
+  public BigDecimal totalCredits() {
+    return optional("total_credits", JsonValue::asDecimal);
+  }
+
+  public BigDecimal sandboxRuntimeCredits() {
+    return optional("sandbox_runtime_credits", JsonValue::asDecimal);
+  }
+
+  public BigDecimal modelCredits() {
+    return optional("model_credits", JsonValue::asDecimal);
   }
 
   public String id() {
@@ -143,6 +156,18 @@ public final class SessionEvent extends JsonModel {
 
   public Map<String, JsonValue> input() {
     return optionalMap("input", item -> item);
+  }
+
+  /** Credits for context compaction, when usage.credits is present. */
+  public BigDecimal usageCredits() {
+    JsonValue value = field("usage").get("credits");
+    return value.isMissing() || value.isNull() ? null : value.asDecimal();
+  }
+
+  /** Incremental credits for a model request, when model_usage.credits is present. */
+  public BigDecimal modelUsageCredits() {
+    JsonValue value = field("model_usage").get("credits");
+    return value.isMissing() || value.isNull() ? null : value.asDecimal();
   }
 
   public Map<String, JsonValue> usage() {

@@ -68,7 +68,7 @@ System.out.println(accepted.requestId());
 
 The development SDK adds `ImageSource.builder().type("file").fileId(fileId)` and `fileId()` for images referenced by file ID. These typed methods are not included in the published `0.1.0` JAR; the service validates the image source and file permissions.
 
-`SessionEventParam` also exposes tool confirmation/result fields, custom tool result IDs, interrupt reason and outcome definition. `OutcomeRubric` is an object with a type and text/file ID, matching the documented outcome contract. Event-specific validation and permissions remain server-side.
+`SessionEventParam` also exposes tool confirmation/result fields, custom tool result IDs, interrupt reason and outcome definition. `OutcomeRubric` uses `content` for `type="text"` and `fileId` for `type="file"`. The deprecated `text` setter now writes `content`; migrate raw JSON explicitly. Event-specific validation and permissions remain server-side.
 
 A successful send acknowledges accepted input; it does not mean the model finished. Reading history returns persisted events, not a live subscription:
 
@@ -146,3 +146,5 @@ See the [isolated lifecycle example](../examples/README.md#session-lifecycle-and
 Implementation follows the [pinned SDK baseline](forward-api-coverage.md). Newer documented fields such as Session search, usage breakdown, outcomes and Thread stats are included without changing wire routes.
 
 Default tests cover local protocol behavior and independent JAR consumers. Session/Thread SSE and resumable subscriptions are described in [streaming](session-streaming.md); the [live runner](live-testing.md) separately checks actual Session execution.
+
+See [Forward contract updates](forward-parity.md) for automatic Session metadata markers, Credits event accessors, and Memory Store mount pagination.
