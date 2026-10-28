@@ -27,11 +27,78 @@ public final class ChannelPairings {
     return Futures.await(async.delete(pairingId, options));
   }
 
+  public ChannelPairingListResponse list(ChannelPairingListParams params) {
+    return list(params, RequestOptions.DEFAULT);
+  }
+
+  public ChannelPairingListResponse list(ChannelPairingListParams params, RequestOptions options) {
+    return Futures.await(async.list(params, options));
+  }
+
+  public ChannelPairing retrieve(String pairingId) {
+    return retrieve(pairingId, RequestOptions.DEFAULT);
+  }
+
+  public ChannelPairing retrieve(String pairingId, RequestOptions options) {
+    return Futures.await(async.retrieve(pairingId, options));
+  }
+
+  public ChannelPairing update(String pairingId, ChannelPairingUpdateParams params) {
+    return update(pairingId, params, RequestOptions.DEFAULT);
+  }
+
+  public ChannelPairing update(
+      String pairingId, ChannelPairingUpdateParams params, RequestOptions options) {
+    return Futures.await(async.update(pairingId, params, options));
+  }
+
+  public ChannelPairingListResponse list() {
+    return list(ChannelPairingListParams.builder().build());
+  }
+
+  public ChannelPairingListResponse list(RequestOptions options) {
+    return list(ChannelPairingListParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public ApiResponse<ChannelPairingListResponse> list() {
+      return list(ChannelPairingListParams.builder().build());
+    }
+
+    public ApiResponse<ChannelPairingListResponse> list(RequestOptions options) {
+      return list(ChannelPairingListParams.builder().build(), options);
+    }
+
+    public ApiResponse<ChannelPairingListResponse> list(ChannelPairingListParams params) {
+      return list(params, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<ChannelPairingListResponse> list(
+        ChannelPairingListParams params, RequestOptions options) {
+      return Futures.await(async.withResponse().list(params, options));
+    }
+
+    public ApiResponse<ChannelPairing> retrieve(String pairingId) {
+      return retrieve(pairingId, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<ChannelPairing> retrieve(String pairingId, RequestOptions options) {
+      return Futures.await(async.withResponse().retrieve(pairingId, options));
+    }
+
+    public ApiResponse<ChannelPairing> update(String pairingId, ChannelPairingUpdateParams params) {
+      return update(pairingId, params, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<ChannelPairing> update(
+        String pairingId, ChannelPairingUpdateParams params, RequestOptions options) {
+      return Futures.await(async.withResponse().update(pairingId, params, options));
+    }
+
     public ApiResponse<ChannelPairing> create(ChannelPairingCreateParams params) {
       return create(params, RequestOptions.DEFAULT);
     }

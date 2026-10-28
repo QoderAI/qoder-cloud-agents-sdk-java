@@ -79,11 +79,43 @@ public final class Skills {
     return Futures.await(async.delete(skillId, options));
   }
 
+  public SkillListResponse search(SkillSearchParams params) {
+    return search(params, RequestOptions.DEFAULT);
+  }
+
+  public SkillListResponse search(SkillSearchParams params, RequestOptions options) {
+    return Futures.await(async.search(params, options));
+  }
+
+  public SkillListResponse search() {
+    return search(SkillSearchParams.builder().build());
+  }
+
+  public SkillListResponse search(RequestOptions options) {
+    return search(SkillSearchParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public ApiResponse<SkillListResponse> search() {
+      return search(SkillSearchParams.builder().build());
+    }
+
+    public ApiResponse<SkillListResponse> search(RequestOptions options) {
+      return search(SkillSearchParams.builder().build(), options);
+    }
+
+    public ApiResponse<SkillListResponse> search(SkillSearchParams params) {
+      return search(params, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<SkillListResponse> search(SkillSearchParams params, RequestOptions options) {
+      return Futures.await(async.withResponse().search(params, options));
+    }
+
     public ApiResponse<SkillListResponse> list() {
       return list(SkillListParams.builder().build());
     }

@@ -1,0 +1,232 @@
+[
+  {
+    "operation": "searchEnvironment",
+    "method": "POST",
+    "path": "/environments/search?identity_id=idn_owner",
+    "body": {
+      "name": "dev",
+      "metadata": {
+        "team": "sdk"
+      },
+      "created_at[gte]": "2026-01-01T00:00:00Z",
+      "limit": 1
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "first_id": null,
+      "last_id": null,
+      "next_page": null
+    }
+  },
+  {
+    "operation": "searchFile",
+    "method": "POST",
+    "path": "/files/search?identity_id=idn_owner",
+    "body": {
+      "name": "report",
+      "scope_id": "sess_test"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "first_id": null,
+      "last_id": null,
+      "next_page": null
+    }
+  },
+  {
+    "operation": "searchSkill",
+    "method": "POST",
+    "path": "/skills/search?identity_id=idn_owner",
+    "body": {
+      "source": "custom",
+      "display_title": "research"
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "first_id": null,
+      "last_id": null,
+      "next_page": null
+    }
+  },
+  {
+    "operation": "searchVault",
+    "method": "POST",
+    "path": "/vaults/search?identity_id=idn_owner",
+    "body": {
+      "name": "keys",
+      "include_archived": true
+    },
+    "response": {
+      "data": [],
+      "has_more": false,
+      "first_id": null,
+      "last_id": null,
+      "next_page": null
+    }
+  },
+  {
+    "operation": "createDream",
+    "method": "POST",
+    "path": "/dreams",
+    "body": {
+      "inputs": [
+        {
+          "type": "memory_store",
+          "memory_store_id": "memstore_test"
+        }
+      ]
+    },
+    "response": {
+      "id": "drm_test",
+      "type": "dream",
+      "status": "pending"
+    }
+  },
+  {
+    "operation": "listDream",
+    "method": "GET",
+    "path": "/dreams?include_archived=true&limit=2",
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "first_id": null,
+      "last_id": null,
+      "next_page": null
+    }
+  },
+  {
+    "operation": "getDream",
+    "method": "GET",
+    "path": "/dreams/drm%2Fa",
+    "body": null,
+    "response": {
+      "id": "drm_test",
+      "type": "dream",
+      "status": "pending"
+    }
+  },
+  {
+    "operation": "cancelDream",
+    "method": "POST",
+    "path": "/dreams/drm%2Fa/cancel",
+    "body": null,
+    "response": {
+      "id": "drm_test",
+      "type": "dream",
+      "status": "pending"
+    }
+  },
+  {
+    "operation": "archiveDream",
+    "method": "POST",
+    "path": "/dreams/drm%2Fa/archive",
+    "body": null,
+    "response": {
+      "id": "drm_test",
+      "type": "dream",
+      "status": "pending"
+    }
+  },
+  {
+    "operation": "listPairing",
+    "method": "GET",
+    "path": "/channel_pairings?channel_id=channel_test&status=active&target_type=group&target_external_id=room&identity_id=idn_test&template_id=tmpl_test&limit=2",
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "first_id": null,
+      "last_id": null,
+      "next_page": null
+    }
+  },
+  {
+    "operation": "getPairing",
+    "method": "GET",
+    "path": "/channel_pairings/pair%2Fa",
+    "body": null,
+    "response": {
+      "id": "pair_test",
+      "status": "active"
+    }
+  },
+  {
+    "operation": "updatePairing",
+    "method": "POST",
+    "path": "/channel_pairings/pair%2Fa",
+    "body": {
+      "template_id": "tmpl_new"
+    },
+    "response": {
+      "id": "pair_test",
+      "status": "active"
+    }
+  },
+  {
+    "operation": "createDecision",
+    "method": "POST",
+    "path": "/decisions",
+    "body": {
+      "state": {
+        "ready": true
+      },
+      "questions": [
+        {
+          "type": "choice",
+          "instructions": "Is it ready?",
+          "choices": [
+            {
+              "value": true
+            },
+            {
+              "value": false
+            }
+          ]
+        }
+      ]
+    },
+    "response": {
+      "id": "dec_test",
+      "status": "completed",
+      "answers": [
+        {
+          "type": "choice",
+          "value": true
+        }
+      ]
+    }
+  },
+  {
+    "operation": "getDecision",
+    "method": "GET",
+    "path": "/decisions/dec%2Fa",
+    "body": null,
+    "response": {
+      "id": "dec_test",
+      "status": "completed",
+      "answers": [
+        {
+          "type": "choice",
+          "value": true
+        }
+      ]
+    }
+  },
+  {
+    "operation": "listDecision",
+    "method": "GET",
+    "path": "/decisions?session_id=sess_test&before_id=dec_new&limit=2",
+    "body": null,
+    "response": {
+      "data": [],
+      "has_more": false,
+      "first_id": null,
+      "last_id": null,
+      "next_page": null
+    }
+  }
+]

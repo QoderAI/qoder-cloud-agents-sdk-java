@@ -14,6 +14,10 @@ public final class ScheduleCreateParams extends JsonObject {
     return new ScheduleCreateParams(value);
   }
 
+  public List<SessionResourceSpec> resources() {
+    return optionalList("resources", SessionResourceSpec::fromJson);
+  }
+
   public String identityId() {
     return optional("identity_id", JsonValue::asString);
   }
@@ -60,6 +64,10 @@ public final class ScheduleCreateParams extends JsonObject {
 
   public static final class Builder extends JsonObjectBuilder<Builder> {
     private Builder() {}
+
+    public Builder resources(List<SessionResourceSpec> value) {
+      return put("resources", value);
+    }
 
     public Builder identityId(String value) {
       return put("identity_id", value);

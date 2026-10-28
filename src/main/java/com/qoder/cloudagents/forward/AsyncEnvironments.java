@@ -70,11 +70,54 @@ public final class AsyncEnvironments {
     return Futures.map(withResponse().delete(environmentId, options), ApiResponse::data);
   }
 
+  public CompletableFuture<EnvironmentListResponse> search(EnvironmentSearchParams params) {
+    return search(params, RequestOptions.DEFAULT);
+  }
+
+  public CompletableFuture<EnvironmentListResponse> search(
+      EnvironmentSearchParams params, RequestOptions options) {
+    return Futures.map(withResponse().search(params, options), ApiResponse::data);
+  }
+
+  public CompletableFuture<EnvironmentListResponse> search() {
+    return search(EnvironmentSearchParams.builder().build());
+  }
+
+  public CompletableFuture<EnvironmentListResponse> search(RequestOptions options) {
+    return search(EnvironmentSearchParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public CompletableFuture<ApiResponse<EnvironmentListResponse>> search() {
+      return search(EnvironmentSearchParams.builder().build());
+    }
+
+    public CompletableFuture<ApiResponse<EnvironmentListResponse>> search(RequestOptions options) {
+      return search(EnvironmentSearchParams.builder().build(), options);
+    }
+
+    public CompletableFuture<ApiResponse<EnvironmentListResponse>> search(
+        EnvironmentSearchParams params) {
+      return search(params, RequestOptions.DEFAULT);
+    }
+
+    public CompletableFuture<ApiResponse<EnvironmentListResponse>> search(
+        EnvironmentSearchParams params, RequestOptions options) {
+      if (options == null || params == null)
+        throw new ConfigurationException("Request parameters and options must not be null");
+      return SearchRequests.search(
+          engine,
+          new String[] {"environments", "search"},
+          params.toJsonValue(),
+          params.query(),
+          options,
+          EnvironmentListResponse::new);
+    }
+
     public CompletableFuture<ApiResponse<EnvironmentListResponse>> list() {
       return list(EnvironmentListParams.builder().build());
     }

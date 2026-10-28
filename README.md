@@ -18,6 +18,8 @@ Version **0.1.0** supports the **Forward API**. **Managed API support is planned
 
 See [API coverage and resource guides](docs/forward-api-coverage.md) for the supported operations.
 
+The development branch also includes [Forward Search, Dreams, Decisions, pairing management and contract updates](docs/forward-parity.md), alongside Webhooks and client extensions. These additions are unreleased and are not included in the published `0.1.0` JAR.
+
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [PAT and Service Account authentication](#pat-and-service-account-authentication)

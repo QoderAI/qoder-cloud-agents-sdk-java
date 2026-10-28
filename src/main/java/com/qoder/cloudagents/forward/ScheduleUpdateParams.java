@@ -14,6 +14,10 @@ public final class ScheduleUpdateParams extends JsonObject {
     return new ScheduleUpdateParams(value);
   }
 
+  public List<SessionResourceSpec> resources() {
+    return optionalList("resources", SessionResourceSpec::fromJson);
+  }
+
   public String name() {
     return optional("name", JsonValue::asString);
   }
@@ -56,6 +60,10 @@ public final class ScheduleUpdateParams extends JsonObject {
 
   public static final class Builder extends JsonObjectBuilder<Builder> {
     private Builder() {}
+
+    public Builder resources(List<SessionResourceSpec> value) {
+      return put("resources", value);
+    }
 
     public Builder name(String value) {
       return put("name", value);

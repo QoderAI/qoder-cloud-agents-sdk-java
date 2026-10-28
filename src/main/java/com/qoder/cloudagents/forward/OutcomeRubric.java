@@ -17,8 +17,16 @@ public final class OutcomeRubric extends JsonObject {
     return optional("type", JsonValue::asString);
   }
 
+  public String content() {
+    return optional("content", JsonValue::asString);
+  }
+
+  /**
+   * @deprecated Use {@link #content()}.
+   */
+  @Deprecated
   public String text() {
-    return optional("text", JsonValue::asString);
+    return content();
   }
 
   public String fileId() {
@@ -36,8 +44,16 @@ public final class OutcomeRubric extends JsonObject {
       return put("type", value);
     }
 
+    public Builder content(String value) {
+      return put("content", value);
+    }
+
+    /**
+     * @deprecated Use {@link #content(String)}; this alias also writes content.
+     */
+    @Deprecated
     public Builder text(String value) {
-      return put("text", value);
+      return content(value);
     }
 
     public Builder fileId(String value) {

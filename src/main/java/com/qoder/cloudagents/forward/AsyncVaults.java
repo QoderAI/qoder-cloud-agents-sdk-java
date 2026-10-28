@@ -57,11 +57,53 @@ public final class AsyncVaults {
     return Futures.map(withResponse().delete(vaultId, options), ApiResponse::data);
   }
 
+  public CompletableFuture<VaultListResponse> search(VaultSearchParams params) {
+    return search(params, RequestOptions.DEFAULT);
+  }
+
+  public CompletableFuture<VaultListResponse> search(
+      VaultSearchParams params, RequestOptions options) {
+    return Futures.map(withResponse().search(params, options), ApiResponse::data);
+  }
+
+  public CompletableFuture<VaultListResponse> search() {
+    return search(VaultSearchParams.builder().build());
+  }
+
+  public CompletableFuture<VaultListResponse> search(RequestOptions options) {
+    return search(VaultSearchParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public CompletableFuture<ApiResponse<VaultListResponse>> search() {
+      return search(VaultSearchParams.builder().build());
+    }
+
+    public CompletableFuture<ApiResponse<VaultListResponse>> search(RequestOptions options) {
+      return search(VaultSearchParams.builder().build(), options);
+    }
+
+    public CompletableFuture<ApiResponse<VaultListResponse>> search(VaultSearchParams params) {
+      return search(params, RequestOptions.DEFAULT);
+    }
+
+    public CompletableFuture<ApiResponse<VaultListResponse>> search(
+        VaultSearchParams params, RequestOptions options) {
+      if (options == null || params == null)
+        throw new ConfigurationException("Request parameters and options must not be null");
+      return SearchRequests.search(
+          engine,
+          new String[] {"vaults", "search"},
+          params.toJsonValue(),
+          params.query(),
+          options,
+          VaultListResponse::new);
+    }
+
     public CompletableFuture<ApiResponse<VaultListResponse>> list() {
       return list(VaultListParams.builder().build());
     }

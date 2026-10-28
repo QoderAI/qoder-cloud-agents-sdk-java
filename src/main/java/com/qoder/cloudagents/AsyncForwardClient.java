@@ -6,6 +6,8 @@ import com.qoder.cloudagents.errors.ConfigurationException;
 import com.qoder.cloudagents.forward.AsyncBatches;
 import com.qoder.cloudagents.forward.AsyncChannelPairings;
 import com.qoder.cloudagents.forward.AsyncChannels;
+import com.qoder.cloudagents.forward.AsyncDecisions;
+import com.qoder.cloudagents.forward.AsyncDreams;
 import com.qoder.cloudagents.forward.AsyncDrives;
 import com.qoder.cloudagents.forward.AsyncEnvironments;
 import com.qoder.cloudagents.forward.AsyncFiles;
@@ -28,6 +30,8 @@ import java.util.function.Consumer;
 
 /** Native asynchronous Forward client. Build with ForwardClient.builder().buildAsync(). */
 public final class AsyncForwardClient implements AutoCloseable {
+  private final AsyncDecisions decisions;
+  private final AsyncDreams dreams;
   private final AsyncWebhooks webhooks;
   private final AsyncUsage usage;
   private final AsyncServiceAccountTokens serviceAccountTokens;
@@ -60,6 +64,8 @@ public final class AsyncForwardClient implements AutoCloseable {
     usage = new AsyncUsage(engine);
     webhooks = new AsyncWebhooks(engine);
     this.ownsEngine = ownsEngine;
+    dreams = new AsyncDreams(engine);
+    decisions = new AsyncDecisions(engine);
     models = new AsyncModels(engine);
     files = new AsyncFiles(engine);
     channelPairings = new AsyncChannelPairings(engine);
@@ -74,6 +80,14 @@ public final class AsyncForwardClient implements AutoCloseable {
     identities = new AsyncIdentities(engine);
     sessions = new AsyncSessions(engine);
     memoryStores = new AsyncMemoryStores(engine);
+  }
+
+  public AsyncDecisions decisions() {
+    return decisions;
+  }
+
+  public AsyncDreams dreams() {
+    return dreams;
   }
 
   public AsyncWebhooks webhooks() {

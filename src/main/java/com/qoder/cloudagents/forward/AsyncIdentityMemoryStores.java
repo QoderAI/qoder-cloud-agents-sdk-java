@@ -48,11 +48,45 @@ public final class AsyncIdentityMemoryStores {
         withResponse().detach(identityId, templateId, memoryStoreId, options), ApiResponse::data);
   }
 
+  public CompletableFuture<IdentityMemoryStoreListResponse> list(
+      String identityId, String templateId, IdentityMemoryStoreListParams params) {
+    return list(identityId, templateId, params, RequestOptions.DEFAULT);
+  }
+
+  public CompletableFuture<IdentityMemoryStoreListResponse> list(
+      String identityId,
+      String templateId,
+      IdentityMemoryStoreListParams params,
+      RequestOptions options) {
+    return Futures.map(
+        withResponse().list(identityId, templateId, params, options), ApiResponse::data);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public CompletableFuture<ApiResponse<IdentityMemoryStoreListResponse>> list(
+        String identityId, String templateId, IdentityMemoryStoreListParams params) {
+      return list(identityId, templateId, params, RequestOptions.DEFAULT);
+    }
+
+    public CompletableFuture<ApiResponse<IdentityMemoryStoreListResponse>> list(
+        String identityId,
+        String templateId,
+        IdentityMemoryStoreListParams params,
+        RequestOptions options) {
+      if (options == null || params == null)
+        throw new ConfigurationException("Request parameters and options must not be null");
+      return CursorRequests.list(
+          engine,
+          new String[] {"identities", identityId, "templates", templateId, "memory_stores"},
+          params.query(),
+          options,
+          IdentityMemoryStoreListResponse::new);
+    }
+
     public CompletableFuture<ApiResponse<IdentityMemoryStoreListResponse>> list(
         String identityId, String templateId) {
       return list(identityId, templateId, RequestOptions.DEFAULT);
@@ -60,17 +94,7 @@ public final class AsyncIdentityMemoryStores {
 
     public CompletableFuture<ApiResponse<IdentityMemoryStoreListResponse>> list(
         String identityId, String templateId, RequestOptions options) {
-      return Futures.map(
-          engine.request(
-              "GET",
-              new String[] {"identities", identityId, "templates", templateId, "memory_stores"},
-              Collections.emptyMap(),
-              null,
-              true,
-              options),
-          response ->
-              response.map(
-                  value -> new IdentityMemoryStoreListResponse(value, response.requestId())));
+      return list(identityId, templateId, IdentityMemoryStoreListParams.builder().build(), options);
     }
 
     public CompletableFuture<ApiResponse<MemoryStoreMount>> mount(

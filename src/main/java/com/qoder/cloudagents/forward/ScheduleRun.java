@@ -9,6 +9,10 @@ public final class ScheduleRun extends JsonModel {
     super(value, requestId);
   }
 
+  public List<ScheduleInitialEvent> initialEvents() {
+    return optionalList("initial_events", ScheduleInitialEvent::fromJson);
+  }
+
   public Long initialEventsVersion() {
     return optional("initial_events_version", JsonValue::asLong);
   }

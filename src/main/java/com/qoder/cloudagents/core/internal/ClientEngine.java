@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -77,6 +78,21 @@ public final class ClientEngine implements AutoCloseable {
   public CompletableFuture<ApiResponse<JsonValue>> get(
       String[] path, Map<String, String> query, RequestOptions options) {
     return request("GET", path, query, null, true, options);
+  }
+
+  /** Add a required beta without losing the effective caller beta selectors. */
+  public RequestOptions withBeta(RequestOptions options, String required) {
+    if (options == null) throw new ConfigurationException("Request options must not be null");
+    String current = null;
+    for (Map.Entry<String, String> entry : defaultHeaders.entrySet())
+      if (entry.getKey().equalsIgnoreCase("x-qoder-beta")) current = entry.getValue();
+    for (Map.Entry<String, String> entry : options.headers().entrySet())
+      if (entry.getKey().equalsIgnoreCase("x-qoder-beta")) current = entry.getValue();
+    Set<String> values = new LinkedHashSet<>();
+    if (current != null)
+      for (String value : current.split(",")) if (!value.trim().isEmpty()) values.add(value.trim());
+    values.add(required);
+    return options.toBuilder().header("x-qoder-beta", String.join(",", values)).build();
   }
 
   /**

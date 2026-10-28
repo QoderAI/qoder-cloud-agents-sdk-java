@@ -1,6 +1,6 @@
 # Forward API 覆盖基线
 
-更新：2026-10-18。状态：**已实现并离线验证 Model 列表、Template、Identity / Config / Memory Store 挂载，以及 Session 普通 HTTP、Memory Store / Memory / Version、Environment / File、Skill / Version、Vault / Credential、Schedule / Run、Batch / Task、基线 Channel / Pairing / QR 接口，以及 Usage、Forward SAT 管理、Drive、Session/Thread SSE、Realtime 创建和 History，共 123 个 HTTP 操作及 Realtime WebSocket**。这是一份首版范围清单；真实环境验收方式和覆盖边界见 [真实环境测试](live-testing.md)。
+更新：2026-10-28。开发分支覆盖 **146 个 HTTP 操作及 Realtime WebSocket**：首版 123 项、未发布 Webhook 8 项、本轮 Forward Search / Dream / Pairing / Decision 15 项。公共 Maven Central 仍为 0.1.0；新增内容尚未发布。离线验证与真实环境验收分别记录，不能把操作覆盖数当作线上通过率。
 
 HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https://api.qoder.com/api/v1/forward`；表内路径均相对于 BaseURL。
 
@@ -166,10 +166,9 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 | SA Credential | `ServiceAccountCredential` | 平台 Token 置换、缓存、按需续期，与 Forward SAT 管理 API 分开 | 已实现 |
 | 同步/异步与响应元信息 | `ForwardClient / AsyncForwardClient / withResponse` | 同一协议核心；取消和资源所有权明确；保留 request ID | 已实现 |
 
-## 当前版本未提供
+## 当前开发分支未提供
 
 - Managed API：计划在后续版本支持，当前 0.1.0 尚未提供。
-- 资源 Search、Forward Dream。
 - Realtime Template 专用配置 GET/POST；普通 Template 的 managed_tool_config 已实现。
 - Agent 运行时内部工具调用和免 Token 的内部服务认证模式。
 - 新增 Drive 本地文件同步框架、采集/播放音频设备实现。
@@ -182,18 +181,36 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 
 维护检查见[维护指南](maintaining.md)，线上验证入口见[真实环境测试](live-testing.md)。
 
-## 本轮发现的基线外补充项
+## 未发布的 Webhooks 与 Forward 补齐
 
-基线核对时的官网文档还包含以下 3 个 Pairing 管理接口；固定 SDK inventory 的 123 项中没有它们。核对 Go SDK GitHub main `735f13c8bf5888bf70b5a93b9ba89bd0e078d4b9` 也未提供这三个接口。Java 首版暂不增加，仅保留差异记录，不计入当前待实现范围。当前基线为 123/123，另已实现 Realtime WebSocket；该比例不表示官网全部接口的覆盖率。
+Webhook 的 8 个操作已实现同步/异步、分页、原始请求体验签及示例，详见 [Webhook 指南](webhooks.md)。本轮补齐之前记录为范围外的三个 Pairing 操作，以及 Search、Dream 和 Decision。
 
-| HTTP | 相对路径 | 建议 Java 入口 | 状态 |
-| --- | --- | --- | --- |
-| GET | `/channel_pairings` | `channelPairings().list(...)` | 暂不增加，当前范围外 |
-| GET | `/channel_pairings/{pairing_id}` | `channelPairings().retrieve(...)` | 暂不增加，当前范围外 |
-| POST | `/channel_pairings/{pairing_id}` | `channelPairings().update(...)` | 暂不增加，当前范围外 |
+| # | HTTP | 相对路径 | Java 入口 |
+| ---: | --- | --- | --- |
+| 124 | `POST` | `/webhook/endpoints` | `webhooks().endpoints().create(...)` |
+| 125 | `GET` | `/webhook/endpoints` | `webhooks().endpoints().list(...)` |
+| 126 | `GET` | `/webhook/endpoints/{endpoint_id}` | `webhooks().endpoints().retrieve(...)` |
+| 127 | `PUT` | `/webhook/endpoints/{endpoint_id}` | `webhooks().endpoints().update(...)` |
+| 128 | `DELETE` | `/webhook/endpoints/{endpoint_id}` | `webhooks().endpoints().delete(...)` |
+| 129 | `POST` | `/webhook/endpoints/{endpoint_id}/enable` | `webhooks().endpoints().enable(...)` |
+| 130 | `POST` | `/webhook/endpoints/{endpoint_id}/disable` | `webhooks().endpoints().disable(...)` |
+| 131 | `POST` | `/webhook/endpoints/{endpoint_id}/test` | `webhooks().endpoints().test(...)` |
+| 132 | `POST` | `/environments/search` | `environments().search(...)` |
+| 133 | `POST` | `/skills/search` | `skills().search(...)` |
+| 134 | `POST` | `/vaults/search` | `vaults().search(...)` |
+| 135 | `POST` | `/files/search` | `files().search(...)` |
+| 136 | `POST` | `/dreams` | `dreams().create(...)` |
+| 137 | `GET` | `/dreams` | `dreams().list(...)` |
+| 138 | `GET` | `/dreams/{id}` | `dreams().retrieve(...)` |
+| 139 | `POST` | `/dreams/{id}/cancel` | `dreams().cancel(...)` |
+| 140 | `POST` | `/dreams/{id}/archive` | `dreams().archive(...)` |
+| 141 | `GET` | `/channel_pairings` | `channelPairings().list(...)` |
+| 142 | `GET` | `/channel_pairings/{pairing_id}` | `channelPairings().retrieve(...)` |
+| 143 | `POST` | `/channel_pairings/{pairing_id}` | `channelPairings().update(...)` |
+| 144 | `POST` | `/decisions` | `decisions().create(...)` |
+| 145 | `GET` | `/decisions` | `decisions().list(...)` |
+| 146 | `GET` | `/decisions/{decision_id}` | `decisions().retrieve(...)` |
 
-后续若决定纳入，再重新核对参数、权限和分页并更新总基线；不能将“完成配对”视为已实现以上三个管理操作。
+最新公开契约及字段迁移说明见 [Forward 补齐指南](forward-parity.md)。固定官方来源为 2026-10-28 文档快照；Go/Python/TS 0.13.0 作为行为对照，不把其扩展字段自动视为官方契约。
 
-## Next release: Webhooks
-
-Eight Webhook endpoint operations extend the original 123-operation baseline to **131 HTTP operations**. Sync/async methods, request metadata, cursor pagination and raw-body signature verification are implemented. See [Webhook guide](webhooks.md) for paths, authentication and validation boundaries. This is separate from the three deferred Pairing operations.
+本轮独立请求 fixture 位于 `src/test/resources/forward-parity-routes.json`，覆盖 15 个操作的同步/异步及 withResponse 入口。`ForwardParityTest`、`ForwardPaginationParityTest` 验证字段、metadata 冲突、精度、分页、幂等重试与取消。`ForwardCapabilitiesConsumerTest` 通过独立 examples 工程消费实际 JAR。真实环境和 QA 包尚须按 [验收指南](live-testing.md) 执行；目前没有这些新增功能的线上通过声明。

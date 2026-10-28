@@ -15,6 +15,8 @@ import com.qoder.cloudagents.errors.ConfigurationException;
 import com.qoder.cloudagents.forward.Batches;
 import com.qoder.cloudagents.forward.ChannelPairings;
 import com.qoder.cloudagents.forward.Channels;
+import com.qoder.cloudagents.forward.Decisions;
+import com.qoder.cloudagents.forward.Dreams;
 import com.qoder.cloudagents.forward.Drives;
 import com.qoder.cloudagents.forward.Environments;
 import com.qoder.cloudagents.forward.Files;
@@ -43,6 +45,8 @@ import okhttp3.HttpUrl;
  * Thread-safe Forward client. Close it after its synchronous and asynchronous views are finished.
  */
 public final class ForwardClient implements AutoCloseable {
+  private final Decisions decisions;
+  private final Dreams dreams;
   private final Webhooks webhooks;
   private final Usage usage;
   private final ServiceAccountTokens serviceAccountTokens;
@@ -71,6 +75,8 @@ public final class ForwardClient implements AutoCloseable {
     this.engine = engine;
     realtime = new Realtime(engine);
     async = new AsyncForwardClient(engine, false, configuration);
+    dreams = new Dreams(async.dreams());
+    decisions = new Decisions(async.decisions());
     models = new Models(async.models());
     drives = new Drives(async.drives());
     serviceAccountTokens = new ServiceAccountTokens(async.serviceAccountTokens());
@@ -89,6 +95,14 @@ public final class ForwardClient implements AutoCloseable {
     identities = new Identities(async.identities());
     sessions = new Sessions(async.sessions());
     memoryStores = new MemoryStores(async.memoryStores());
+  }
+
+  public Decisions decisions() {
+    return decisions;
+  }
+
+  public Dreams dreams() {
+    return dreams;
   }
 
   public Webhooks webhooks() {

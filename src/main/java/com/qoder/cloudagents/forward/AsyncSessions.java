@@ -117,7 +117,7 @@ public final class AsyncSessions {
               "POST",
               new String[] {"sessions"},
               Collections.emptyMap(),
-              params.toJsonValue(),
+              SessionMetadata.created(params.toJsonValue()),
               true,
               options),
           response -> response.map(value -> new Session(value, response.requestId())));

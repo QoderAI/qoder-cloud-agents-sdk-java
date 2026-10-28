@@ -62,11 +62,43 @@ public final class Files {
     return Futures.await(async.download(fileId, options));
   }
 
+  public FileListResponse search(FileSearchParams params) {
+    return search(params, RequestOptions.DEFAULT);
+  }
+
+  public FileListResponse search(FileSearchParams params, RequestOptions options) {
+    return Futures.await(async.search(params, options));
+  }
+
+  public FileListResponse search() {
+    return search(FileSearchParams.builder().build());
+  }
+
+  public FileListResponse search(RequestOptions options) {
+    return search(FileSearchParams.builder().build(), options);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+    public ApiResponse<FileListResponse> search() {
+      return search(FileSearchParams.builder().build());
+    }
+
+    public ApiResponse<FileListResponse> search(RequestOptions options) {
+      return search(FileSearchParams.builder().build(), options);
+    }
+
+    public ApiResponse<FileListResponse> search(FileSearchParams params) {
+      return search(params, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<FileListResponse> search(FileSearchParams params, RequestOptions options) {
+      return Futures.await(async.withResponse().search(params, options));
+    }
+
     public ApiResponse<FileListResponse> list() {
       return list(FileListParams.builder().build());
     }
