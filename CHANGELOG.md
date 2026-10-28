@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add `ManagedClient` / `AsyncManagedClient` and 108 documented Managed operations: Agents and versions, Deployments and Runs, Sessions/Threads/events/resources, Environments/self-hosted Work, Files, Skills/Versions, Vaults/Credentials/OAuth, Memory Stores, Models and Dreams.
+- Add typed Managed budget and Credits, Agent runtime patches, versioned multiagent references, OSS storage, repository resources and exact Session provenance markers. Preserve null/omitted values and unknown response fields; retain POST search filters and opaque cursors.
+- Add Managed independent JAR examples, opt-in CN/Global PAT/SA integration groups, official-response contract fixtures and API coverage documentation. Forward and Managed additions target one combined 0.2.0 release.
+
 - Add typed synchronous/asynchronous Forward resource Search for Environments, Files, Skills and Vaults, retaining body filters, Identity query scope and Beta selectors across cursor pages.
 - Add Forward Dream create/list/retrieve/cancel/archive, Channel Pairing list/retrieve/update, and Decision create/retrieve/list with typed input, output and precise score values.
 - Add Identity auto-memory configuration, independent mount access and pagination, Schedule file resources, optional Run input snapshots, and Credits accessors for Session events.

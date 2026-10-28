@@ -1,6 +1,6 @@
 # Java SDK maintenance
 
-The SDK covers Forward and targets Java 8. Use JDK 17 or later for maintenance tools; the runtime compatibility matrix remains Java 8, 11, 17, 21 and 25.
+The development SDK covers Forward and Managed and targets Java 8. Use JDK 17 or later for maintenance tools; the runtime compatibility matrix remains Java 8, 11, 17, 21 and 25.
 
 ## Local checks and pull requests
 

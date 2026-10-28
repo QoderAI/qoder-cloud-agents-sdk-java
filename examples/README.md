@@ -248,3 +248,7 @@ Forward Webhook listing and receiver verification: see [Webhook guide](../docs/w
 ## Forward additions (development JAR)
 
 [ForwardCapabilitiesExample](src/main/java/com/qoder/cloudagents/examples/ForwardCapabilitiesExample.java) demonstrates resource Search, Decision creation, Dream creation and Pairing listing. See [parameters, opt-in flags and side effects](../docs/forward-parity.md#verification-and-executable-example). It uses the installed development JAR; these APIs are not in Maven Central `0.1.0`.
+
+## Managed API (unreleased, planned for 0.2.0)
+
+`ManagedExampleClient` configures PAT / SA Key / SAT authentication with `QODER_BASE_URL` for `/api/v1/cloud`. `ManagedLiveCheck` provides explicit `read`, `resources`, `session`, `deployment` and `work` integration groups against the resolved JAR. See [Managed usage](../docs/managed.md) and [opt-in live testing](../docs/managed-live-testing.md) for permissions, test resources and cleanup. These classes are not in the published 0.1.0 SDK.
