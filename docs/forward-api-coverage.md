@@ -1,6 +1,6 @@
 # Forward API 覆盖基线
 
-契约核对：2026-10-28。**0.2.0** 覆盖 **146 个 HTTP 操作及 Realtime WebSocket**：首版 123 项、Webhook 8 项、Forward Search / Dream / Pairing / Decision 15 项。同一版本还提供 [108 个 Managed 操作](managed-api-coverage.md)。离线验证与真实环境验收分别记录，不能把操作覆盖数当作线上通过率。
+契约核对：2026-10-28。**0.2.0** 覆盖 **146 个 HTTP 操作及 Realtime WebSocket**：首版 123 项、Webhook 8 项、Forward Search / Dream / Pairing / Decision 15 项。同一版本还提供 [107 个 Managed 操作](managed-api-coverage.md)。离线验证与真实环境验收分别记录，不能把操作覆盖数当作线上通过率。
 
 HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https://api.qoder.com/api/v1/forward`；表内路径均相对于 BaseURL。
 

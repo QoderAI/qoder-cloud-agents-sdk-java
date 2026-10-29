@@ -1,6 +1,6 @@
 # Managed API
 
-Managed support is included with the Forward additions in **0.2.0**. The [coverage inventory](managed-api-coverage.md) records 108 documented operations, including two SSE endpoints, checked against the [official documentation](https://docs.qoder.com/cloud-agents/overview) on 2026-10-28.
+Managed support is included with the Forward additions in **0.2.0**. The [coverage inventory](managed-api-coverage.md) records 107 documented operations, including two SSE endpoints, checked against the [official documentation](https://docs.qoder.com/cloud-agents/overview) on 2026-10-28.
 
 ## Client and authentication
 
@@ -85,12 +85,12 @@ Cursor lists retain supported filters and request options; `getNextPageAsync()` 
 - `deployments()` supports create/retrieve/update/list/search, pause/unpause/archive and manual run. Omit `schedule` for manual-only execution. Use `deployments().runs()` for scoped runs and `deploymentRuns()` for global runs.
 - `environments().work()` supports poll, ack, heartbeat, retrieve/list/stats, metadata update and stop for self-hosted environments. Poll may return null. Heartbeat parameters go in the query. Supply `Worker-ID` through `RequestOptions.header(...)`. Poll/ack/heartbeat are never automatically retried because they claim or advance a lease.
 - Environment storage supports typed OSS buckets, RAM roles and access-key credentials. Set `x-qoder-beta: oss-bucket-2026-09-23` explicitly when required by the [storage contract](https://docs.qoder.com/cloud-agents/api/environments/schemas). No dedicated OSS live configuration is included in the test suite.
-- Files support multipart upload, metadata, search, URL retrieval and isolated streaming download. Skill creation accepts `displayTitle`, repeatable files and metadata; Skill Versions support immutable upload/retrieve/list/delete and ZIP download. The deprecated Skill PUT update remains available for compatibility.
+- Files support multipart upload, metadata, search, URL retrieval and isolated streaming download. Skill creation accepts `displayTitle`, repeatable files and metadata; Skill Versions support immutable upload/retrieve/list/delete and ZIP download. The deprecated Skill PUT update is not exposed. Use `skills().versions().create(...)` for content updates; version creation does not replace Skill metadata updates.
 - Vaults support archives and credential CRUD/archive/validation. `oauth().start(...)` sends optional client secrets in the JSON body and returns `authorizationUrl`, `state` and `callbackOrigin`. User authorization still happens at the provider. Credential updates, OAuth startup and validation disable automatic retries to avoid replaying token rotations or OAuth state changes.
 - Dream inputs support a single primary Memory Store plus optional Session IDs. Forward's `identity_template` input does not apply to Managed. `Dream.sessionId()` exposes the execution Session when available.
 
 ## Verification and release
 
-The offline suite tests all 106 HTTP operations in four call styles, both SSE routes, exact wire placement, pagination, metadata/budget semantics, and response examples from the official docs. The independent examples project compiles and tests against the installed JAR. Run [the opt-in Managed integration entry](managed-live-testing.md) separately; offline coverage is not a claim that all operations passed against production.
+The offline suite tests all 105 HTTP operations in four call styles, both SSE routes, exact wire placement, pagination, metadata/budget semantics, and response examples from the official docs. The independent examples project compiles and tests against the installed JAR. Run [the opt-in Managed integration entry](managed-live-testing.md) separately; offline coverage is not a claim that all operations passed against production.
 
 Forward and Managed are delivered together in 0.2.0. Before publishing, run internal integration tests from the merged version commit and accept that build's QA package; results from an earlier development package do not replace version-package acceptance.

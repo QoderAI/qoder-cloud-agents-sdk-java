@@ -1,10 +1,10 @@
 # Managed API 覆盖基线
 
-契约核对：2026-10-28。**0.2.0** 与 Forward 更新一起提供 **108 个 Managed 协议操作：106 个普通 HTTP 操作、2 个 SSE 操作**。同步/异步/响应封装只计一个操作；0.1.0 不包含本表能力。
+契约核对：2026-10-28；接口清单更新：2026-10-29。**0.2.0** 与 Forward 更新一起提供 **107 个 Managed 协议操作：105 个普通 HTTP 操作、2 个 SSE 操作**。同步/异步/响应封装只计一个操作；0.1.0 不包含本表能力。
 
 Base URL：CN `https://api.qoder.com.cn/api/v1/cloud`，Global `https://api.qoder.com/api/v1/cloud`。使用方法见 [Managed 指南](managed.md)；验收范围见 [真实环境测试](managed-live-testing.md)。接口存在与离线通过不等于线上权限或执行结果已验证。
 
-OAuth 的浏览器重定向快捷入口 `/oauth/authorize` 不是 SDK JSON 方法；SDK 使用 `/oauth/start` 返回授权 URL。Forward 专用 Webhook、Identity、Channel 等不属于 Managed API。
+OAuth 的浏览器重定向快捷入口 `/oauth/authorize` 不是 SDK JSON 方法；SDK 使用 `/oauth/start` 返回授权 URL。Forward 专用 Webhook、Identity、Channel 等不属于 Managed API。已弃用的 `PUT /skills/{skill_id}` 不提供 SDK 方法；更新 Skill 内容请使用 `skills().versions().create(...)`，该方法不替代 Skill metadata 更新。
 
 | # | Java 资源方法 | HTTP | 相对路径 | 官方文档 |
 | ---: | --- | --- | --- | --- |
@@ -101,18 +101,17 @@ OAuth 的浏览器重定向快捷入口 `/oauth/authorize` 不是 SDK JSON 方�
 | 91 | `skills().versions().list(...)` | `GET` | `/skills/{skill_id}/versions` | [文档](https://docs.qoder.com/cloud-agents/api/skills/list-versions) |
 | 92 | `skills().list(...)` | `GET` | `/skills` | [文档](https://docs.qoder.com/cloud-agents/api/skills/list) |
 | 93 | `skills().search(...)` | `POST` | `/skills/search` | [文档](https://docs.qoder.com/cloud-agents/api/skills/search) |
-| 94 | `skills().update(...)` | `PUT` | `/skills/{skill_id}` | [文档](https://docs.qoder.com/cloud-agents/api/skills/update) |
-| 95 | `vaults().credentials().archive(...)` | `POST` | `/vaults/{vault_id}/credentials/{credential_id}/archive` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/archive-credential) |
-| 96 | `vaults().archive(...)` | `POST` | `/vaults/{vault_id}/archive` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/archive) |
-| 97 | `vaults().credentials().create(...)` | `POST` | `/vaults/{vault_id}/credentials` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/create-credential) |
-| 98 | `vaults().create(...)` | `POST` | `/vaults` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/create) |
-| 99 | `vaults().credentials().delete(...)` | `DELETE` | `/vaults/{vault_id}/credentials/{credential_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/delete-credential) |
-| 100 | `vaults().delete(...)` | `DELETE` | `/vaults/{vault_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/delete) |
-| 101 | `vaults().credentials().retrieve(...)` | `GET` | `/vaults/{vault_id}/credentials/{credential_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/get-credential) |
-| 102 | `vaults().retrieve(...)` | `GET` | `/vaults/{vault_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/get) |
-| 103 | `vaults().credentials().list(...)` | `GET` | `/vaults/{vault_id}/credentials` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/list-credentials) |
-| 104 | `vaults().list(...)` | `GET` | `/vaults` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/list) |
-| 105 | `vaults().search(...)` | `POST` | `/vaults/search` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/search) |
-| 106 | `oauth().start(...)` | `POST` | `/oauth/start` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/start-oauth) |
-| 107 | `vaults().credentials().update(...)` | `POST` | `/vaults/{vault_id}/credentials/{credential_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/update-credential) |
-| 108 | `vaults().credentials().validate(...)` | `POST` | `/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/validate-credential) |
+| 94 | `vaults().credentials().archive(...)` | `POST` | `/vaults/{vault_id}/credentials/{credential_id}/archive` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/archive-credential) |
+| 95 | `vaults().archive(...)` | `POST` | `/vaults/{vault_id}/archive` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/archive) |
+| 96 | `vaults().credentials().create(...)` | `POST` | `/vaults/{vault_id}/credentials` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/create-credential) |
+| 97 | `vaults().create(...)` | `POST` | `/vaults` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/create) |
+| 98 | `vaults().credentials().delete(...)` | `DELETE` | `/vaults/{vault_id}/credentials/{credential_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/delete-credential) |
+| 99 | `vaults().delete(...)` | `DELETE` | `/vaults/{vault_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/delete) |
+| 100 | `vaults().credentials().retrieve(...)` | `GET` | `/vaults/{vault_id}/credentials/{credential_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/get-credential) |
+| 101 | `vaults().retrieve(...)` | `GET` | `/vaults/{vault_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/get) |
+| 102 | `vaults().credentials().list(...)` | `GET` | `/vaults/{vault_id}/credentials` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/list-credentials) |
+| 103 | `vaults().list(...)` | `GET` | `/vaults` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/list) |
+| 104 | `vaults().search(...)` | `POST` | `/vaults/search` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/search) |
+| 105 | `oauth().start(...)` | `POST` | `/oauth/start` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/start-oauth) |
+| 106 | `vaults().credentials().update(...)` | `POST` | `/vaults/{vault_id}/credentials/{credential_id}` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/update-credential) |
+| 107 | `vaults().credentials().validate(...)` | `POST` | `/vaults/{vault_id}/credentials/{credential_id}/mcp_oauth_validate` | [文档](https://docs.qoder.com/cloud-agents/api/vaults/validate-credential) |

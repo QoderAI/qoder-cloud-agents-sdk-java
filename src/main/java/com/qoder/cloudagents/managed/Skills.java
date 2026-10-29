@@ -55,22 +55,6 @@ public final class Skills {
     return Futures.await(async.retrieve(skillId, params, options));
   }
 
-  /**
-   * @deprecated Append an immutable Skill version instead.
-   */
-  @Deprecated
-  public Skill update(String skillId, SkillUpdateParams params) {
-    return update(skillId, params, RequestOptions.DEFAULT);
-  }
-
-  /**
-   * @deprecated Append an immutable Skill version instead.
-   */
-  @Deprecated
-  public Skill update(String skillId, SkillUpdateParams params, RequestOptions options) {
-    return Futures.await(async.update(skillId, params, options));
-  }
-
   public DeletedSkill delete(String skillId) {
     return delete(skillId, RequestOptions.DEFAULT);
   }
@@ -155,23 +139,6 @@ public final class Skills {
     public ApiResponse<Skill> retrieve(
         String skillId, SkillRetrieveParams params, RequestOptions options) {
       return Futures.await(async.withResponse().retrieve(skillId, params, options));
-    }
-
-    /**
-     * @deprecated Append an immutable Skill version instead.
-     */
-    @Deprecated
-    public ApiResponse<Skill> update(String skillId, SkillUpdateParams params) {
-      return update(skillId, params, RequestOptions.DEFAULT);
-    }
-
-    /**
-     * @deprecated Append an immutable Skill version instead.
-     */
-    @Deprecated
-    public ApiResponse<Skill> update(
-        String skillId, SkillUpdateParams params, RequestOptions options) {
-      return Futures.await(async.withResponse().update(skillId, params, options));
     }
 
     public ApiResponse<DeletedSkill> delete(String skillId) {
