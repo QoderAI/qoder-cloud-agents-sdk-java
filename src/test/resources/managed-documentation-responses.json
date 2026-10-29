@@ -2035,24 +2035,6 @@
     }
   },
   {
-    "source": "api__skills__update.md",
-    "model": "Skill",
-    "value": {
-      "id": "skill_019e3bba474b73cfaf19eae9b5f5e66d",
-      "type": "skill",
-      "display_title": "test-skill-api-doc",
-      "description": "Updated skill description",
-      "source": "custom",
-      "latest_version": "1759178010641129",
-      "metadata": {
-        "team": "docs",
-        "stage": "updated"
-      },
-      "created_at": "2026-05-18T15:35:24.248164Z",
-      "updated_at": "2026-05-18T15:36:01.767469Z"
-    }
-  },
-  {
     "source": "api__vaults__archive-credential.md",
     "model": "VaultCredential",
     "value": {

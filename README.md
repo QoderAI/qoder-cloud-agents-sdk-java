@@ -18,7 +18,7 @@ Version **0.2.0** supports both the **Forward API** and the **[Managed API](docs
 
 See the [Forward](docs/forward-api-coverage.md) and [Managed](docs/managed-api-coverage.md) coverage inventories and resource guides for the supported operations.
 
-The [0.2.0 changelog](CHANGELOG.md) covers Forward Search, Dreams, Decisions, pairing management, contract updates, Session creation metadata, Webhooks, client extensions and 108 Managed operations. See the [Forward migration guide](docs/forward-parity.md) for the rubric field and reserved metadata changes.
+The [0.2.0 changelog](CHANGELOG.md) covers Forward Search, Dreams, Decisions, pairing management, contract updates, Session creation metadata, Webhooks, client extensions and 107 Managed operations. See the [Forward migration guide](docs/forward-parity.md) for the rubric field and reserved metadata changes.
 
 - [Installation](#installation)
 - [Quick start](#quick-start)

@@ -58,23 +58,6 @@ public final class AsyncSkills {
     return Futures.map(withResponse().retrieve(skillId, params, options), ApiResponse::data);
   }
 
-  /**
-   * @deprecated Append an immutable Skill version instead.
-   */
-  @Deprecated
-  public CompletableFuture<Skill> update(String skillId, SkillUpdateParams params) {
-    return update(skillId, params, RequestOptions.DEFAULT);
-  }
-
-  /**
-   * @deprecated Append an immutable Skill version instead.
-   */
-  @Deprecated
-  public CompletableFuture<Skill> update(
-      String skillId, SkillUpdateParams params, RequestOptions options) {
-    return Futures.map(withResponse().update(skillId, params, options), ApiResponse::data);
-  }
-
   public CompletableFuture<DeletedSkill> delete(String skillId) {
     return delete(skillId, RequestOptions.DEFAULT);
   }
@@ -202,32 +185,6 @@ public final class AsyncSkills {
       return Futures.map(
           engine.request(
               "GET", new String[] {"skills", skillId}, params.query(), null, true, options),
-          r -> r.map(v -> new Skill(v, r.requestId())));
-    }
-
-    /**
-     * @deprecated Append an immutable Skill version instead.
-     */
-    @Deprecated
-    public CompletableFuture<ApiResponse<Skill>> update(String skillId, SkillUpdateParams params) {
-      return update(skillId, params, RequestOptions.DEFAULT);
-    }
-
-    /**
-     * @deprecated Append an immutable Skill version instead.
-     */
-    @Deprecated
-    public CompletableFuture<ApiResponse<Skill>> update(
-        String skillId, SkillUpdateParams params, RequestOptions options) {
-      if (params == null) throw new ConfigurationException("Request parameters are required");
-      return Futures.map(
-          engine.request(
-              "PUT",
-              new String[] {"skills", skillId},
-              Collections.emptyMap(),
-              params.toJsonValue(),
-              true,
-              options),
           r -> r.map(v -> new Skill(v, r.requestId())));
     }
 

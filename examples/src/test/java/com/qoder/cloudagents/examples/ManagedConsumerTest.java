@@ -16,6 +16,22 @@ import org.junit.jupiter.params.provider.ValueSource;
 @Timeout(15)
 class ManagedConsumerTest {
   @Test
+  void packagedManagedSkillsExcludeTheDeprecatedUpdateApi() {
+    for (Class<?> service :
+        Arrays.asList(
+            Skills.class,
+            AsyncSkills.class,
+            Skills.WithResponse.class,
+            AsyncSkills.WithResponse.class))
+      assertFalse(
+          Arrays.stream(service.getMethods()).anyMatch(method -> "update".equals(method.getName())),
+          service.getName());
+    assertThrows(
+        ClassNotFoundException.class,
+        () -> Class.forName("com.qoder.cloudagents.managed.SkillUpdateParams"));
+  }
+
+  @Test
   void compiledConsumerUsesJarAndCreatesBudgetedSession() throws Exception {
     assertTrue(
         ManagedClient.class

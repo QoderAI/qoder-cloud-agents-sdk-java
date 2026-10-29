@@ -2281,32 +2281,6 @@
     }
   },
   {
-    "source": "https://docs.qoder.com/cloud-agents/api/skills/update",
-    "method": "PUT",
-    "path": "/api/v1/cloud/skills/segment_0%2Fencoded",
-    "resource": "skills",
-    "operation": "update",
-    "param": "SkillUpdateParams",
-    "mode": "body",
-    "ids": [
-      "segment_0/encoded"
-    ],
-    "query": {},
-    "query_types": {},
-    "body": {
-      "metadata": {
-        "team": "sdk"
-      }
-    },
-    "response": {
-      "id": "object_test",
-      "type": "test",
-      "future": {
-        "accepted": true
-      }
-    }
-  },
-  {
     "source": "https://docs.qoder.com/cloud-agents/api/vaults/archive-credential",
     "method": "POST",
     "path": "/api/v1/cloud/vaults/segment_0%2Fencoded/credentials/segment_1%2Fencoded/archive",
