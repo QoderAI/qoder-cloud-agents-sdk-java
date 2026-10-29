@@ -469,8 +469,9 @@ final class ForwardExecutionChecks {
 
   private final class Fixture implements AutoCloseable {
     final IdentityFixture identity = new IdentityFixture(client, out);
-    final String key = UUID.randomUUID().toString(),
-        marker = "java_execution_" + key.replace("-", "");
+    final String key = UUID.randomUUID().toString();
+    // Identifier-shaped replies can trigger the model's internal-information refusal.
+    final String marker = "Hello from the Java SDK.";
     final String environment;
     final String template;
     boolean safeToClean = true;

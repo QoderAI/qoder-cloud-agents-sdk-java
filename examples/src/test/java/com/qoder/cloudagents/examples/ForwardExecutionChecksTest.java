@@ -59,6 +59,7 @@ class ForwardExecutionChecksTest {
                 assertEquals("manual", body.get("trigger_policy").get("type").asString());
                 String prompt =
                     body.get("initial_events").asArray().get(0).get("content").asString();
+                assertEquals("Reply with exactly Hello from the Java SDK.", prompt);
                 marker = prompt.substring("Reply with exactly ".length());
                 return ok("{\"id\":\"schedule-owned\"}");
               }
@@ -85,6 +86,7 @@ class ForwardExecutionChecksTest {
                         .get("input")
                         .asString()
                         .substring("Reply with exactly ".length());
+                assertEquals("Hello from the Java SDK.", marker);
                 return ok("{\"id\":\"input-owned\"}");
               }
               if (path.endsWith("/batches") && "POST".equals(method)) {
