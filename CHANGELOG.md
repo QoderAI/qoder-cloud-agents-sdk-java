@@ -22,6 +22,8 @@
 
 ### Fixed
 
+- Use a plain-text greeting in Schedule/Batch live checks so model identifier-protection refusals do not obscure API verification; retain exact reply, ownership and terminal-state assertions.
+
 - Serialize text Outcome rubrics with the documented `content` field. Keep `text()` and `Builder.text(...)` as deprecated aliases for content.
 
 
