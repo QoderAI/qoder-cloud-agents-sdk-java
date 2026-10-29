@@ -1,16 +1,16 @@
 # Forward API 覆盖基线
 
-更新：2026-10-28。开发分支覆盖 **146 个 HTTP 操作及 Realtime WebSocket**：首版 123 项、未发布 Webhook 8 项、本轮 Forward Search / Dream / Pairing / Decision 15 项。公共 Maven Central 仍为 0.1.0；新增内容尚未发布。离线验证与真实环境验收分别记录，不能把操作覆盖数当作线上通过率。
+契约核对：2026-10-28。**0.2.0** 覆盖 **146 个 HTTP 操作及 Realtime WebSocket**：首版 123 项、Webhook 8 项、Forward Search / Dream / Pairing / Decision 15 项。同一版本还提供 [108 个 Managed 操作](managed-api-coverage.md)。离线验证与真实环境验收分别记录，不能把操作覆盖数当作线上通过率。
 
 HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https://api.qoder.com/api/v1/forward`；表内路径均相对于 BaseURL。
 
 来源：TypeScript main `597ff047be4fb0afb72fc6bd024ce957cf3e1fc1` 的 `src/forward/api-inventory.json`（120 项），补充 `service-account-token.ts` 和 `identity-service-account-token.ts` 的 3 项；operation ID 集合与 Go main `735f13c8bf5888bf70b5a93b9ba89bd0e078d4b9` 的 `forward/testdata/api-contracts.json`（123 项）交叉核对一致。
 
-共 **123 个 HTTP 操作**：121 个普通 HTTP 操作、2 个 SSE 订阅操作；另有 1 个 WebSocket 连接入口。Java 资源方法见下表；Maven 接入方式见 [README](../README.md#installation)，已发布版本见 [Releases](https://github.com/QoderAI/qoder-cloud-agents-sdk-java/releases)。相同方法的同步/异步形式只计一个协议操作。
+首版基线共 **123 个 HTTP 操作**：121 个普通 HTTP 操作、2 个 SSE 订阅操作；另有 1 个 WebSocket 连接入口。Java 资源方法见下表，0.2.0 新增的 23 项列在本文末尾；Maven 接入方式见 [README](../README.md#installation)，已发布版本见 [Releases](https://github.com/QoderAI/qoder-cloud-agents-sdk-java/releases)。相同方法的同步/异步形式只计一个协议操作。
 
 这里只盘点协议入口；参数、响应、分页、认证和重试行为由对应资源指南与契约测试说明。
 
-开发分支已按 Go `a996a88`、Python `2f8c625`、TypeScript `f4e3a4f` 的 main 补齐 ImageSource `file_id`、创建 Memory Store 时的 mount `access`、Schedule/Run `initial_events_version` 和 ChannelPairing 时间戳。接口操作集合仍为 123 项；客户端 HTTP 扩展、通用 JSON 请求和配置复制见[客户端配置](client-configuration.md)，这些新增能力尚不在已发布的 `0.1.0` 中。
+0.2.0 已按 Go `a996a88`、Python `2f8c625`、TypeScript `f4e3a4f` 的 main 补齐 ImageSource `file_id`、创建 Memory Store 时的 mount `access`、Schedule/Run `initial_events_version` 和 ChannelPairing 时间戳。这些字段不新增协议操作；客户端 HTTP 扩展、通用 JSON 请求和配置复制见[客户端配置](client-configuration.md)。
 
 ## 使用指南
 
@@ -166,9 +166,8 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 | SA Credential | `ServiceAccountCredential` | 平台 Token 置换、缓存、按需续期，与 Forward SAT 管理 API 分开 | 已实现 |
 | 同步/异步与响应元信息 | `ForwardClient / AsyncForwardClient / withResponse` | 同一协议核心；取消和资源所有权明确；保留 request ID | 已实现 |
 
-## 当前开发分支未提供
+## 当前未提供
 
-- Managed API：计划在后续版本支持，当前 0.1.0 尚未提供。
 - Realtime Template 专用配置 GET/POST；普通 Template 的 managed_tool_config 已实现。
 - Agent 运行时内部工具调用和免 Token 的内部服务认证模式。
 - 新增 Drive 本地文件同步框架、采集/播放音频设备实现。
@@ -181,7 +180,7 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 
 维护检查见[维护指南](maintaining.md)，线上验证入口见[真实环境测试](live-testing.md)。
 
-## 未发布的 Webhooks 与 Forward 补齐
+## 0.2.0 新增的 Webhooks 与 Forward 操作
 
 Webhook 的 8 个操作已实现同步/异步、分页、原始请求体验签及示例，详见 [Webhook 指南](webhooks.md)。本轮补齐之前记录为范围外的三个 Pairing 操作，以及 Search、Dream 和 Decision。
 

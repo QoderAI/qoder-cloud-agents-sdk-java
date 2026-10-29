@@ -24,7 +24,7 @@ Schedule schedule = client.schedules().create(
 
 Schedule initial events use string `content` as documented by this endpoint; ordinary Session events have their own content-block model. `ScheduleTriggerPolicyParams` exposes request fields (`type`, `expression`, `timezone`), while `ScheduleTriggerPolicy` includes computed response fields such as `upcomingRunsAt` and `lastRunAt`. Cron/timezone, once-time and interval rules are validated by the server.
 
-The development SDK exposes `initialEventsVersion()` on both `Schedule` and `ScheduleRun`. It returns a nullable `Long`: an absent version remains unknown, distinct from an explicit zero. This getter is not included in the published `0.1.0` JAR.
+Since 0.2.0, `initialEventsVersion()` is available on both `Schedule` and `ScheduleRun`. It returns a nullable `Long`: an absent version remains unknown, distinct from an explicit zero.
 
 - `schedules().list/create/retrieve/update/archive/archiveMany/pause/unpause/run` cover the nine Schedule operations.
 - `scheduleRuns().list/retrieve` cover Run queries. Listing requires `ScheduleRunListParams.identityId`; retrieval accepts optional `ScheduleRunRetrieveParams.identityId`.
