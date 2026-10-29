@@ -1,6 +1,6 @@
 # Java SDK maintenance
 
-The development SDK covers Forward and Managed and targets Java 8. Use JDK 17 or later for maintenance tools; the runtime compatibility matrix remains Java 8, 11, 17, 21 and 25.
+SDK 0.2.0 covers Forward and Managed and targets Java 8. Use JDK 17 or later for maintenance tools; the runtime compatibility matrix remains Java 8, 11, 17, 21 and 25.
 
 ## Local checks and pull requests
 
@@ -34,10 +34,10 @@ The SDK's embedded version is filtered from `${project.version}`; do not replace
 ```sh
 python3 .github/scripts/release_notes.py check
 # After adding the actual release entry:
-python3 .github/scripts/release_notes.py extract --version 0.1.0
+python3 .github/scripts/release_notes.py extract --version 0.2.0
 ```
 
-The release version in this checkout is `0.1.0`. Also update the README dependency and version-specific maintenance examples. Acceptance records must include the resolved version, source SHA and JAR digest. Release versions must not be overwritten; a successful test of an older build is not evidence for a newer one.
+The release version in this checkout is `0.2.0`. Also update the README dependency and version-specific maintenance examples. Acceptance records must include the resolved version, source SHA and JAR digest. Release versions must not be overwritten; a successful test of an older build is not evidence for a newer one.
 
 ### RC qualification for 0.1.0
 

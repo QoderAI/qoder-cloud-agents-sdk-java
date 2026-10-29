@@ -2,18 +2,19 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-29
+
+Bring Forward additions and Managed API support together in one Java 8 compatible release.
+
 ### Added
 
 - Add `ManagedClient` / `AsyncManagedClient` and 108 documented Managed operations: Agents and versions, Deployments and Runs, Sessions/Threads/events/resources, Environments/self-hosted Work, Files, Skills/Versions, Vaults/Credentials/OAuth, Memory Stores, Models and Dreams.
 - Add typed Managed budget and Credits, Agent runtime patches, versioned multiagent references, OSS storage, repository resources and exact Session provenance markers. Preserve null/omitted values and unknown response fields; retain POST search filters and opaque cursors.
-- Add Managed independent JAR examples, opt-in CN/Global PAT/SA integration groups, official-response contract fixtures and API coverage documentation. Forward and Managed additions target one combined 0.2.0 release.
-
+- Add Managed independent JAR examples, opt-in CN/Global PAT/SA integration groups, official-response contract fixtures and API coverage documentation.
 - Add typed synchronous/asynchronous Forward resource Search for Environments, Files, Skills and Vaults, retaining body filters, Identity query scope and Beta selectors across cursor pages.
 - Add Forward Dream create/list/retrieve/cancel/archive, Channel Pairing list/retrieve/update, and Decision create/retrieve/list with typed input, output and precise score values.
 - Add Identity auto-memory configuration, independent mount access and pagination, Schedule file resources, optional Run input snapshots, and Credits accessors for Session events.
 - Mark typed Session creation with `__qca_sdk_created`, `__qca_sdk_language` and the actual package version; preserve custom metadata and reject conflicting reserved values before HTTP.
-
-
 - Add Forward Webhook endpoint creation, listing, retrieval, partial update, deletion, enable/disable and synthetic test delivery.
 - Add raw-body webhook signature verification with HMAC-SHA256, multiple v1 signatures and a 300-second timestamp window; include receiver examples and offline contracts.
 - Public Java 8 HTTP transport and per-attempt interceptor contracts for custom networking and tracing, without exposing OkHttp types. Cancellation reaches downstream transport futures; SSE bodies remain streaming. Storage downloads use the transport without API credentials or interceptors. WebSockets and SA Key exchange retain their existing transports.
@@ -23,17 +24,13 @@
 ### Fixed
 
 - Use a plain-text greeting in Schedule/Batch live checks so model identifier-protection refusals do not obscure API verification; retain exact reply, ownership and terminal-state assertions.
-
 - Serialize text Outcome rubrics with the documented `content` field. Keep `text()` and `Builder.text(...)` as deprecated aliases for content.
-
-
 - Add typed image `file_id`, Memory Store creation-mount `access`, Schedule/Run `initial_events_version` and Pairing `created_at` / `updated_at` fields. Missing versions remain unknown rather than becoming zero.
 
 ### Migration
 
 - Prefer `OutcomeRubric.content()` / `Builder.content(...)`; raw JSON callers must replace the old rubric `text` key with `content`.
 - Typed Session creation now adds three metadata entries. Do not use different values/types for these exact reserved keys, and allow for them within the service metadata limit. Other metadata, including future prefixed keys, remains unchanged.
-
 
 ## [0.1.0] - 2026-10-21
 

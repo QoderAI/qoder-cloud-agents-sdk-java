@@ -1,6 +1,6 @@
-# Forward API additions (unreleased)
+# Forward API additions in 0.2.0
 
-This guide describes the development SDK after `0.1.0`, checked against the official Forward documentation on 2026-10-28. These additions are not available from the published `0.1.0` JAR. Both `ForwardClient` and `AsyncForwardClient` expose the same resources, including `withResponse()` for status, headers and request IDs. The same planned 0.2.0 release also includes [Managed support](managed.md).
+This guide describes the Forward additions in `0.2.0`, checked against the official Forward documentation on 2026-10-28. Both `ForwardClient` and `AsyncForwardClient` expose the same resources, including `withResponse()` for status, headers and request IDs. The same release also includes [Managed support](managed.md).
 
 ## Search resources
 

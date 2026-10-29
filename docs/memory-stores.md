@@ -42,7 +42,7 @@ MemoryStoreCreateMount mount = MemoryStoreCreateMount.builder()
 // Supply .mount(mount) on MemoryStoreCreateParams.builder().
 ```
 
-Both IDs are required when supplying `mount`. The development SDK also supports `.access("read_only")` or `.access("read_write")`; omitting it leaves the default to the service. This typed setter is not included in the published `0.1.0` JAR. Store `bindingInfo().identityTemplateCount()` reports active mounts; unknown binding fields remain available through `field(...)`.
+Both IDs are required when supplying `mount`. Since 0.2.0, `.access("read_only")` and `.access("read_write")` are supported; omitting access leaves the default to the service. Store `bindingInfo().identityTemplateCount()` reports active mounts; unknown binding fields remain available through `field(...)`.
 
 Store metadata is a string map with at most 15 user keys. `created_by` is reserved and added by the service. Memory metadata allows 16 keys and does not reserve `created_by`. Key/value size rules and other business constraints are enforced by the service. The SDK does not insert reserved metadata.
 

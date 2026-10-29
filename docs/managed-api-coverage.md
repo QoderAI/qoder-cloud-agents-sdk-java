@@ -1,6 +1,6 @@
 # Managed API 覆盖基线
 
-更新：2026-10-28。以当日官方文档为准，开发分支实现 **108 个协议操作：106 个普通 HTTP 操作、2 个 SSE 操作**。同步/异步/响应封装只计一个操作。目标与 Forward 更新合并为 **0.2.0**，公共 0.1.0 不包含本表能力。
+契约核对：2026-10-28。**0.2.0** 与 Forward 更新一起提供 **108 个 Managed 协议操作：106 个普通 HTTP 操作、2 个 SSE 操作**。同步/异步/响应封装只计一个操作；0.1.0 不包含本表能力。
 
 Base URL：CN `https://api.qoder.com.cn/api/v1/cloud`，Global `https://api.qoder.com/api/v1/cloud`。使用方法见 [Managed 指南](managed.md)；验收范围见 [真实环境测试](managed-live-testing.md)。接口存在与离线通过不等于线上权限或执行结果已验证。
 

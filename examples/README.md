@@ -1,4 +1,4 @@
-# Forward examples
+# Forward and Managed examples
 
 This independent Maven project consumes `com.qoder.sdk:qoder-cloud-agents-sdk` as a JAR dependency. `ForwardReadOnlyExample` lists Models and the first Template page, then optionally retrieves `QODER_TEMPLATE_ID`, without mutating resources. `TemplateLifecycleExample` creates, updates, clones and retrieves isolated Templates, then archives every created ID. `IdentityConfigExample` creates an isolated Identity, configures it for an existing Template, retrieves effective configuration, then clears and deletes that Identity. All share PAT/SA setup through `ExampleClient`.
 
@@ -17,7 +17,7 @@ For SDK development or an unpublished version, install the local SDK first:
 
 Verification uses a local fake service and asserts the SDK was loaded from a JAR. It does not use production credentials.
 
-`ClientExtensionsExample` demonstrates a read-only generic JSON request, a per-attempt tracing interceptor and an independently closeable client copy. It also accepts an application-owned `HttpTransport`. These extension APIs are unreleased; install the development SDK first, then run with `-Dexec.mainClass=com.qoder.cloudagents.examples.ClientExtensionsExample`. The packaged-consumer test verifies an adapter built with Java 8 `HttpURLConnection`, without importing SDK internals.
+`ClientExtensionsExample` demonstrates a read-only generic JSON request, a per-attempt tracing interceptor and an independently closeable client copy. It also accepts an application-owned `HttpTransport`. These extension APIs are included in 0.2.0; run with `-Dexec.mainClass=com.qoder.cloudagents.examples.ClientExtensionsExample`. The packaged-consumer test verifies an adapter built with Java 8 `HttpURLConnection`, without importing SDK internals.
 
 To run against your environment, configure credentials in your shell and choose one mode:
 
@@ -245,10 +245,10 @@ See [the opt-in live runner](../docs/live-testing.md) for the `read`, `resources
 
 Forward Webhook listing and receiver verification: see [Webhook guide](../docs/webhooks.md). The example does not create subscriptions or emit test deliveries.
 
-## Forward additions (development JAR)
+## Forward additions in 0.2.0
 
-[ForwardCapabilitiesExample](src/main/java/com/qoder/cloudagents/examples/ForwardCapabilitiesExample.java) demonstrates resource Search, Decision creation, Dream creation and Pairing listing. See [parameters, opt-in flags and side effects](../docs/forward-parity.md#verification-and-executable-example). It uses the installed development JAR; these APIs are not in Maven Central `0.1.0`.
+[ForwardCapabilitiesExample](src/main/java/com/qoder/cloudagents/examples/ForwardCapabilitiesExample.java) demonstrates resource Search, Decision creation, Dream creation and Pairing listing. See [parameters, opt-in flags and side effects](../docs/forward-parity.md#verification-and-executable-example). These APIs require SDK 0.2.0 or later.
 
-## Managed API (unreleased, planned for 0.2.0)
+## Managed API
 
-`ManagedExampleClient` configures PAT / SA Key / SAT authentication with `QODER_BASE_URL` for `/api/v1/cloud`. `ManagedLiveCheck` provides explicit `read`, `resources`, `session`, `deployment` and `work` integration groups against the resolved JAR. See [Managed usage](../docs/managed.md) and [opt-in live testing](../docs/managed-live-testing.md) for permissions, test resources and cleanup. These classes are not in the published 0.1.0 SDK.
+`ManagedExampleClient` configures PAT / SA Key / SAT authentication with `QODER_BASE_URL` for `/api/v1/cloud`. `ManagedLiveCheck` provides explicit `read`, `resources`, `session`, `deployment` and `work` integration groups against the resolved JAR. See [Managed usage](../docs/managed.md) and [opt-in live testing](../docs/managed-live-testing.md) for permissions, test resources and cleanup. These examples require SDK 0.2.0 or later.

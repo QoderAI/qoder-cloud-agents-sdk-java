@@ -1,6 +1,6 @@
-# Managed API (development)
+# Managed API
 
-Managed support is being prepared together with the unreleased Forward changes for **0.2.0**. It is not in the published 0.1.0 JAR. The [coverage inventory](managed-api-coverage.md) records 108 documented operations, including two SSE endpoints, checked against the [official documentation](https://docs.qoder.com/cloud-agents/overview) on 2026-10-28.
+Managed support is included with the Forward additions in **0.2.0**. The [coverage inventory](managed-api-coverage.md) records 108 documented operations, including two SSE endpoints, checked against the [official documentation](https://docs.qoder.com/cloud-agents/overview) on 2026-10-28.
 
 ## Client and authentication
 
@@ -93,4 +93,4 @@ Cursor lists retain supported filters and request options; `getNextPageAsync()` 
 
 The offline suite tests all 106 HTTP operations in four call styles, both SSE routes, exact wire placement, pagination, metadata/budget semantics, and response examples from the official docs. The independent examples project compiles and tests against the installed JAR. Run [the opt-in Managed integration entry](managed-live-testing.md) separately; offline coverage is not a claim that all operations passed against production.
 
-Both Forward and Managed remain under `Unreleased` until the combined 0.2.0 version PR. After merging implementation PRs, run internal integration tests from the merged GitHub SHA and accept that build's QA package before preparing the release.
+Forward and Managed are delivered together in 0.2.0. Before publishing, run internal integration tests from the merged version commit and accept that build's QA package; results from an earlier development package do not replace version-package acceptance.

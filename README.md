@@ -4,21 +4,21 @@
 
 The Qoder Cloud Agents Java SDK provides typed synchronous and asynchronous clients, with shared authentication, timeouts, retries, pagination, streaming and error handling.
 
-Version **0.1.0** supports the **Forward API**. The development branch adds [Managed API support](docs/managed.md) for the planned combined **0.2.0** release; it is not available in the published 0.1.0 JAR.
+Version **0.2.0** supports both the **Forward API** and the **[Managed API](docs/managed.md)** in one package. Use `ForwardClient` / `AsyncForwardClient` for Forward and `ManagedClient` / `AsyncManagedClient` for Managed.
 
 | Capability | Resources |
 | --- | --- |
-| Agent configuration | Template, Identity and per-Identity configuration |
+| Agent configuration | Forward Template, Identity and per-Identity configuration; Managed Agent and versions |
 | Conversations | Session, Thread, event history and SSE subscriptions |
-| Execution | Schedule, Schedule Run, Batch and Batch Task |
-| Resources | Environment, File, Skill, Vault, Memory Store and Drive |
-| Channels | Channel configuration, Pairing creation/deletion and QR authorization |
+| Execution | Forward Schedule, Schedule Run, Batch and Batch Task; Managed Deployment, Run and self-hosted Work |
+| Resources | Environment, File, Skill, Vault, Memory Store and resource Search; Forward Drive |
+| Channels and notifications | Forward Channel configuration, Pairing management, QR authorization and Webhooks |
 | Authentication and usage | PAT, Service Account credentials, Forward SAT issuance/revocation, Model and Usage |
-| Realtime (Beta) | Text/audio WebSocket conversations and persisted History |
+| Realtime (Forward, Beta) | Text/audio WebSocket conversations and persisted History |
 
-See [API coverage and resource guides](docs/forward-api-coverage.md) for the supported operations.
+See the [Forward](docs/forward-api-coverage.md) and [Managed](docs/managed-api-coverage.md) coverage inventories and resource guides for the supported operations.
 
-The development branch also includes [Forward Search, Dreams, Decisions, pairing management and contract updates](docs/forward-parity.md), alongside Webhooks, client extensions and [108 Managed operations](docs/managed-api-coverage.md). These additions are unreleased and are not included in the published `0.1.0` JAR.
+The [0.2.0 changelog](CHANGELOG.md) covers Forward Search, Dreams, Decisions, pairing management, contract updates, Session creation metadata, Webhooks, client extensions and 108 Managed operations. See the [Forward migration guide](docs/forward-parity.md) for the rubric field and reserved metadata changes.
 
 - [Installation](#installation)
 - [Quick start](#quick-start)
@@ -39,7 +39,7 @@ Add the Maven dependency; published versions require no local SDK build or addit
 <dependency>
   <groupId>com.qoder.sdk</groupId>
   <artifactId>qoder-cloud-agents-sdk</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
@@ -50,7 +50,7 @@ Requirements:
 
 ## Quick start
 
-Set `QODER_PAT` in your environment. This complete program connects to Global and lists the enabled models:
+Set `QODER_PAT` in your environment. This complete Forward program connects to Global and lists the enabled models. For Managed client creation, authentication and resource examples, see the [Managed quick start](docs/managed.md#client-and-authentication).
 
 ```java
 import com.qoder.cloudagents.ForwardClient;
@@ -229,7 +229,8 @@ Microphone capture and audio playback belong to the application. Connections do 
 
 - [Runnable examples](examples/README.md): shared PAT/SA setup, resource lifecycles, Session SSE and Realtime.
 - [API coverage](docs/forward-api-coverage.md): supported operations and guides for each resource.
-- [Client extensions (unreleased)](docs/client-configuration.md#client-extensions-unreleased): custom HTTP transport, interceptors, generic JSON requests and configuration copies.
+- [Managed API](docs/managed.md): Agents, Deployments, Sessions, resources and self-hosted Work.
+- [Client extensions](docs/client-configuration.md#client-extensions): custom HTTP transport, interceptors, generic JSON requests and configuration copies.
 - [Files and downloads](docs/environments-files.md) and [Drive, Usage and SAT management](docs/usage-sat-drive.md).
 - [Live testing](docs/live-testing.md): opt-in CN/Global verification and coverage boundaries.
 

@@ -87,9 +87,9 @@ com.qoder.cloudagents.core.ApiResponse<com.qoder.cloudagents.forward.Template> r
 - Models provide `requestId()`, `field(name)` for unknown fields and `rawJson()`. Unknown fields and numeric precision are preserved; invalid typed field access raises `ResponseValidationException`. Request metadata is separate from the JSON body.
 - Template list parameters support `limit`, `status`, `afterId` or `beforeId`. Use `page.data()` for one page, `getNextPage()` / `getNextPageAsync()` for manual pagination, or `for (Template template : page)` for lazy synchronous iteration. Server order is retained; filters and request options follow subsequent pages. Check `hasNextPage()` before fetching; an exhausted page or repeated cursor raises `PaginationException`.
 
-## Client extensions (unreleased)
+## Client extensions
 
-The following client extensions are on the development branch and are not included in the published `0.1.0` JAR. Build and install the local SDK to try them.
+The following client extensions are included in `0.2.0`.
 
 ### Derived clients
 

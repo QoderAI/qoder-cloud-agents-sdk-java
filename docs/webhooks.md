@@ -1,6 +1,6 @@
 # Forward Webhooks
 
-Available in the next SDK release. Configure account notifications with a PAT or
+Included in SDK 0.2.0. Configure account notifications with a PAT or
 administrator SAT. Identity SATs cannot manage webhook endpoints. Use the same
 regional Forward client and shared authentication configuration as other APIs.
 
