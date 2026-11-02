@@ -6,30 +6,17 @@ The Qoder Cloud Agents Java SDK provides typed synchronous and asynchronous clie
 
 Version **0.2.0** supports both the **Forward API** and the **[Managed API](docs/managed.md)** in one package. Use `ForwardClient` / `AsyncForwardClient` for Forward and `ManagedClient` / `AsyncManagedClient` for Managed.
 
-| Capability | Resources |
-| --- | --- |
-| Agent configuration | Forward Template, Identity and per-Identity configuration; Managed Agent and versions |
-| Conversations | Session, Thread, event history and SSE subscriptions |
-| Execution | Forward Schedule, Schedule Run, Batch and Batch Task; Managed Deployment, Run and self-hosted Work |
-| Resources | Environment, File, Skill, Vault, Memory Store and resource Search; Forward Drive |
-| Channels and notifications | Forward Channel configuration, Pairing management, QR authorization and Webhooks |
-| Authentication and usage | PAT, Service Account credentials, Forward SAT issuance/revocation, Model and Usage |
-| Realtime (Forward, Beta) | Text/audio WebSocket conversations and persisted History |
-
-See the [Forward](docs/forward-api-coverage.md) and [Managed](docs/managed-api-coverage.md) coverage inventories and resource guides for the supported operations.
-
-The [0.2.0 changelog](CHANGELOG.md) covers Forward Search, Dreams, Decisions, pairing management, contract updates, Session creation metadata, Webhooks, client extensions and 107 Managed operations. See the [Forward migration guide](docs/forward-parity.md) for the rubric field and reserved metadata changes.
-
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [PAT and Service Account authentication](#pat-and-service-account-authentication)
-- [Conversations and streaming](#conversations-and-streaming)
+- [Streaming](#streaming)
 - [Asynchronous calls and cancellation](#asynchronous-calls-and-cancellation)
 - [Pagination](#pagination)
 - [Timeouts, retries and errors](#timeouts-retries-and-errors)
-- [Realtime](#realtime)
-- [Examples and documentation](#examples-and-documentation)
+- [Documentation and examples](#documentation-and-examples)
 - [Development](#development)
+- [Versioning](#versioning)
+- [License](#license)
 
 ## Installation
 
@@ -50,7 +37,7 @@ Requirements:
 
 ## Quick start
 
-Set `QODER_PAT` in your environment. This complete Forward program connects to Global and lists the enabled models. For Managed client creation, authentication and resource examples, see the [Managed quick start](docs/managed.md#client-and-authentication).
+Set `QODER_PAT` in your environment. This complete Forward program connects to Global and lists the enabled models. For the other client, see the [Managed quick start](docs/managed.md#client-and-authentication).
 
 ```java
 import com.qoder.cloudagents.ForwardClient;
@@ -113,53 +100,9 @@ Business requests use the SAT; the SA Key is sent only to the exchange service. 
 
 Forward also provides explicit administrator/Identity SAT issuance and revocation through `serviceAccountTokens()` and `identities().serviceAccountTokens()`. These methods take a per-call SA Key and do not retry automatically. See [SAT management](docs/usage-sat-drive.md) and [authentication configuration](docs/client-configuration.md).
 
-## Conversations and streaming
+## Streaming
 
-Create a Session using an existing Identity and Template, send a user message, and consume events through SSE:
-
-```java
-import com.qoder.cloudagents.core.RequestOptions;
-import com.qoder.cloudagents.forward.*;
-import com.qoder.cloudagents.streaming.EventStream;
-import java.time.Duration;
-import java.util.Collections;
-import java.util.UUID;
-
-Session session = client.sessions().create(
-    SessionCreateParams.builder()
-        .identityId("idn_example")
-        .templateId("tmpl_example")
-        .title("SDK quick start")
-        .build(),
-    RequestOptions.builder().idempotencyKey(UUID.randomUUID().toString()).build());
-
-SessionEventSendResponse sent = client.sessions().events().send(session.id(),
-    SessionEventSendParams.builder().events(Collections.singletonList(
-        SessionEventParam.builder()
-            .type("user.message")
-            .content(EventContent.text("Hello!"))
-            .build())).build(),
-    RequestOptions.builder().idempotencyKey(UUID.randomUUID().toString()).build());
-
-// Start after the accepted input, excluding events from earlier turns.
-String inputEventId = sent.data().get(0).id();
-try (EventStream<SessionEvent> stream = client.sessions().events().streamEvents(
-        session.id(), SessionEventStreamParams.builder().lastEventId(inputEventId).build(),
-        RequestOptions.builder().totalTimeout(Duration.ofMinutes(5)).build())) {
-    for (SessionEvent event : stream) {
-        System.out.println(event.type());
-        // Inspect event.content() for message blocks.
-        if ("session.error".equals(event.type()) || "session.status_terminated".equals(event.type())) {
-            throw new IllegalStateException("Session stopped: " + event.type());
-        }
-        if ("session.status_idle".equals(event.type())) break;
-    }
-}
-```
-
-Reuse an idempotency key when retrying the same logical write. A successful send acknowledges input, not completed execution. An idle event can mean the turn finished or paused for input; inspect the event's stop reason in your application. The example bounds the subscription to five minutes; closing it does not cancel or archive the Session.
-
-Thread subscriptions use `sessions().threads().events()`. For explicit reconnects with the last delivered SSE ID, use `resumableStream(...)`; user messages are not automatically resent. See [Session operations](docs/sessions.md), [streaming and cancellation](docs/session-streaming.md) and the [runnable streaming example](examples/src/main/java/com/qoder/cloudagents/examples/SessionStreamingExample.java).
+Streaming responses are consumed incrementally. Close the stream when finished and handle interruption explicitly; closing a local stream does not cancel server-side work. See the [usage guide](docs/usage-guide.md) for runnable patterns and reconnection behavior.
 
 ## Asynchronous calls and cancellation
 
@@ -190,7 +133,7 @@ for (com.qoder.cloudagents.forward.Template template : page) {
 }
 ```
 
-Use `page.data()` for only the current page, or `hasNextPage()` and `getNextPage()` / `getNextPageAsync()` for manual pagination. Filters, request options and server order are preserved. Drive uses `entries` / `next_page_token`; Realtime History has its own `next_before` cursor. See the [resource guides](docs/forward-api-coverage.md#使用指南) for those APIs.
+Use `page.data()` for only the current page, or `hasNextPage()` and `getNextPage()` / `getNextPageAsync()` for manual pagination. Filters, request options and server order are preserved. See the [usage guide](docs/usage-guide.md#pagination) for API-specific pagination behavior.
 
 ## Timeouts, retries and errors
 
@@ -219,20 +162,14 @@ try {
 
 See [client configuration](docs/client-configuration.md) for detailed defaults and [Template configuration](docs/templates.md) for typed configuration and field semantics.
 
-## Realtime
+## Documentation and examples
 
-Realtime (Beta) supports conversation creation, text and PCM audio exchange over WebSocket, Work events and persisted History. Use `client.realtime().conversations()` for creation/history and `client.realtime().connect(...)` for connections. The Template must have Realtime enabled and be accessible to the credential.
-
-Microphone capture and audio playback belong to the application. Connections do not automatically reconnect or replay input. See the [Realtime guide](docs/realtime.md) and [runnable example](examples/src/main/java/com/qoder/cloudagents/examples/RealtimeExample.java) for authentication, audio formats and connection lifecycle.
-
-## Examples and documentation
-
-- [Runnable examples](examples/README.md): shared PAT/SA setup, resource lifecycles, Session SSE and Realtime.
-- [API coverage](docs/forward-api-coverage.md): supported operations and guides for each resource.
-- [Managed API](docs/managed.md): Agents, Deployments, Sessions, resources and self-hosted Work.
-- [Client extensions](docs/client-configuration.md#client-extensions): custom HTTP transport, interceptors, generic JSON requests and configuration copies.
-- [Files and downloads](docs/environments-files.md) and [Drive, Usage and SAT management](docs/usage-sat-drive.md).
-- [Live testing](docs/live-testing.md): opt-in CN/Global verification and coverage boundaries.
+- [Usage guide](docs/usage-guide.md)
+- [Forward API reference](docs/forward-api-coverage.md)
+- [Managed API reference](docs/managed-api-coverage.md)
+- [Client configuration](docs/client-configuration.md)
+- [Runnable examples](examples/README.md)
+- [Contribution guide](CONTRIBUTING.md)
 
 ## Development
 
@@ -252,7 +189,3 @@ Pin the SDK version in your build. Before 1.0, incompatible API changes use a ne
 ## License
 
 [MIT](LICENSE).
-
-## Forward Webhooks (next release)
-
-Manage webhook endpoints and verify signed event deliveries. See [Webhook usage and receiver examples](docs/webhooks.md).
