@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Remove resource-specific sections and inventories from the README to keep it focused on SDK setup and shared client behavior.
+
 ### Removed
 
 - Remove the deprecated Managed `skills().update(...)` API and `managed.SkillUpdateParams` from the 0.2.0 candidate, including asynchronous and `withResponse()` variants. Use `skills().versions().create(...)` for Skill content updates; it does not replace Skill metadata updates. Forward Skill APIs are unchanged.
