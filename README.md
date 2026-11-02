@@ -102,7 +102,7 @@ Forward also provides explicit administrator/Identity SAT issuance and revocatio
 
 ## Streaming
 
-Streaming responses are consumed incrementally. Close the stream when finished and handle interruption explicitly; closing a local stream does not cancel server-side work. See the [usage guide](docs/usage-guide.md) for runnable patterns and reconnection behavior.
+Streaming responses are consumed incrementally. Close the stream when finished and handle interruption explicitly; closing a local stream does not cancel server-side work.
 
 ## Asynchronous calls and cancellation
 
@@ -133,7 +133,7 @@ for (com.qoder.cloudagents.forward.Template template : page) {
 }
 ```
 
-Use `page.data()` for only the current page, or `hasNextPage()` and `getNextPage()` / `getNextPageAsync()` for manual pagination. Filters, request options and server order are preserved. See the [usage guide](docs/usage-guide.md#pagination) for API-specific pagination behavior.
+Use `page.data()` for only the current page, or `hasNextPage()` and `getNextPage()` / `getNextPageAsync()` for manual pagination. Filters, request options and server order are preserved.
 
 ## Timeouts, retries and errors
 
@@ -164,7 +164,6 @@ See [client configuration](docs/client-configuration.md) for detailed defaults a
 
 ## Documentation and examples
 
-- [Usage guide](docs/usage-guide.md)
 - [Forward API reference](docs/forward-api-coverage.md)
 - [Managed API reference](docs/managed-api-coverage.md)
 - [Client configuration](docs/client-configuration.md)

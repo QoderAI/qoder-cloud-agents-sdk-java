@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Move resource-specific README documentation into a dedicated usage guide, keeping the README focused on SDK setup and shared client behavior.
+- Remove resource-specific sections and inventories from the README to keep it focused on SDK setup and shared client behavior.
 
 ### Removed
 
