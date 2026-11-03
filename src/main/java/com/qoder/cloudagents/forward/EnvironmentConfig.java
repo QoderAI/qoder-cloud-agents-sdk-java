@@ -17,6 +17,11 @@ public final class EnvironmentConfig extends JsonObject {
     return optional("type", JsonValue::asString);
   }
 
+  /** Runs on each sandbox start or resume; self-hosted execution depends on the worker. */
+  public String startupScript() {
+    return optional("startup_script", JsonValue::asString);
+  }
+
   public String setupScript() {
     return optional("setup_script", JsonValue::asString);
   }
@@ -34,6 +39,11 @@ public final class EnvironmentConfig extends JsonObject {
 
     public Builder type(String value) {
       return put("type", value);
+    }
+
+    /** Configure a startup script; the SDK does not execute it. */
+    public Builder startupScript(String value) {
+      return put("startup_script", value);
     }
 
     public Builder setupScript(String value) {

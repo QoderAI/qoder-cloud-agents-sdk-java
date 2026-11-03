@@ -1,5 +1,7 @@
 # Managed API 覆盖基线
 
+开发中契约复核（2026-11-03）：修正顶层 evaluatedPermission 字符串和 Thread 终止后的续订行为，补齐 Environment startup_script。Memory version/redacted、Vault credentials 和 Session Credits 已有正式访问器。本轮没有新增 HTTP 操作；验证见 `DocumentationAlignmentTest`，真实环境结果单独记录。
+
 契约核对：2026-10-28；接口清单更新：2026-10-29。**0.2.0** 与 Forward 更新一起提供 **107 个 Managed 协议操作：105 个普通 HTTP 操作、2 个 SSE 操作**。同步/异步/响应封装只计一个操作；0.1.0 不包含本表能力。
 
 Base URL：CN `https://api.qoder.com.cn/api/v1/cloud`，Global `https://api.qoder.com/api/v1/cloud`。使用方法见 [Managed 指南](managed.md)；验收范围见 [真实环境测试](managed-live-testing.md)。接口存在与离线通过不等于线上权限或执行结果已验证。

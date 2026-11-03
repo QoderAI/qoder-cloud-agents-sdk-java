@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add Forward Session budget builders/getters with decimal-string limits and preserved omission/null clearing, Session model overrides and typed approval evaluation details.
+- Add `startupScript()` and builder setters to Forward/Managed Environment configurations. Scripts run on sandbox start/resume; self-hosted execution is controlled by the external worker.
+
+### Fixed
+
+- Read event-level `evaluatedPermission()` as a string in Forward and Managed.
+- Stop Forward/Managed Thread resumable streams after `session.thread_status_terminated` in synchronous and asynchronous clients. Idle events keep the subscription open, and Session streams continue after a child Thread ends.
+
+### Breaking changes
+
+- `SessionEvent.evaluatedPermission()` returns `String` instead of `Map<String, JsonValue>` in both layers.
+
+### Migration
+
+- Compare `event.evaluatedPermission()` to `"allow"`, `"ask"` or `"deny"`; optional Forward automatic decision details are under `event.evaluation().evaluatedPermission()`.
+- Set `budget(SessionBudget.builder().type("limit").maxCreditCost("100.00").build())` to limit Credits. Omit the setter to keep the default/current limit; `budget(null)` clears it.
+- Use `SessionConfig.builder().model(ModelConfig.of("ultimate"))` to override the model. Omit on create to inherit; `.model(null)` on update restores inheritance. `field(...)` distinguishes absent and null responses.
+
 ### Changed
 
 - Remove resource-specific sections and inventories from the README to keep it focused on SDK setup and shared client behavior.

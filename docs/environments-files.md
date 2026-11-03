@@ -126,3 +126,7 @@ Treat signed URLs as credentials; do not log them. This helper does not fetch co
 [EnvironmentFileExample](../examples/src/main/java/com/qoder/cloudagents/examples/EnvironmentFileExample.java) creates an isolated Environment and text File, compares downloaded bytes in bounded chunks, then deletes only its own resources. It retains cleanup errors without hiding the original failure. It does not start Sessions or execute a setup script.
 
 See [example commands](../examples/README.md) and [opt-in live testing](live-testing.md). Default tests use mock services and the installed SDK JAR.
+
+## Startup scripts
+
+Both Forward and Managed `EnvironmentConfig` expose `.startupScript("...")` and `startupScript()`. Cloud sandboxes run this shell script after setup on the first start and again on each resume. Put persistent installation work in `setupScript`, and restart transient services in `startupScript`. The service limits scripts to 64 KB and five minutes; startup failures surface as `environment_startup_failed_error`. Self-hosted environments store and return the script, while the external worker decides whether to execute it. The SDK transports the configuration and does not execute shell commands locally.

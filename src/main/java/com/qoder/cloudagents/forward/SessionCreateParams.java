@@ -25,6 +25,11 @@ public final class SessionCreateParams extends JsonObject {
     return optional("title", JsonValue::asString);
   }
 
+  /** Null means no limit; field("budget") distinguishes omission from explicit null. */
+  public SessionBudget budget() {
+    return optional("budget", SessionBudget::fromJson);
+  }
+
   public Map<String, JsonValue> metadata() {
     return optionalMap("metadata", item -> item);
   }
@@ -54,6 +59,11 @@ public final class SessionCreateParams extends JsonObject {
 
     public Builder title(String value) {
       return put("title", value);
+    }
+
+    /** Omit to keep the default/current budget; null clears it. */
+    public Builder budget(SessionBudget value) {
+      return put("budget", value);
     }
 
     public Builder metadata(Map<String, JsonValue> value) {

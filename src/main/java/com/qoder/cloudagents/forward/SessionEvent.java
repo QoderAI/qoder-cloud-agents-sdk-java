@@ -182,12 +182,22 @@ public final class SessionEvent extends JsonModel {
     return optionalMap("error", item -> item);
   }
 
-  public Map<String, JsonValue> evaluatedPermission() {
-    return optionalMap("evaluated_permission", item -> item);
+  /** Approval result: allow, ask, or deny. */
+  public String evaluatedPermission() {
+    return optional("evaluated_permission", JsonValue::asString);
+  }
+
+  public ToolApprovalEvaluation evaluation() {
+    return optional("evaluation", ToolApprovalEvaluation::fromJson);
   }
 
   public Map<String, JsonValue> agent() {
     return optionalMap("agent", item -> item);
+  }
+
+  /** Null means no limit; field("budget") distinguishes omission from explicit null. */
+  public SessionBudget budget() {
+    return optional("budget", SessionBudget::fromJson);
   }
 
   public Map<String, JsonValue> metadata() {

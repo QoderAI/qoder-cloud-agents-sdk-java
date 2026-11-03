@@ -37,6 +37,11 @@ public final class Session extends JsonModel {
     return optional("title", JsonValue::asString);
   }
 
+  /** Null means no limit; field("budget") distinguishes omission from explicit null. */
+  public SessionBudget budget() {
+    return optional("budget", SessionBudget::fromJson);
+  }
+
   public Map<String, JsonValue> metadata() {
     return optionalMap("metadata", item -> item);
   }
