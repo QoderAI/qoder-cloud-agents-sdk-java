@@ -94,3 +94,7 @@ To cancel the actual Session execution, use the existing `client.sessions().canc
 [SessionStreamingExample](../examples/src/main/java/com/qoder/cloudagents/examples/SessionStreamingExample.java) supports existing Session or Thread, shared PAT/SA setup, sync/async consumption, a 20-event limit and a two-minute total deadline. It logs only event IDs/types, checkpoint and request ID. Tests run it as an independent consumer of the installed JAR.
 
 Protocol behavior follows the [shared SDK baseline](forward-api-coverage.md). Offline checks do not establish CN/Global production compatibility; use [live testing](live-testing.md) to exercise Session execution and streaming in a selected environment.
+
+Thread `resumableStream` stops after yielding `session.thread_status_terminated`. Idle events do not end a Thread subscription. A Session subscription continues after one child Thread terminates. This applies to both Forward and Managed, including asynchronous clients.
+
+In both layers, `event.evaluatedPermission()` returns an optional `String` (`allow`, `ask`, or `deny`). Forward additionally exposes `event.evaluation()` for policy source and optional automatic decision details; check for null before reading `evaluatedPermission().reasonCode()`. The nested decision is an object and is separate from the event-level result.

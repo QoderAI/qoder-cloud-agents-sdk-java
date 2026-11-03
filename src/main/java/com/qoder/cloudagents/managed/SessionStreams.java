@@ -35,7 +35,8 @@ final class SessionStreams {
         SessionEvent::new,
         event ->
             "session.status_terminated".equals(event.type())
-                || "session.deleted".equals(event.type()),
+                || "session.deleted".equals(event.type())
+                || (thread && "session.thread_status_terminated".equals(event.type())),
         resumable);
   }
 }

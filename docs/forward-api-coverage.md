@@ -1,5 +1,7 @@
 # Forward API 覆盖基线
 
+开发中契约复核（2026-11-03）：补齐 Session budget（省略/null/对象）、config.model、审批 evaluation 和 Environment startup_script；修正顶层 evaluatedPermission 字符串与 Thread 终止后的续订行为。本轮没有新增 HTTP 操作；验证见 `DocumentationAlignmentTest`，真实环境结果单独记录。
+
 契约核对：2026-10-28。**0.2.0** 覆盖 **146 个 HTTP 操作及 Realtime WebSocket**：首版 123 项、Webhook 8 项、Forward Search / Dream / Pairing / Decision 15 项。同一版本还提供 [107 个 Managed 操作](managed-api-coverage.md)。离线验证与真实环境验收分别记录，不能把操作覆盖数当作线上通过率。
 
 HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https://api.qoder.com/api/v1/forward`；表内路径均相对于 BaseURL。

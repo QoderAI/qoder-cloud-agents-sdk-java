@@ -182,8 +182,9 @@ public final class SessionEvent extends JsonModel {
     return optionalMap("error", item -> item);
   }
 
-  public Map<String, JsonValue> evaluatedPermission() {
-    return optionalMap("evaluated_permission", item -> item);
+  /** Approval result: allow, ask, or deny. */
+  public String evaluatedPermission() {
+    return optional("evaluated_permission", JsonValue::asString);
   }
 
   public Agent agent() {

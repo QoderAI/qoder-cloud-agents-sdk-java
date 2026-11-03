@@ -52,4 +52,48 @@ class PackagedConsumerTest {
       assertEquals("/api/v1/forward/models", server.takeRequest().getPath());
     }
   }
+
+  @Test
+  void newSessionContractsAreAvailableFromThePackagedJar() {
+    com.qoder.cloudagents.forward.SessionBudget budget =
+        com.qoder.cloudagents.forward.SessionBudget.builder()
+            .type("limit")
+            .maxCreditCost("100.00")
+            .build();
+    com.qoder.cloudagents.forward.SessionConfig config =
+        com.qoder.cloudagents.forward.SessionConfig.builder()
+            .model(com.qoder.cloudagents.forward.ModelConfig.of("ultimate"))
+            .build();
+    com.qoder.cloudagents.forward.SessionUpdateParams params =
+        com.qoder.cloudagents.forward.SessionUpdateParams.builder()
+            .budget(budget)
+            .config(config)
+            .build();
+    assertEquals("100.00", params.budget().maxCreditCost());
+    assertEquals("ultimate", params.config().model().id());
+    com.qoder.cloudagents.core.JsonValue payload =
+        com.qoder.cloudagents.core.JsonValue.parse(
+            "{\"evaluated_permission\":\"deny\",\"evaluation\":{\"type\":\"auto\",\"evaluated_permission\":{\"type\":\"deny\",\"reason_code\":\"high_risk\"}}}");
+    com.qoder.cloudagents.forward.SessionEvent event =
+        new com.qoder.cloudagents.forward.SessionEvent(payload, null);
+    assertEquals("deny", event.evaluatedPermission());
+    assertEquals("high_risk", event.evaluation().evaluatedPermission().reasonCode());
+    assertEquals(
+        "deny",
+        new com.qoder.cloudagents.managed.SessionEvent(payload, null).evaluatedPermission());
+    assertEquals(
+        "echo ready",
+        com.qoder.cloudagents.forward.EnvironmentConfig.builder()
+            .type("cloud")
+            .startupScript("echo ready")
+            .build()
+            .startupScript());
+    assertEquals(
+        "echo ready",
+        com.qoder.cloudagents.managed.EnvironmentConfig.builder()
+            .type("cloud")
+            .startupScript("echo ready")
+            .build()
+            .startupScript());
+  }
 }

@@ -148,3 +148,20 @@ Implementation follows the [pinned SDK baseline](forward-api-coverage.md). Newer
 Default tests cover local protocol behavior and independent JAR consumers. Session/Thread SSE and resumable subscriptions are described in [streaming](session-streaming.md); the [live runner](live-testing.md) separately checks actual Session execution.
 
 See [Forward contract updates](forward-parity.md) for automatic Session metadata markers, Credits event accessors, and Memory Store mount pagination.
+
+## Session budget and model overrides
+
+```java
+SessionCreateParams create = SessionCreateParams.builder()
+    .identityId("idn_existing").templateId("tmpl_existing")
+    .budget(SessionBudget.builder().type("limit").maxCreditCost("100.00").build())
+    .config(SessionConfig.builder().model(ModelConfig.builder()
+        .id("ultimate").speed("high").build()).build())
+    .build();
+SessionUpdateParams clear = SessionUpdateParams.builder().budget(null)
+    .config(SessionConfig.builder().model(null).build()).build();
+```
+
+Omitting `budget` keeps the current limit on update; `null` clears it and an object replaces it. It limits cumulative model and sandbox Credits; an active turn can finish, but the server rejects the next user message once the budget is exhausted. A Session model override accepts a model ID string (`ModelConfig.of`) or an object. Omit it on create to inherit; `null` is only valid on update to restore inheritance. Query model capabilities before selecting speed or context windows.
+
+`session.updated` carries only changed fields. Use `event.field("budget").isMissing()` versus `.isNull()` to distinguish an unchanged budget from a cleared limit. `session.usage` provides cumulative `modelCredits()`, `sandboxRuntimeCredits()` and `totalCredits()`; replace the previous snapshot rather than summing successive events.
