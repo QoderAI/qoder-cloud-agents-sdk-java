@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### Added
 
 - Add Forward Session budget builders/getters with decimal-string limits and preserved omission/null clearing, Session model overrides and typed approval evaluation details.
@@ -25,10 +27,6 @@
 ### Changed
 
 - Remove resource-specific sections and inventories from the README to keep it focused on SDK setup and shared client behavior.
-
-### Removed
-
-- Remove the deprecated Managed `skills().update(...)` API and `managed.SkillUpdateParams` from the 0.2.0 candidate, including asynchronous and `withResponse()` variants. Use `skills().versions().create(...)` for Skill content updates; it does not replace Skill metadata updates. Forward Skill APIs are unchanged.
 
 ## [0.2.0] - 2026-10-29
 
@@ -59,6 +57,10 @@ Bring Forward additions and Managed API support together in one Java 8 compatibl
 
 - Prefer `OutcomeRubric.content()` / `Builder.content(...)`; raw JSON callers must replace the old rubric `text` key with `content`.
 - Typed Session creation now adds three metadata entries. Do not use different values/types for these exact reserved keys, and allow for them within the service metadata limit. Other metadata, including future prefixed keys, remains unchanged.
+
+### Removed
+
+- Remove the deprecated Managed `skills().update(...)` API and `managed.SkillUpdateParams` before the 0.2.0 release, including asynchronous and `withResponse()` variants. Use `skills().versions().create(...)` for Skill content updates; it does not replace Skill metadata updates. Forward Skill APIs are unchanged.
 
 ## [0.1.0] - 2026-10-21
 

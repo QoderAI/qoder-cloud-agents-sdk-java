@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.qoder.sdk</groupId>
   <artifactId>qoder-cloud-agents-sdk</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <name>Qoder Cloud Agents Java SDK</name>
   <description>Java 8 compatible Qoder Cloud Agents Forward and Managed API clients.</description>
   <url>https://github.com/QoderAI/qoder-cloud-agents-sdk-java</url>
