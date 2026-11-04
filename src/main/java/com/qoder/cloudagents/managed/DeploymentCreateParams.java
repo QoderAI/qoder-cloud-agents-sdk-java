@@ -30,6 +30,11 @@ public final class DeploymentCreateParams extends JsonObject {
     return optional("environment_id", JsonValue::asString);
   }
 
+  /** BYOC tunnel bound to the deployment, when configured. */
+  public String tunnelId() {
+    return optional("tunnel_id", JsonValue::asString);
+  }
+
   public DeploymentSchedule schedule() {
     return optional("schedule", DeploymentSchedule::fromJson);
   }
@@ -79,6 +84,11 @@ public final class DeploymentCreateParams extends JsonObject {
 
     public Builder environmentId(String value) {
       return put("environment_id", value);
+    }
+
+    /** Bind sessions created by this deployment to the specified BYOC tunnel. */
+    public Builder tunnelId(String value) {
+      return put("tunnel_id", value);
     }
 
     public Builder schedule(DeploymentSchedule value) {

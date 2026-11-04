@@ -5,6 +5,7 @@
   "system": "Help with the supplied task.",
   "max_tool_rounds": 12,
   "environment_id": "env_test",
+  "tunnel_id": "tnl_test",
   "tools": [
     {"type": "custom", "name": "lookup", "description": "Lookup", "input_schema": {"type": "object", "properties": {"q": {"type": "string"}}}},
     {"type": "agent_toolset_20260401", "enabled_tools": ["Read"], "disallowed_tools": ["Write"],

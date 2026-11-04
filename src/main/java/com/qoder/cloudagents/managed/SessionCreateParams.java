@@ -21,6 +21,11 @@ public final class SessionCreateParams extends JsonObject {
     return optional("environment_id", JsonValue::asString);
   }
 
+  /** BYOC tunnel used for MCP requests from this session. */
+  public String tunnelId() {
+    return optional("tunnel_id", JsonValue::asString);
+  }
+
   public SessionBudget budget() {
     return optional("budget", SessionBudget::fromJson);
   }
@@ -62,6 +67,11 @@ public final class SessionCreateParams extends JsonObject {
 
     public Builder environmentId(String value) {
       return put("environment_id", value);
+    }
+
+    /** Bind the session to a BYOC tunnel for MCP requests. */
+    public Builder tunnelId(String value) {
+      return put("tunnel_id", value);
     }
 
     public Builder budget(SessionBudget value) {
