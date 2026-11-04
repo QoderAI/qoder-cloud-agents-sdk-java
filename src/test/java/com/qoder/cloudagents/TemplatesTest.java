@@ -121,7 +121,11 @@ class TemplatesTest {
     assertEquals("/api/v1/forward/templates/a%2Fb%20%3F%23%25", get.getPath());
 
     TemplateUpdateParams update =
-        TemplateUpdateParams.builder().description(null).tools(Collections.emptyList()).build();
+        TemplateUpdateParams.builder()
+            .description(null)
+            .tunnelId(null)
+            .tools(Collections.emptyList())
+            .build();
     ApiResponse<Template> updated =
         async
             ? client.async().templates().withResponse().update(id, update).get()
@@ -131,7 +135,7 @@ class TemplatesTest {
     assertEquals("POST", patch.getMethod());
     assertEquals(get.getPath(), patch.getPath());
     assertEquals(
-        JSON.readTree("{\"description\":null,\"tools\":[]}"),
+        JSON.readTree("{\"description\":null,\"tunnel_id\":null,\"tools\":[]}"),
         JSON.readTree(patch.getBody().readUtf8()));
 
     TemplateCloneParams clone = TemplateCloneParams.builder().name("copy").build();
@@ -171,6 +175,7 @@ class TemplatesTest {
             .description("Contract test")
             .system("Help with the supplied task.")
             .maxToolRounds(12L)
+            .tunnelId("tnl_test")
             .environmentId("env_test")
             .tools(
                 Arrays.asList(
@@ -274,6 +279,7 @@ class TemplatesTest {
     assertEquals("standard", template.model().speed());
     assertEquals(400000L, template.model().contextWindow());
     assertEquals(12L, template.maxToolRounds());
+    assertEquals("tnl_test", template.tunnelId());
     assertEquals("Help with the supplied task.", template.system());
     assertEquals(
         "always_allow", template.tools().get(1).configs().get(0).permissionPolicy().type());

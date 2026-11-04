@@ -2,6 +2,8 @@
 
 Session, event history, file attachment and Thread HTTP APIs share the client's PAT/SA credential, timeout, retry and error handling. This guide covers 13 ordinary HTTP operations. Session and Thread SSE subscriptions are described in [streaming](session-streaming.md).
 
+Forward sessions inherit the BYOC MCP tunnel from their Template. Set it with `TemplateCreateParams.builder().tunnelId("tnl_...")`, or clear it with `TemplateUpdateParams.builder().tunnelId(null)`.
+
 ## Methods
 
 | Resource | Methods | Response |

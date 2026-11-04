@@ -4,6 +4,8 @@
 
 ### Added
 
+- Bind a Managed Session to a BYOC MCP tunnel with `tunnel_id` at creation. On Forward, set the tunnel on a Template for its sessions to inherit. Managed Deployments also accept and return the binding. Template and Deployment updates can replace or clear it.
+
 - Add Forward Session budget builders/getters with decimal-string limits and preserved omission/null clearing, Session model overrides and typed approval evaluation details.
 - Add `startupScript()` and builder setters to Forward/Managed Environment configurations. Scripts run on sandbox start/resume; self-hosted execution is controlled by the external worker.
 

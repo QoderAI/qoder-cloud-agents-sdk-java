@@ -37,6 +37,11 @@ public final class Deployment extends JsonModel {
     return optional("environment_id", JsonValue::asString);
   }
 
+  /** BYOC tunnel bound to the deployment, when configured. */
+  public String tunnelId() {
+    return optional("tunnel_id", JsonValue::asString);
+  }
+
   public DeploymentSchedule schedule() {
     return optional("schedule", DeploymentSchedule::fromJson);
   }

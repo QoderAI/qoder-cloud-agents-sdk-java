@@ -79,6 +79,44 @@ class ManagedContractsTest {
     assertEquals(0, server.getRequestCount());
   }
 
+  @ParameterizedTest
+  @ValueSource(booleans = {false, true})
+  void deploymentTunnelBinding(boolean async) throws Exception {
+    SessionEventParam event =
+        SessionEventParam.builder()
+            .type("user.message")
+            .content(EventContent.text("hello"))
+            .build();
+    DeploymentCreateParams create =
+        DeploymentCreateParams.builder()
+            .name("demo")
+            .agent("agent_test")
+            .environmentId("env_test")
+            .initialEvents(Collections.singletonList(event))
+            .tunnelId("tnl_one")
+            .build();
+    respond("{\"id\":\"dep_test\",\"tunnel_id\":\"tnl_one\"}");
+    Deployment deployment =
+        async
+            ? client.async().deployments().create(create).get()
+            : client.deployments().create(create);
+    assertEquals("tnl_one", body().get("tunnel_id").asString());
+    assertEquals("tnl_one", deployment.tunnelId());
+    for (DeploymentUpdateParams patch :
+        Arrays.asList(
+            DeploymentUpdateParams.builder().name("renamed").build(),
+            DeploymentUpdateParams.builder().tunnelId("tnl_two").build(),
+            DeploymentUpdateParams.builder().tunnelId(null).build())) {
+      respond("{\"id\":\"dep_test\"}");
+      if (async) client.async().deployments().update("dep_test", patch).get();
+      else client.deployments().update("dep_test", patch);
+      JsonValue wire = body().get("tunnel_id");
+      if (patch.name() != null) assertTrue(wire.isMissing());
+      else if (patch.tunnelId() == null) assertTrue(wire.isNull());
+      else assertEquals("tnl_two", wire.asString());
+    }
+  }
+
   @Test
   void omissionNullAndMergePatchRemainDistinct() throws Exception {
     Map<String, JsonValue> patch = new LinkedHashMap<>();
@@ -122,6 +160,7 @@ class ManagedContractsTest {
         SessionCreateParams.builder()
             .agent("agent_test")
             .environmentId("env_test")
+            .tunnelId("tnl_test")
             .metadata(custom)
             .build();
     respond("{\"id\":\"sess_test\"}");
@@ -130,7 +169,10 @@ class ManagedContractsTest {
     else if (mode == 2) client.sessions().withResponse().create(params);
     else client.async().sessions().withResponse().create(params).get();
     RecordedRequest r = request();
-    JsonValue m = JsonValue.parse(r.getBody().readUtf8()).get("metadata");
+    JsonValue payload = JsonValue.parse(r.getBody().readUtf8());
+    assertEquals("tnl_test", params.tunnelId());
+    assertEquals("tnl_test", payload.get("tunnel_id").asString());
+    JsonValue m = payload.get("metadata");
     assertEquals(5, m.asObject().size());
     assertEquals("java", m.get("__qca_sdk_language").asString());
     assertEquals(r.getHeader("X-Qoder-Package-Version"), m.get("__qca_sdk_version").asString());

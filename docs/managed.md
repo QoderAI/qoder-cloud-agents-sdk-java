@@ -2,6 +2,8 @@
 
 Managed support is included with the Forward additions in **0.2.0**. The [coverage inventory](managed-api-coverage.md) records 107 documented operations, including two SSE endpoints, checked against the [official documentation](https://docs.qoder.com/cloud-agents/overview) on 2026-10-28.
 
+For a BYOC MCP tunnel, pass `.tunnelId("tnl_...")` to the Managed `SessionCreateParams` builder. The service verifies access to the tunnel when it creates the session. For sessions started by a Deployment, use `DeploymentCreateParams.Builder.tunnelId(...)`. Update the binding with `DeploymentUpdateParams.Builder.tunnelId(...)`, pass null to clear it, and read the current value with `Deployment.tunnelId()`.
+
 ## Client and authentication
 
 Use `ManagedClient` or `AsyncManagedClient`; resource models live in `com.qoder.cloudagents.managed`. The root client shares the existing Java 8 transport, credentials, request options, retry/cancellation handling and typed errors with Forward. Models are immutable, preserve unknown JSON fields, and keep omitted fields distinct from explicit JSON null.

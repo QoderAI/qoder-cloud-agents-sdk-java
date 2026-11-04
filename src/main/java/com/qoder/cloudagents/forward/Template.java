@@ -43,6 +43,11 @@ public final class Template extends JsonModel {
     return field("environment_id").stringOrNull();
   }
 
+  /** BYOC tunnel inherited by sessions, or null when the template has no binding. */
+  public String tunnelId() {
+    return field("tunnel_id").stringOrNull();
+  }
+
   public ModelConfig model() {
     return optional("model", ModelConfig::fromJson);
   }
