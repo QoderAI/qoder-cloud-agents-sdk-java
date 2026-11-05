@@ -42,6 +42,11 @@ public abstract class TemplateConfigBuilder<B extends TemplateConfigBuilder<B>>
     return put("environment_id", value);
   }
 
+  /** Set the BYOC tunnel inherited by sessions. Pass null on update to clear the binding. */
+  public B tunnelId(String value) {
+    return put("tunnel_id", value);
+  }
+
   public B tools(List<Tool> value) {
     return put("tools", value);
   }
