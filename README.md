@@ -4,7 +4,7 @@
 
 The Qoder Cloud Agents Java SDK provides typed synchronous and asynchronous clients, with shared authentication, timeouts, retries, pagination, streaming and error handling.
 
-Version **0.2.0** supports both the **Forward API** and the **[Managed API](docs/managed.md)** in one package. Use `ForwardClient` / `AsyncForwardClient` for Forward and `ManagedClient` / `AsyncManagedClient` for Managed.
+Version **0.3.0** supports both the **Forward API** and the **[Managed API](docs/managed.md)** in one package. Use `ForwardClient` / `AsyncForwardClient` for Forward and `ManagedClient` / `AsyncManagedClient` for Managed.
 
 - [Installation](#installation)
 - [Quick start](#quick-start)
@@ -26,7 +26,7 @@ Add the Maven dependency; published versions require no local SDK build or addit
 <dependency>
   <groupId>com.qoder.sdk</groupId>
   <artifactId>qoder-cloud-agents-sdk</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 </dependency>
 ```
 
