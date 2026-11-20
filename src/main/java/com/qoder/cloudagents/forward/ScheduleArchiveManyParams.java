@@ -4,8 +4,12 @@ import com.qoder.cloudagents.core.*;
 import com.qoder.cloudagents.errors.ConfigurationException;
 import java.util.*;
 
-/** An explicit, bounded set of Schedule IDs. The server rejects extra fields including scope. */
+/**
+ * An explicit, bounded set of Schedule IDs. Requests always carry the only supported scope, {@code
+ * by_schedule_ids}; the server rejects a missing scope and other extra fields.
+ */
 public final class ScheduleArchiveManyParams implements JsonSerializable {
+  private static final String SCOPE = "by_schedule_ids";
   private final List<String> ids;
 
   private ScheduleArchiveManyParams(List<String> value) {
@@ -26,7 +30,10 @@ public final class ScheduleArchiveManyParams implements JsonSerializable {
   }
 
   public JsonValue toJsonValue() {
-    return JsonValue.of(Collections.singletonMap("schedule_ids", ids));
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("scope", SCOPE);
+    body.put("schedule_ids", ids);
+    return JsonValue.of(body);
   }
 
   public static Builder builder() {
