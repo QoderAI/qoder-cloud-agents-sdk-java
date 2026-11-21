@@ -52,7 +52,7 @@ ScheduleArchiveManyResponse result = client.schedules().archiveMany(
     RequestOptions.builder().idempotencyKey(archiveKey).build());
 ```
 
-The request contains **only `schedule_ids`**. The builder snapshots and deduplicates IDs in insertion order and requires 1–50 unique, nonempty IDs. The current official contract rejects `scope` and other extra fields. This differs from the older TypeScript baseline's `scope: by_schedule_ids` implementation; Java follows the current contract. The endpoint permits PAT or administrator SAT; an Identity-bound SAT cannot perform this administrator operation. SDK does not infer permissions from token text.
+The SDK sends the required `scope: by_schedule_ids` together with `schedule_ids`; it is the only supported scope and has no server default. The builder snapshots and deduplicates IDs in insertion order and requires 1–50 unique, nonempty IDs. Other extra fields are rejected. The endpoint permits PAT or administrator SAT; an Identity-bound SAT cannot perform this administrator operation. SDK does not infer permissions from token text.
 
 ## Batch creation and inspection
 

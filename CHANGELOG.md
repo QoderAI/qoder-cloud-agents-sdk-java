@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Send the required `scope: by_schedule_ids` in Forward `schedules().archiveMany(...)`. Earlier releases sent only `schedule_ids`, so every batch archive request was rejected with HTTP 400 `invalid_request`; existing calls work without code changes.
+
 ## [0.3.0]
 
 ### Added

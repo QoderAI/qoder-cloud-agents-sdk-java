@@ -52,7 +52,7 @@ Environment/File use page/next_page pagination; retain explicit forward/backward
 
 Skill multipart uses repeated files parts and relative filenames. Skill ZIP downloads are direct authenticated streams, not File download grants. Credential updates must enforce zero retries regardless of request overrides; test both status and connection failures. Preserve write-only secret handling, metadata merge-patch nulls, and the distinction between create/update/response auth models.
 
-Schedule batch archive sends only schedule_ids (1–50 unique nonempty IDs); do not copy the older TS scope field. Keep request trigger policy fields separate from computed response fields, preserve merge-patch omission/null distinctions and Batch decimal credits. Batch task cursors use custom IDs; output/error grants are not generic File IDs. Examples must preserve pending inputs and never print signed URLs.
+Schedule batch archive always sends `scope: by_schedule_ids` with schedule_ids (1–50 unique nonempty IDs); the server rejects a missing scope. Keep request trigger policy fields separate from computed response fields, preserve merge-patch omission/null distinctions and Batch decimal credits. Batch task cursors use custom IDs; output/error grants are not generic File IDs. Examples must preserve pending inputs and never print signed URLs.
 
 Channel QR authorization and message-scope Pairing are different flows. Keep request-only IM credentials separate from redacted response configuration, and never print QR payloads/session keys or pairing codes. Channel tests must not send real IM messages; live QR/pairing acceptance needs a dedicated authorized connection. Preserve fixed/pairing required-field rules and the current code-or-Pairing-ID selector.
 

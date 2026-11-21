@@ -63,7 +63,7 @@ class SchedulesBatchesTest {
         "archiveMany",
         "POST",
         "/schedules/archive",
-        "{\"schedule_ids\":[\"sched_1\",\"sched_2\"]}",
+        "{\"scope\":\"by_schedule_ids\",\"schedule_ids\":[\"sched_1\",\"sched_2\"]}",
         "{\"archived_count\":2}"
       },
       {"scheduleGet", "GET", "/schedules/id%2F%3F%23%25", "", "{\"id\":\"sched_1\"}"},
@@ -358,7 +358,10 @@ class SchedulesBatchesTest {
     ids.clear();
     ScheduleArchiveManyParams p = b.build();
     assertEquals(Arrays.asList("s1", "s2"), p.scheduleIds());
-    assertEquals(Collections.singleton("schedule_ids"), p.toJsonValue().asObject().keySet());
+    assertEquals(
+        Arrays.asList("scope", "schedule_ids"),
+        new ArrayList<>(p.toJsonValue().asObject().keySet()));
+    assertEquals("by_schedule_ids", p.toJsonValue().get("scope").asString());
     assertThrows(UnsupportedOperationException.class, () -> p.scheduleIds().clear());
     ScheduleSink sink = ScheduleSink.builder().type("im_channel").build();
     assertThrows(
