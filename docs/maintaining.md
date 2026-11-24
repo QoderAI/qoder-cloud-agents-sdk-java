@@ -15,6 +15,8 @@ make test
 
 GitHub CI has six required-check names: `quality`, `check (Java 8)`, `check (Java 11)`, `check (Java 17)`, `check (Java 21)` and `check (Java 25)`. The [main ruleset payload](../.github/config/main-ruleset.json) must keep those names aligned with the workflow. Adding the JSON file does not activate GitHub protection.
 
+CI uses Azul Zulu for Java 8 and Eclipse Temurin for Java 11/17/21/25. Java 8 uses Azul's download source after repeated non-gzip responses from the Temurin GitHub release-asset URL. Every runtime still runs the full SDK tests, independent consumer and package checks; installation failures fail the job.
+
 The GitHub `quality` job also exercises the Central bundle profile with a temporary source copy and disposable signing key. It verifies reproducible artifact bytes and signatures without uploading a package or requiring publishing credentials.
 
 CODEOWNERS assigns the same maintainer as the other SDK repositories. The prepared protection policy follows the Go baseline: a PR, resolved discussions, required checks, linear history, and no force pushes or branch deletion. It does not add a mandatory review count or mandatory CODEOWNER approval. Use the PR template to record cross-SDK impact, validation, skipped checks and candidate source evidence.
