@@ -76,7 +76,9 @@ class CapabilityParityTest {
       assertJson(
           "{\"identity_id\":\"idn_test\",\"template_id\":\"tmpl_test\""
               + flags[state]
-              + ",\"metadata\":{\"__qca_sdk_created\":\"true\",\"__qca_sdk_language\":\"java\",\"__qca_sdk_version\":\"0.3.0\"}}",
+              + ",\"metadata\":{\"__qca_sdk_created\":\"true\",\"__qca_sdk_language\":\"java\",\"__qca_sdk_version\":\""
+              + wire.getHeader("X-Qoder-Package-Version")
+              + "\"}}",
           sent);
       assertTrue(JsonValue.parse(sent).get("title").isMissing());
       if (state < 2) assertNull(create.autoTitle());
@@ -171,7 +173,9 @@ class CapabilityParityTest {
       assertJson(
           "{\"identity_id\":\"idn_test\",\"template_id\":\"tmpl_test\",\"auto_title\":true,\"title\":"
               + titleJson[state]
-              + ",\"metadata\":{\"__qca_sdk_created\":\"true\",\"__qca_sdk_language\":\"java\",\"__qca_sdk_version\":\"0.3.0\"}}",
+              + ",\"metadata\":{\"__qca_sdk_created\":\"true\",\"__qca_sdk_language\":\"java\",\"__qca_sdk_version\":\""
+              + wire.getHeader("X-Qoder-Package-Version")
+              + "\"}}",
           wire.getBody().readUtf8());
       assertEquals(400, error.statusCode());
       assertEquals("invalid_request_error", error.type());
