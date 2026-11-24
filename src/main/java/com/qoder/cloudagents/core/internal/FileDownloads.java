@@ -45,6 +45,7 @@ public final class FileDownloads implements AutoCloseable {
     Response response;
     ScheduledFuture<?> deadline, retry, headerWait;
     boolean stopped;
+    int activeReads;
     volatile RuntimeException failure;
     String apiRequestId;
 
@@ -191,13 +192,6 @@ public final class FileDownloads implements AutoCloseable {
                       new InputStream() {
                         private boolean eof;
 
-                        private void check() {
-                          if (failure != null) throw failure;
-                          synchronized (Operation.this) {
-                            if (stopped) throw new ApiUserAbortException("Download closed");
-                          }
-                        }
-
                         public int read() throws IOException {
                           byte[] one = new byte[1];
                           int count = read(one, 0, 1);
@@ -206,7 +200,11 @@ public final class FileDownloads implements AutoCloseable {
 
                         public int read(byte[] bytes, int offset, int length) throws IOException {
                           if (eof) return length == 0 ? 0 : -1;
-                          check();
+                          if (failure != null) throw failure;
+                          synchronized (Operation.this) {
+                            if (stopped) throw new ApiUserAbortException("Download closed");
+                            activeReads++;
+                          }
                           try {
                             int count = source.read(bytes, offset, length);
                             if (failure != null) throw failure;
@@ -219,6 +217,11 @@ public final class FileDownloads implements AutoCloseable {
                             RuntimeException mapped = failure != null ? failure : ioError(e);
                             fail(mapped);
                             throw mapped;
+                          } finally {
+                            synchronized (Operation.this) {
+                              activeReads--;
+                              closeResponseWhenIdle();
+                            }
                           }
                         }
 
@@ -296,8 +299,17 @@ public final class FileDownloads implements AutoCloseable {
       cancelHeaderWait();
       if (grant != null && !grant.isDone()) grant.cancel(true);
       if (call != null) call.cancel();
-      if (response != null) response.close();
       active.remove(this);
+      // Cancellation interrupts reads; closing an Okio source during a read is unsafe.
+      closeResponseWhenIdle();
+    }
+
+    private void closeResponseWhenIdle() {
+      if (stopped && activeReads == 0 && response != null) {
+        Response closing = response;
+        response = null;
+        closing.close();
+      }
     }
   }
 }

@@ -26,8 +26,8 @@ public final class SessionUpdateParams extends JsonObject {
     return optionalMap("metadata", item -> item);
   }
 
-  public SessionConfig config() {
-    return optional("config", SessionConfig::fromJson);
+  public SessionUpdateConfig config() {
+    return optional("config", SessionUpdateConfig::fromJson);
   }
 
   public static Builder builder() {
@@ -50,7 +50,7 @@ public final class SessionUpdateParams extends JsonObject {
       return put("metadata", value);
     }
 
-    public Builder config(SessionConfig value) {
+    public Builder config(SessionUpdateConfig value) {
       return put("config", value);
     }
 

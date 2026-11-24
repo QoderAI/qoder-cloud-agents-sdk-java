@@ -67,6 +67,10 @@ public abstract class TemplateConfigBuilder<B extends TemplateConfigBuilder<B>>
     return put("multiagent", value);
   }
 
+  public B a2a(TemplateA2AConfig value) {
+    return put("a2a", value);
+  }
+
   public B vaults(Map<String, ResourceBinding> value) {
     return put("vaults", value);
   }

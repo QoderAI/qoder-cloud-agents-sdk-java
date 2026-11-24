@@ -328,6 +328,7 @@ public final class ClientEngine implements AutoCloseable {
     final Map<String, List<String>> repeatedQuery = new LinkedHashMap<>();
     volatile RuntimeException streamFailure;
     boolean disposed;
+    int activeReads;
     Response ownedResponse;
     Call call;
     ScheduledFuture<?> deadline, retry, headerWait;
@@ -579,6 +580,7 @@ public final class ClientEngine implements AutoCloseable {
               if (streamFailure != null) throw streamFailure;
               synchronized (Operation.this) {
                 if (disposed) throw new ApiUserAbortException("Response stream closed");
+                activeReads++;
               }
               try {
                 int n = source.read(bytes, offset, length);
@@ -597,6 +599,11 @@ public final class ClientEngine implements AutoCloseable {
                             : new ApiConnectionException("Response stream read failed", e);
                 fail(mapped);
                 throw mapped;
+              } finally {
+                synchronized (Operation.this) {
+                  activeReads--;
+                  closeResponseWhenIdle();
+                }
               }
             }
 
@@ -655,7 +662,16 @@ public final class ClientEngine implements AutoCloseable {
       if (retry != null) retry.cancel(false);
       cancelHeaderWait();
       if (call != null) call.cancel();
-      if (ownedResponse != null) ownedResponse.close();
+      // Cancellation interrupts reads; closing an Okio source during a read is unsafe.
+      closeResponseWhenIdle();
+    }
+
+    private void closeResponseWhenIdle() {
+      if (disposed && activeReads == 0 && ownedResponse != null) {
+        Response response = ownedResponse;
+        ownedResponse = null;
+        response.close();
+      }
     }
   }
 }

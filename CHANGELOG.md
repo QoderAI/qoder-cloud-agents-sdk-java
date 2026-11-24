@@ -2,8 +2,24 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add Forward Session creation `autoTitle`, Session update `config.multiagent`, Template A2A configuration and authenticated `retrieveAgentCard` discovery for A2A 0.3 and 1.0.
+- Add typed Forward OSS storage requests and masked response credentials. Credential omission on update preserves saved credentials; mounting requires the OSS Beta header and server-side authorization.
+- Add Managed Thread `eventDeltas` selectors that survive reconnects, OAuth refresh `resource`, expiry and redacted refresh accessors, and top-level MCP `Tool.permissionPolicy` for the default governing unlisted tools.
+
+### Breaking changes
+
+- Forward `SessionUpdateParams.config` now uses `SessionUpdateConfig`, separate from the creation `SessionConfig`. `MultiagentEntry` now implements `JsonSerializable` rather than extending `JsonObject`, so it can preserve string references as well as objects.
+
+### Migration
+
+- Use `SessionUpdateConfig.builder()` for Session update model/environment variables and multiagent settings. Continue using `SessionConfig.builder()` for creation; multiagent is update-only. Replace any `JsonObject` variable holding a `MultiagentEntry` with `MultiagentEntry` or `JsonSerializable`.
+
 ### Fixed
 
+- Cancel active Skill and File downloads before releasing their response bodies, and defer body closure until in-flight reads exit. Closing a client during a blocked download read now raises the SDK abort error instead of an Okio `Unbalanced enter/exit` exception.
+- Preserve Forward multiagent string references when decoding a Template or Session override; typed roster access no longer rejects valid string entries.
 - Send the required `scope: by_schedule_ids` in Forward `schedules().archiveMany(...)`. Earlier releases sent only `schedule_ids`, so every batch archive request was rejected with HTTP 400 `invalid_request`; existing calls work without code changes.
 
 ## [0.3.0]

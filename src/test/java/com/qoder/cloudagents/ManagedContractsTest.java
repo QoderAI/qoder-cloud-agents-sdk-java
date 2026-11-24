@@ -373,7 +373,10 @@ class ManagedContractsTest {
             .eventDeltas(Arrays.asList("agent.message", "agent.thinking"))
             .build();
     SessionThreadEventStreamParams tp =
-        SessionThreadEventStreamParams.builder().lastEventId("evt_old").build();
+        SessionThreadEventStreamParams.builder()
+            .lastEventId("evt_old")
+            .eventDeltas(Arrays.asList("agent.message", "agent.thinking"))
+            .build();
     EventStream<SessionEvent> stream =
         thread
             ? (async
@@ -414,7 +417,10 @@ class ManagedContractsTest {
             ? "/api/v1/cloud/sessions/sess_test/threads/sth_test/stream"
             : "/api/v1/cloud/sessions/sess_test/events/stream",
         r.getRequestUrl().encodedPath());
-    assertEquals(thread ? 0 : 2, r.getRequestUrl().querySize());
+    assertEquals(2, r.getRequestUrl().querySize());
+    assertEquals(
+        Arrays.asList("agent.message", "agent.thinking"),
+        r.getRequestUrl().queryParameterValues("event_deltas[]"));
   }
 
   @Test

@@ -58,6 +58,15 @@ Budget values are positive decimal strings with up to 12 integer and two fractio
 
 Session environment variables use `Map<String,String>`. Deployment environment variables use a string of `KEY=VALUE` lines. Session metadata updates are merge patches; null values remove keys, while top-level null is a service no-op. Deployment metadata has its own merge-patch rules. The SDK preserves the submitted representation.
 
+## MCP default policies
+
+```java
+Tool mcp = Tool.builder().type("mcp_toolset").mcpServerName("server")
+    .permissionPolicy(PermissionPolicy.builder().type("always_deny").build()).build();
+```
+
+MCP tools not listed in `configs` use the toolset's top-level `permission_policy`. The `default_config.permission_policy` metadata does not control this MCP default. Set per-tool overrides with `ToolConfig.permissionPolicy(...)`; use `tool.permissionPolicy()` to read the top-level policy. Built-in tools use their separate default-config and per-tool policies. Policy declarations are sent to the service, not enforced by the SDK.
+
 ## Events, resources and pagination
 
 `SessionEventParam` and `EventContent.text(...)` build user events as content-block arrays. List events with `SessionEventListParams.types(...)`, which sends the Managed `types` query key; Session lifecycle filters use `statuses`. Date comparisons use `createdAtGt/Gte/Lt/Lte` where supported.
@@ -76,7 +85,7 @@ try (com.qoder.cloudagents.streaming.EventStream<SessionEvent> stream =
 }
 ```
 
-Session streams accept repeated `event_deltas[]` selectors; thread streams accept no query selectors and use `/sessions/{session}/threads/{thread}/stream`. Both put the resume cursor in `Last-Event-ID`. Per-call headers override parameter/default cursors. `resumableStream(...)` is explicit and never resends user messages. Closing a stream cancels the subscription, not the Session.
+Session streams accept repeated `event_deltas[]` selectors; Thread streams accept the same query key for `agent.message` and `agent.thinking` previews and use `/sessions/{session}/threads/{thread}/stream`. Use `SessionThreadEventStreamParams.builder().eventDeltas(...)`; Thread thinking remains event-start-only, and Session-only filters are rejected. Both put the resume cursor in `Last-Event-ID`. Per-call headers override parameter/default cursors. `resumableStream(...)` is explicit and never resends user messages. Closing a stream cancels the subscription, not the Session.
 
 Create-time resources support File, GitHub, generic Git and Memory Store attachments. `SessionResourceSpec` includes checkout, credentials, mount path and memory access as applicable. Existing Sessions can add File resources through `sessions().resources().create(...)`; resource updates rotate repository credentials. Credentials are request fields; responses do not expose them.
 

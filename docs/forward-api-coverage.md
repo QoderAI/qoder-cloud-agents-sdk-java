@@ -14,6 +14,8 @@ HTTP BaseURL 为 CN `https://api.qoder.com.cn/api/v1/forward` 或 Global `https:
 
 0.2.0 已按 Go `a996a88`、Python `2f8c625`、TypeScript `f4e3a4f` 的 main 补齐 ImageSource `file_id`、创建 Memory Store 时的 mount `access`、Schedule/Run `initial_events_version` 和 ChannelPairing 时间戳。这些字段不新增协议操作；客户端 HTTP 扩展、通用 JSON 请求和配置复制见[客户端配置](client-configuration.md)。
 
+开发中能力补齐（2026-11-21）：新增 `GET /templates/{template_id}/a2a/agent-card.json`，方法 `templates().retrieveAgentCard(...)`，同步/异步及 withResponse 均支持；其余变更补齐 Session 更新多智能体、创建自动标题、A2A 配置和 OSS 模型，不新增这些资源的 HTTP 路由。新增测试见 `CapabilityParityTest`；真实环境未在本轮执行。
+
 ## 使用指南
 
 - [客户端认证、超时、重试与取消](client-configuration.md)

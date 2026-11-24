@@ -67,7 +67,7 @@ try (EventStream<SessionEvent> stream = client.sessions().threads().events()
 }
 ```
 
-Thread SSE uses `/sessions/{session_id}/threads/{thread_id}/stream`, not the Thread history `/events` path. It does not accept Session query filters; the Java entry point rejects query overrides. The caller must use a cursor valid for this Thread. A terminated/archived Thread that cannot reopen is surfaced as the service's HTTP error; no automatic re-creation occurs.
+Thread SSE uses `/sessions/{session_id}/threads/{thread_id}/stream`, not the Thread history `/events` path. Managed `SessionThreadEventStreamParams.eventDeltas(Arrays.asList("agent.message", "agent.thinking"))` enables previews through repeated `event_deltas[]` query entries; thinking is event-start-only on this surface. The copied selector list survives reconnects, while the header-only `Last-Event-ID` advances independently. Managed Thread query overrides accept only `event_deltas[]`, not Session filters; Forward Thread query selectors remain unsupported. The caller must use a cursor valid for this Thread. A terminated/archived Thread that cannot reopen is surfaced as the service's HTTP error; no automatic re-creation occurs.
 
 ## Asynchronous callbacks and cancellation
 
