@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,10 +127,15 @@ public final class JsonValue {
     return Collections.unmodifiableList(result);
   }
 
+  @SuppressWarnings("deprecation")
   public Map<String, JsonValue> asObject() {
     if (!node.isObject()) throw invalid("object");
     Map<String, JsonValue> result = new LinkedHashMap<>();
-    node.properties().forEach(entry -> result.put(entry.getKey(), new JsonValue(entry.getValue())));
+    Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
+    while (fields.hasNext()) {
+      Map.Entry<String, JsonNode> entry = fields.next();
+      result.put(entry.getKey(), new JsonValue(entry.getValue()));
+    }
     return Collections.unmodifiableMap(result);
   }
 

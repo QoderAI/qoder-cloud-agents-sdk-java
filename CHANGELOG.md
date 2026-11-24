@@ -18,6 +18,7 @@
 
 ### Fixed
 
+- Use Jackson 2.x-compatible `JsonNode.fields()` in `JsonValue.asObject()` instead of Jackson 2.19+ `JsonNode.properties()`, preventing `NoSuchMethodError` crashes in applications pinned to Jackson 2.13–2.18 (such as Spring Boot 2.x and 3.0–3.4).
 - Cancel active Skill and File downloads before releasing their response bodies, and defer body closure until in-flight reads exit. Closing a client during a blocked download read now raises the SDK abort error instead of an Okio `Unbalanced enter/exit` exception.
 - Preserve Forward multiagent string references when decoding a Template or Session override; typed roster access no longer rejects valid string entries.
 - Send the required `scope: by_schedule_ids` in Forward `schedules().archiveMany(...)`. Earlier releases sent only `schedule_ids`, so every batch archive request was rejected with HTTP 400 `invalid_request`; existing calls work without code changes.
