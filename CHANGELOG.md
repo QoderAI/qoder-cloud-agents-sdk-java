@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.4.0]
+
 ### Added
 
 - Add Forward Session creation `autoTitle`, Session update `config.multiagent`, Template A2A configuration and authenticated `retrieveAgentCard` discovery for A2A 0.3 and 1.0.
