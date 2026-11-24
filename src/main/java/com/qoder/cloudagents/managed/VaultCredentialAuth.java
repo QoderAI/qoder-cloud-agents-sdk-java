@@ -25,6 +25,14 @@ public final class VaultCredentialAuth extends JsonObject {
     return optional("secret_name", JsonValue::asString);
   }
 
+  public String expiresAt() {
+    return optionalString("expires_at");
+  }
+
+  public VaultCredentialOAuthRefreshInfo refresh() {
+    return optional("refresh", VaultCredentialOAuthRefreshInfo::fromJson);
+  }
+
   public static Builder builder() {
     return new Builder();
   }

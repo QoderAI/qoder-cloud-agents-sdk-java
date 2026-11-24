@@ -35,6 +35,10 @@ public final class Tool extends JsonObject {
     return optional("mcp_server_name", JsonValue::asString);
   }
 
+  public PermissionPolicy permissionPolicy() {
+    return optional("permission_policy", PermissionPolicy::fromJson);
+  }
+
   public String name() {
     return optional("name", JsonValue::asString);
   }
@@ -72,6 +76,10 @@ public final class Tool extends JsonObject {
 
     public Builder mcpServerName(String value) {
       return put("mcp_server_name", value);
+    }
+
+    public Builder permissionPolicy(PermissionPolicy value) {
+      return put("permission_policy", value);
     }
 
     public Builder name(String value) {

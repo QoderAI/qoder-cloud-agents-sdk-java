@@ -6,6 +6,8 @@
 
 Base URL：CN `https://api.qoder.com.cn/api/v1/cloud`，Global `https://api.qoder.com/api/v1/cloud`。使用方法见 [Managed 指南](managed.md)；验收范围见 [真实环境测试](managed-live-testing.md)。接口存在与离线通过不等于线上权限或执行结果已验证。
 
+开发中能力补齐（2026-11-21）：Managed Thread 支持 `event_deltas[]`，允许 `agent.message` / `agent.thinking`；更新模型 `VaultCredentialOAuthRefresh.resource` 和凭据响应的到期时间、脱敏刷新信息。`VaultCredentialOAuthRefreshInfo` / `VaultCredentialTokenEndpointAuthInfo` 不提供刷新令牌或客户端密钥访问器。新增测试见 `CapabilityParityTest`，未新增 Managed HTTP 路由、未执行真实环境测试。
+
 OAuth 的浏览器重定向快捷入口 `/oauth/authorize` 不是 SDK JSON 方法；SDK 使用 `/oauth/start` 返回授权 URL。Forward 专用 Webhook、Identity、Channel 等不属于 Managed API。已弃用的 `PUT /skills/{skill_id}` 不提供 SDK 方法；更新 Skill 内容请使用 `skills().versions().create(...)`，该方法不替代 Skill metadata 更新。
 
 | # | Java 资源方法 | HTTP | 相对路径 | 官方文档 |

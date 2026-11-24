@@ -63,11 +63,38 @@ public final class Templates {
     return Futures.await(async.list(params, options));
   }
 
+  public TemplateAgentCard retrieveAgentCard(String id) {
+    return retrieveAgentCard(id, TemplateAgentCardParams.builder().build());
+  }
+
+  public TemplateAgentCard retrieveAgentCard(String id, TemplateAgentCardParams params) {
+    return retrieveAgentCard(id, params, RequestOptions.DEFAULT);
+  }
+
+  public TemplateAgentCard retrieveAgentCard(
+      String id, TemplateAgentCardParams params, RequestOptions options) {
+    return Futures.await(async.retrieveAgentCard(id, params, options));
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+
+    public ApiResponse<TemplateAgentCard> retrieveAgentCard(String id) {
+      return retrieveAgentCard(id, TemplateAgentCardParams.builder().build());
+    }
+
+    public ApiResponse<TemplateAgentCard> retrieveAgentCard(
+        String id, TemplateAgentCardParams params) {
+      return retrieveAgentCard(id, params, RequestOptions.DEFAULT);
+    }
+
+    public ApiResponse<TemplateAgentCard> retrieveAgentCard(
+        String id, TemplateAgentCardParams params, RequestOptions options) {
+      return Futures.await(async.withResponse().retrieveAgentCard(id, params, options));
+    }
 
     public ApiResponse<Template> retrieve(String id) {
       return retrieve(id, RequestOptions.DEFAULT);

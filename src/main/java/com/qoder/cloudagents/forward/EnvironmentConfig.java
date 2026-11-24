@@ -30,6 +30,10 @@ public final class EnvironmentConfig extends JsonObject {
     return optional("packages", EnvironmentPackages::fromJson);
   }
 
+  public EnvironmentStorage storage() {
+    return optional("storage", EnvironmentStorage::fromJson);
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -52,6 +56,10 @@ public final class EnvironmentConfig extends JsonObject {
 
     public Builder packages(EnvironmentPackages value) {
       return put("packages", value);
+    }
+
+    public Builder storage(EnvironmentStorageParams value) {
+      return put("storage", value);
     }
 
     public EnvironmentConfig build() {

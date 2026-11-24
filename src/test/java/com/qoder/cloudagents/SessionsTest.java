@@ -277,7 +277,9 @@ class SessionsTest {
             SessionUpdateParams.builder()
                 .title("Updated")
                 .config(
-                    SessionConfig.builder().environmentVariables(Collections.emptyMap()).build())
+                    SessionUpdateConfig.builder()
+                        .environmentVariables(Collections.emptyMap())
+                        .build())
                 .build();
         return async
             ? client.async().sessions().withResponse().update(SID, update, o).get()
@@ -492,7 +494,8 @@ class SessionsTest {
     assertEquals(
         0,
         SessionUpdateParams.builder()
-            .config(SessionConfig.builder().environmentVariables(Collections.emptyMap()).build())
+            .config(
+                SessionUpdateConfig.builder().environmentVariables(Collections.emptyMap()).build())
             .build()
             .config()
             .environmentVariables()

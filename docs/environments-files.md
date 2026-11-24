@@ -41,6 +41,25 @@ Environment update metadata is a **server-side merge**; this differs from Memory
 
 Environment responses also expose archived time, Identity ownership, icon URL and typed Template binding counts. Archive is separate from deletion. Delete does not silently archive or unbind a referenced Environment. Both Environment and File delete methods return typed JSON deletion results; a legacy HTTP 204/205 returns null data and retains status/headers in `withResponse()`.
 
+## OSS buckets (Beta)
+
+```java
+EnvironmentStorageBucketParams bucket = EnvironmentStorageBucketParams.builder()
+    .name("datasets").provider("aliyun-oss").region("cn-hangzhou")
+    .bucket("your-bucket").access("read_only")
+    .credential(EnvironmentStorageCredentialParams.builder().type("ram_role")
+        .roleArn(System.getenv("QODER_OSS_ROLE_ARN")).build()).build();
+EnvironmentConfig config = EnvironmentConfig.builder().type("cloud")
+    .storage(EnvironmentStorageParams.builder().buckets(Collections.singletonList(bucket)).build())
+    .build();
+client.environments().create(EnvironmentCreateParams.builder().name("OSS data").config(config).build(),
+    RequestOptions.builder().header("X-Qoder-Beta", "oss-bucket-2026-09-23").build());
+```
+
+Forward supports at most seven cloud bucket mounts at `/mnt/buckets/<name>`. RAM roles use `roleArn`; access-key requests use `accessKeyId` and `accessKeySecret` from a protected configuration source. Do not log raw request JSON. The service verifies Beta eligibility, bucket authorization and read/write permissions; the SDK does not execute permission changes.
+
+Response `config().storage().buckets()` uses separate `EnvironmentStorageBucket` and `EnvironmentStorageCredential` models. Credentials expose only their type and optional masked key ID, never role ARN or secret getters. During update, omitting a bucket credential preserves its saved credential by name. The entire config replaces the previous config; keep required package/script fields when updating. Removing a bucket or sending an empty bucket list affects new Sessions, not existing mounts. See the [public schema](https://docs.qoder.com/cloud-agents/api/forward/environments/schemas.md).
+
 ## Identity ownership and pagination
 
 For PAT access to an Identity-owned resource, use:

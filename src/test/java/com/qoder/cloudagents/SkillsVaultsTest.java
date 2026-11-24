@@ -789,10 +789,15 @@ class SkillsVaultsTest {
     }
   }
 
-  @Test
-  void binaryClientCloseInterruptsAnActiveReader() throws Exception {
+  @ParameterizedTest
+  @ValueSource(strings = {"skill", "file"})
+  void binaryClientCloseInterruptsAnActiveReader(String resource) throws Exception {
+    if (resource.equals("file")) api.enqueue(json("{\"url\":\"" + api.url("/storage") + "\"}"));
     api.enqueue(new MockResponse().setBody("PK long response").setBodyDelay(3, TimeUnit.SECONDS));
-    FileDownload d = client.skills().versions().download("s", "1");
+    FileDownload d =
+        resource.equals("skill")
+            ? client.skills().versions().download("s", "1")
+            : client.files().download("file_1");
     ExecutorService reader = Executors.newSingleThreadExecutor();
     CountDownLatch started = new CountDownLatch(1);
     try {
@@ -805,6 +810,8 @@ class SkillsVaultsTest {
       assertTrue(started.await(1, TimeUnit.SECONDS));
       client.close();
       reading.get(2, TimeUnit.SECONDS);
+      assertThrows(ApiUserAbortException.class, () -> d.body().read());
+      assertEquals(resource.equals("skill") ? 1 : 2, api.getRequestCount());
     } finally {
       d.close();
       reader.shutdownNow();

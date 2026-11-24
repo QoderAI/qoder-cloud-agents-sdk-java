@@ -29,6 +29,10 @@ public final class VaultCredentialOAuthRefresh extends JsonObject {
     return optional("scope", JsonValue::asString);
   }
 
+  public String resource() {
+    return optionalString("resource");
+  }
+
   public JsonValue tokenEndpointAuth() {
     return field("token_endpoint_auth");
   }
@@ -54,6 +58,10 @@ public final class VaultCredentialOAuthRefresh extends JsonObject {
 
     public Builder scope(String value) {
       return put("scope", value);
+    }
+
+    public Builder resource(String value) {
+      return put("resource", value);
     }
 
     public Builder tokenEndpointAuth(JsonValue value) {

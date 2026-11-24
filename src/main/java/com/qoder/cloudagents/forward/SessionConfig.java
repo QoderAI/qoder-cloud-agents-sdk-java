@@ -21,6 +21,10 @@ public final class SessionConfig extends JsonObject {
     return optionalMap("environment_variables", JsonValue::asString);
   }
 
+  public MultiagentConfig multiagent() {
+    return optional("multiagent", MultiagentConfig::fromJson);
+  }
+
   public static Builder builder() {
     return new Builder();
   }

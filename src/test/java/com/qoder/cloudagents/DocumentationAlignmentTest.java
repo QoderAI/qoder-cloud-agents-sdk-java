@@ -103,10 +103,10 @@ class DocumentationAlignmentTest {
         assertEquals("100.00", response.budget().maxCreditCost());
         for (int state = 0; state < 3; state++) {
           SessionUpdateParams.Builder b = SessionUpdateParams.builder();
-          if (state == 1) b.budget(null).config(SessionConfig.builder().model(null).build());
+          if (state == 1) b.budget(null).config(SessionUpdateConfig.builder().model(null).build());
           if (state == 2)
             b.budget(budget)
-                .config(SessionConfig.builder().model(ModelConfig.of("ultimate")).build());
+                .config(SessionUpdateConfig.builder().model(ModelConfig.of("ultimate")).build());
           SessionUpdateParams params = b.build();
           server.enqueue(new MockResponse().setBody(params.rawJson()));
           if (async) client.async().sessions().update("sess_test", params).get();

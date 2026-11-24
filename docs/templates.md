@@ -1,6 +1,6 @@
 # Template API
 
-Implemented: list, retrieve, create, update, archive and clone. These six operations share the same request engine and credential handling in synchronous and asynchronous clients.
+Implemented: list, retrieve, create, update, archive, clone and authenticated Agent Card retrieval. These seven operations share the same request engine and credential handling in synchronous and asynchronous clients.
 
 ## Methods
 
@@ -53,7 +53,8 @@ Use values supported by the selected environment and model; the SDK does not inf
 | `managed_tool_config` | `ManagedToolConfig` |
 | `mcp_servers` | `List<MCPServer>` |
 | `skills` | `List<SkillBinding>` |
-| `multiagent` | `MultiagentConfig`, `MultiagentEntry` (including Advisor model) |
+| `multiagent` | `MultiagentConfig`, `MultiagentEntry` (string reference, Agent, Self or Advisor) |
+| `a2a` | `TemplateA2AConfig`, `TemplateA2ASkill` (Agent Card capabilities, not resource Skill bindings) |
 | `vaults`, `files` | `Map<String, ResourceBinding>` |
 | `github_repositories` | Request: `GitHubRepositoryConfig`; response: `GitHubRepository` |
 | `environment_variables` | `EnvironmentVariables`: object or string |
@@ -133,6 +134,22 @@ if (page.hasNextPage()) {
 ```
 
 Forward pagination uses `last_id` as the next `after_id`; a request using `before_id` continues with `first_id`. These two request cursors are mutually exclusive, including request-option overrides. A false `has_more`, empty data or absent cursor ends iteration. Calling next on an exhausted page raises `PaginationException`, as does a repeated cursor that would cause a loop. Async consumers use explicit page futures; no whole-result buffering or async stream API is provided.
+
+## A2A publication and discovery
+
+```java
+TemplateA2AConfig a2a = TemplateA2AConfig.builder().enabled(true)
+    .skills(Collections.singletonList(TemplateA2ASkill.builder()
+        .id("summary").name("Summarize").description("Summarize supplied text")
+        .build())).build();
+client.templates().update("tmpl_example", TemplateUpdateParams.builder().a2a(a2a).build());
+TemplateAgentCard card = client.templates().retrieveAgentCard("tmpl_example",
+    TemplateAgentCardParams.builder().identityId("idn_example").a2aVersion("1.0").build());
+```
+
+A2A is separate from multiagent orchestration. Updating A2A patches supplied object fields; omitted fields and `{}` preserve configuration, `skills: []` clears capabilities, and `a2a: null` clears and disables publication. Members do not accept null. These skills describe Card capabilities, not mounted Qoder Skills.
+
+PAT callers select runtime `identityId`; identity-bound SAT callers omit it. Card retrieval uses the same authentication and request options as other APIs and sends `A2A-Version` as a header. Version 0.3 exposes `card.url()`, while 1.0 exposes `card.supportedInterfaces()`. Read the invocation URL from the Card and pass it to a compatible A2A client; this SDK does not follow that URL or replay A2A tasks. See the [official integration guide](https://docs.qoder.com/cloud-agents/a2a-integration.md).
 
 ## Contract sources and validation boundary
 

@@ -42,15 +42,31 @@ Session session = client.sessions().create(
 
 Creation requires an Identity and Template accessible to the credential. The service compiles the Template and Identity configuration and applies the Session's environment variables. The SDK does not supply source type, resolve ownership or merge configuration locally.
 
-Session update allows title, metadata and `config.environment_variables`. The environment-variable map **replaces the whole Session-level map**, then overlays the Template/Identity base. An empty map clears the Session override; an omitted field leaves it unchanged. The service rejects null config/environment-variable maps. Builders preserve explicit null for wire fidelity; they do not silently turn it into omission or an empty map.
+Session update allows title, metadata, budget and `config.model`, `config.environment_variables` and `config.multiagent`. The environment-variable map **replaces the whole Session-level map**, then overlays the Template/Identity base. An empty map clears the Session override; an omitted field leaves it unchanged. The service rejects null config/environment-variable maps. Builders preserve explicit null for wire fidelity; they do not silently turn it into omission or an empty map.
 
 ```java
 client.sessions().update(session.id(), SessionUpdateParams.builder()
-    .config(SessionConfig.builder().environmentVariables(Collections.emptyMap()).build())
+    .config(SessionUpdateConfig.builder().environmentVariables(Collections.emptyMap()).build())
     .build());
 ```
 
 Metadata follows the endpoint's merge behavior. File resources can be supplied on creation with `SessionResourceSpec`; later additions use `sessions().resources().add(...)`, not Session update.
+
+## Automatic titles and multiagent updates
+
+```java
+Session automaticallyNamed = client.sessions().create(SessionCreateParams.builder()
+    .identityId("idn_example").templateId("tmpl_example").autoTitle(true).build());
+MultiagentConfig roster = MultiagentConfig.builder().type("coordinator")
+    .agents(java.util.Arrays.asList(MultiagentEntry.of("tmpl_child"),
+        MultiagentEntry.builder().type("advisor").model("ultimate").build())).build();
+client.sessions().update(automaticallyNamed.id(), SessionUpdateParams.builder()
+    .config(SessionUpdateConfig.builder().multiagent(roster).build()).build());
+```
+
+`autoTitle(true)` is creation-only and cannot be combined with any supplied `title`, including empty or null. The initial title is empty; the first user message starts automatic naming. The response exposes `title`, not an auto-title flag. Manual title updates take over naming.
+
+Initial multiagent configuration is inherited; creation does not accept `config.multiagent`. Updates use `SessionUpdateConfig`, not the creation `SessionConfig`. A supplied roster replaces the entire override; omission preserves it, `multiagent(null)` persistently disables it rather than restoring inheritance, and empty rosters are rejected by the service. The response's `config().multiagent()` contains the authored override. Re-submitting a roster refreshes the pinned child versions; the SDK does not select historical child versions or resolve them locally. Strings, Agent objects (`templateId` or `id`), Self and one Advisor are supported; strings remain strings through `MultiagentEntry.of(...)` and `isString()`.
 
 ## Send and read events
 
@@ -161,7 +177,7 @@ SessionCreateParams create = SessionCreateParams.builder()
         .id("ultimate").speed("high").build()).build())
     .build();
 SessionUpdateParams clear = SessionUpdateParams.builder().budget(null)
-    .config(SessionConfig.builder().model(null).build()).build();
+    .config(SessionUpdateConfig.builder().model(null).build()).build();
 ```
 
 Omitting `budget` keeps the current limit on update; `null` clears it and an object replaces it. It limits cumulative model and sandbox Credits; an active turn can finish, but the server rejects the next user message once the budget is exhausted. A Session model override accepts a model ID string (`ModelConfig.of`) or an object. Omit it on create to inherit; `null` is only valid on update to restore inheritance. Query model capabilities before selecting speed or context windows.

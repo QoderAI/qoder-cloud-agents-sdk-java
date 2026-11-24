@@ -80,6 +80,10 @@ public final class Template extends JsonModel {
     return optional("multiagent", MultiagentConfig::fromJson);
   }
 
+  public TemplateA2AConfig a2a() {
+    return optional("a2a", TemplateA2AConfig::fromJson);
+  }
+
   public Map<String, ResourceBinding> vaults() {
     return optionalMap("vaults", ResourceBinding::fromJson);
   }

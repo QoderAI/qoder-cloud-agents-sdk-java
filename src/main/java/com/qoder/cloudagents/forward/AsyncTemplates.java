@@ -70,11 +70,53 @@ public final class AsyncTemplates {
     return Futures.map(withResponse().list(params, options), ApiResponse::data);
   }
 
+  public CompletableFuture<TemplateAgentCard> retrieveAgentCard(String id) {
+    return retrieveAgentCard(id, TemplateAgentCardParams.builder().build());
+  }
+
+  public CompletableFuture<TemplateAgentCard> retrieveAgentCard(
+      String id, TemplateAgentCardParams params) {
+    return retrieveAgentCard(id, params, RequestOptions.DEFAULT);
+  }
+
+  public CompletableFuture<TemplateAgentCard> retrieveAgentCard(
+      String id, TemplateAgentCardParams params, RequestOptions options) {
+    return Futures.map(withResponse().retrieveAgentCard(id, params, options), ApiResponse::data);
+  }
+
   public WithResponse withResponse() {
     return new WithResponse();
   }
 
   public final class WithResponse {
+
+    public CompletableFuture<ApiResponse<TemplateAgentCard>> retrieveAgentCard(String id) {
+      return retrieveAgentCard(id, TemplateAgentCardParams.builder().build());
+    }
+
+    public CompletableFuture<ApiResponse<TemplateAgentCard>> retrieveAgentCard(
+        String id, TemplateAgentCardParams params) {
+      return retrieveAgentCard(id, params, RequestOptions.DEFAULT);
+    }
+
+    public CompletableFuture<ApiResponse<TemplateAgentCard>> retrieveAgentCard(
+        String id, TemplateAgentCardParams params, RequestOptions options) {
+      if (params == null || options == null)
+        throw new ConfigurationException("Agent Card parameters and options must not be null");
+      if (params.a2aVersion() != null
+          && options.headers().keySet().stream()
+              .noneMatch(name -> name.equalsIgnoreCase("A2A-Version")))
+        options = options.toBuilder().header("A2A-Version", params.a2aVersion()).build();
+      return Futures.map(
+          engine.request(
+              "GET",
+              new String[] {"templates", id, "a2a", "agent-card.json"},
+              params.query(),
+              null,
+              true,
+              options),
+          response -> response.map(value -> new TemplateAgentCard(value, response.requestId())));
+    }
 
     public CompletableFuture<ApiResponse<Template>> retrieve(String id) {
       return retrieve(id, RequestOptions.DEFAULT);

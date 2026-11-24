@@ -21,8 +21,10 @@ final class SessionStreams {
     for (String segment : path)
       if (segment == null || segment.isEmpty() || segment.equals(".") || segment.equals(".."))
         throw new ConfigurationException("Invalid API path segment");
-    if (thread && !options.query().isEmpty())
-      throw new ConfigurationException("Thread streams do not accept query selectors");
+    if (thread)
+      for (String key : options.query().keySet())
+        if (!key.equals("event_deltas[]"))
+          throw new ConfigurationException("Thread streams accept only event_deltas[] selectors");
     String cursor = initialId == null ? engine.defaultHeader("Last-Event-ID") : initialId;
     for (Map.Entry<String, String> header : options.headers().entrySet())
       if (header.getKey().equalsIgnoreCase("Last-Event-ID")) cursor = header.getValue();
